@@ -36,7 +36,7 @@ const theme = createTheme({
 /* check that string contains number, upper case, lower case, special character,
 and at least 10 characters */
 const strongPasswordPattern = new RegExp(
-  "^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[^da-zA-Z]).{10,}$"
+  "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^da-zA-Z]).{10,}$"
 );
 
 interface State extends SnackbarOrigin {
