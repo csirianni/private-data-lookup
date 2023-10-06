@@ -1,5 +1,11 @@
 "use client";
-import { useState, useEffect, FormEvent, MouseEvent } from "react";
+import {
+  useState,
+  useEffect,
+  forwardRef,
+  FormEvent,
+  MouseEvent,
+} from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -14,6 +20,10 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Snackbar, { SnackbarOrigin } from "@mui/material/Snackbar";
+import MuiAlert, { AlertProps } from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useRouter } from "next/navigation";
 
 // can change colors if we want
 const theme = createTheme({
@@ -29,7 +39,12 @@ const strongPasswordPattern = new RegExp(
   "^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[^da-zA-Z]).{10,}$"
 );
 
+interface State extends SnackbarOrigin {
+  open: boolean;
+}
+
 export default function SignUp() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isStrongPassword, setIsStrongPassword] = useState(false);
   const [isValidForm, setIsValidForm] = useState(false);
@@ -38,10 +53,42 @@ export default function SignUp() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [state, setState] = useState<State>({
+    vertical: "top",
+    horizontal: "center",
+    open: false,
+  });
+  const { vertical, horizontal, open } = state;
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleClose = () => {
+    setState({ ...state, open: false });
+  };
+
+  const securityCheck = async () => {
+    return {
+      status: "success", //"fail"
+      data: {
+        post: {
+          id: 1,
+          title: "mock data",
+          body: "nini is cool",
+        },
+      },
+    };
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    setIsLoading(true);
+    const response = await securityCheck();
+    setIsLoading(false);
+
+    if (response.status == "success") {
+      router.push(`/success`);
+    } else {
+      setState({ ...state, open: true });
+    }
   };
 
   const handleClickShowPassword = () =>
@@ -62,6 +109,15 @@ export default function SignUp() {
         password === confirmPassword
     );
   }, [password, confirmPassword, isValidForm, isStrongPassword]);
+
+  const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
+    props,
+    ref
+  ) {
+    return (
+      <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
+    );
+  });
 
   return (
     <ThemeProvider theme={theme}>
@@ -109,6 +165,7 @@ export default function SignUp() {
                   fullWidth
                   id="firstName"
                   label="First Name"
+                  aria-label="first name"
                   onChange={(event) => setFirst(event.target.value)}
                   autoFocus
                 />
@@ -120,6 +177,7 @@ export default function SignUp() {
                   id="lastName"
                   label="Last Name"
                   name="lastName"
+                  aria-label="last name"
                   autoComplete="family-name"
                   onChange={(event) => setLast(event.target.value)}
                 />
@@ -131,6 +189,7 @@ export default function SignUp() {
                   id="email"
                   label="Email Address"
                   name="email"
+                  aria-label="email address"
                   autoComplete="email"
                   onChange={(event) => setEmail(event.target.value)}
                 />
@@ -143,6 +202,7 @@ export default function SignUp() {
                   label="Password"
                   id="password"
                   autoComplete="new-password"
+                  aria-label="password"
                   type={showPassword ? "text" : "password"}
                   onChange={(event) =>
                     setPassword(event.target.value)
@@ -173,8 +233,11 @@ export default function SignUp() {
                   name="password"
                   label="Confirm your password"
                   id="confirm-password"
+                  aria-label="confirm password"
                   type={showPassword ? "text" : "password"}
-                  onChange={(event) => setConfirmPassword(event.target.value)}
+                  onChange={(event) =>
+                    setConfirmPassword(event.target.value)
+                  }
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -216,12 +279,41 @@ export default function SignUp() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              disabled={!isStrongPassword || !isValidForm}
+              disabled={
+                !isStrongPassword || !isValidForm || isLoading
+              }
             >
-              Sign Up
+              {isLoading ? (
+                <span className="inline-flex">
+                  <CircularProgress
+                    size="24px"
+                    color="inherit"
+                    sx={{ marginRight: "12px" }}
+                  />
+                  Loading...
+                </span>
+              ) : (
+                "Sign Up"
+              )}
             </Button>
           </Box>
         </Box>
+        <Snackbar
+          anchorOrigin={{ vertical, horizontal }}
+          open={open}
+          key={vertical + horizontal}
+          autoHideDuration={8000}
+          onClose={handleClose}
+        >
+          <Alert
+            severity="error"
+            onClose={handleClose}
+            sx={{ width: "100%" }}
+          >
+            Password was found in a previously breached dataset!
+            Please try a different password.
+          </Alert>
+        </Snackbar>
       </Container>
     </ThemeProvider>
   );
