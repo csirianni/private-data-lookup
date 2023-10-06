@@ -26,7 +26,7 @@ const theme = createTheme({
 /* check that string contains number, upper case, lower case, special character,
 and at least 10 characters */
 const strongPasswordPattern = new RegExp(
-  "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{10,}$"
+  "^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[^da-zA-Z]).{10,}$"
 );
 
 export default function SignUp() {
@@ -55,14 +55,12 @@ export default function SignUp() {
 
   useEffect(() => {
     setIsStrongPassword(strongPasswordPattern.test(password));
-
-    const valid =
+    setIsValidForm(
       first.length > 0 &&
-      last.length > 0 &&
-      email.length > 0 &&
-      password === confirmPassword;
-
-    setIsValidForm(valid);
+        last.length > 0 &&
+        email.length > 0 &&
+        password === confirmPassword
+    );
   }, [password, confirmPassword, isValidForm, isStrongPassword]);
 
   return (
@@ -146,7 +144,9 @@ export default function SignUp() {
                   id="password"
                   autoComplete="new-password"
                   type={showPassword ? "text" : "password"}
-                  onChange={(event) => setPassword(event.target.value)}
+                  onChange={(event) =>
+                    setPassword(event.target.value)
+                  }
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
