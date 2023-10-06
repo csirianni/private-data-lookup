@@ -23,8 +23,10 @@ const theme = createTheme({
   },
 });
 
-const re = new RegExp(
-  "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[-+_!@#$%^&*.,?]).+$"
+/* check that string contains number, upper case, lower case, special character,
+and is longer than 10 characters */
+const validPasswordPattern = new RegExp(
+  "^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{10,}$"
 );
 
 export default function SignUp() {
@@ -40,12 +42,6 @@ export default function SignUp() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      firstName: data.get("firstName"),
-      lastName: data.get("lastName"),
-      email: data.get("email"),
-      password: data.get("password"),
-    });
   };
 
   const handleClickShowPassword = () =>
@@ -58,7 +54,9 @@ export default function SignUp() {
   };
 
   useEffect(() => {
-    setIsStrong(re.test(password) && password.length > 9);
+    setIsStrong(
+      validPasswordPattern.test(password) && password.length > 9
+    );
 
     const valid =
       first.length > 0 &&
@@ -150,9 +148,7 @@ export default function SignUp() {
                   id="password"
                   autoComplete="new-password"
                   type={showPassword ? "text" : "password"}
-                  onChange={(event) =>
-                    setPassword(event.target.value)
-                  }
+                  onChange={(event) => setPassword(event.target.value)}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
