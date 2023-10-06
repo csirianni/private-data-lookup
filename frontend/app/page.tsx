@@ -24,9 +24,9 @@ const theme = createTheme({
 });
 
 /* check that string contains number, upper case, lower case, special character,
-and is longer than 10 characters */
+and at least 10 characters */
 const validPasswordPattern = new RegExp(
-  "^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{10,}$"
+  "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{10,}$"
 );
 
 export default function SignUp() {
@@ -54,9 +54,7 @@ export default function SignUp() {
   };
 
   useEffect(() => {
-    setIsStrong(
-      validPasswordPattern.test(password) && password.length > 9
-    );
+    setIsStrong(validPasswordPattern.test(password));
 
     const valid =
       first.length > 0 &&
@@ -176,9 +174,7 @@ export default function SignUp() {
                   label="Confirm your password"
                   id="confirm-password"
                   type={showPassword ? "text" : "password"}
-                  onChange={(event) =>
-                    setConfirmPassword(event.target.value)
-                  }
+                  onChange={(event) => setConfirmPassword(event.target.value)}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
