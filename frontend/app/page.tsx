@@ -25,14 +25,14 @@ const theme = createTheme({
 
 /* check that string contains number, upper case, lower case, special character,
 and at least 10 characters */
-const validPasswordPattern = new RegExp(
+const strongPasswordPattern = new RegExp(
   "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{10,}$"
 );
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
-  const [isStrong, setIsStrong] = useState(false);
-  const [isValid, setIsValid] = useState(false);
+  const [isStrongPassword, setIsStrongPassword] = useState(false);
+  const [isValidForm, setIsValidForm] = useState(false);
   const [first, setFirst] = useState<string>("");
   const [last, setLast] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -54,7 +54,7 @@ export default function SignUp() {
   };
 
   useEffect(() => {
-    setIsStrong(validPasswordPattern.test(password));
+    setIsStrongPassword(strongPasswordPattern.test(password));
 
     const valid =
       first.length > 0 &&
@@ -62,8 +62,8 @@ export default function SignUp() {
       email.length > 0 &&
       password === confirmPassword;
 
-    setIsValid(valid);
-  }, [password, confirmPassword, isValid, isStrong]);
+    setIsValidForm(valid);
+  }, [password, confirmPassword, isValidForm, isStrongPassword]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -216,7 +216,7 @@ export default function SignUp() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              disabled={!isStrong || !isValid}
+              disabled={!isStrongPassword || !isValidForm}
             >
               Sign Up
             </Button>
