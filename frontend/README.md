@@ -2,7 +2,7 @@
 
 Made with [Next.js](https://nextjs.org/).
 
-## Configuation
+## Configuration
 
 To run the frontend server, use your preferred terminal to `cd` into `/frontend` and then install the required packages by running
 
