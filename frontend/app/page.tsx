@@ -39,7 +39,7 @@ const strongPasswordPattern = new RegExp(
   "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^da-zA-Z]).{10,}$"
 );
 
-interface State extends SnackbarOrigin {
+interface SnackbarState extends SnackbarOrigin {
   open: boolean;
 }
 
@@ -54,18 +54,18 @@ export default function SignUp() {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
-  const [state, setState] = useState<State>({
+  const [showSnackbar, setShowSnackbar] = useState<SnackbarState>({
     vertical: "top",
     horizontal: "center",
     open: false,
   });
-  const { vertical, horizontal, open } = state;
+  const { vertical, horizontal, open } = showSnackbar;
 
   const handleClose = () => {
-    setState({ ...state, open: false });
+    setShowSnackbar({ ...showSnackbar, open: false });
   };
 
-  const securityCheck = async () => {
+  const checkSecurity = async () => {
     return {
       status: "success", //"fail"
       data: {
@@ -81,13 +81,13 @@ export default function SignUp() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
-    const response = await securityCheck();
+    const response = await checkSecurity();
     setIsLoading(false);
 
     if (response.status == "success") {
       router.push(`/success`);
     } else {
-      setState({ ...state, open: true });
+      setShowSnackbar({ ...showSnackbar, open: true });
     }
   };
 
