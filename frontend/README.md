@@ -1,13 +1,22 @@
-made with next.js
+# Frontend
 
-## Install packages:
-yarn add next@latest
-yarn add @mui/material @emotion/react @emotion/styled @mui/icons-material
+Made with [Next.js](https://nextjs.org/).
 
-## Run frontend
+## Configuration
+
+To run the frontend server, use your preferred terminal to `cd` into `/frontend` and then install the required packages by running
+
+```bash
+yarn install
+```
+
+Then, you should be able to start the server with the command
+
 ```bash
 yarn dev
 ```
+
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser. The page will reload if you make edits.
 
 ## Deploy on Vercel
 

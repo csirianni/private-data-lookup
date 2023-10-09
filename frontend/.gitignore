@@ -33,3 +33,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# npm
+# ignore package lock because only supporting yarn
+package-lock.json
