@@ -10,3 +10,7 @@ brew install conan cmake
 mkdir build && cd build
 cmake .. && cmake --build .
 ```
+
+```bash
+conan install . --output-folder=build --build=missing
+```
