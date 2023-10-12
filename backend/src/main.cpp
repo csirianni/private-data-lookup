@@ -10,7 +10,9 @@ int main(void) {
 
     // define endpoint at the root directory
     CROW_ROUTE(app, "/")([](){
-        return "Hello world";
+        crow::json::wvalue response;
+        response["status"] = "success";
+        return response;
     });
 
     // set the port, set the app to run on multiple threads, and run the app
