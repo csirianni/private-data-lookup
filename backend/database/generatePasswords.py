@@ -11,7 +11,8 @@ Generates 20 passwords between 10-24 characters that contain:
 
 since when presented with these requirements, most users choose 1 special character and fill in the rest of the characters with letters and digits. Writes to passwords to a csv file.
 '''
-passwords, i = [], 0
+passwords, i = set(), 0
+
 while i < 20:
     # meet requirements:
     password = random.choice(string.ascii_lowercase) # select 1 lowercase
@@ -31,7 +32,7 @@ while i < 20:
     password = ''.join(password_list)
 
     if password not in passwords:
-        passwords.append(password)
+        passwords.add(password)
         i += 1
 
 # write to csv file
