@@ -9,7 +9,7 @@ Private Data Lookup (PDL) is a web application that allows users to privately qu
 > This project is inspired by some excellent work at Meta and Google:
 >
 > - [How Meta is improving password security and preserving privacy](https://engineering.fb.com/2023/08/08/security/how-meta-is-improving-password-security-and-preserving-privacy/)
-> - [Data Breaches, Phishing, or Malware?: Understanding the Risks of Stolen Credentials](https://dl.acm.org/doi/10.1145/3133956.3134067).
+> - [Data Breaches, Phishing, or Malware?: Understanding the Risks of Stolen Credentials](https://dl.acm.org/doi/10.1145/3133956.3134067)
 
 ## Instructions
 
