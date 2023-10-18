@@ -1,6 +1,6 @@
 # Private Data Lookup
 
-[![commit messages](https://github.com/csirianni/private-data-lookup/actions/workflows/commits.yml/badge.svg)](https://github.com/csirianni/movie-recommender/actions/workflows/commits.yml)
+[![commit messages](https://github.com/csirianni/private-data-lookup/actions/workflows/commits.yml/badge.svg)](https://github.com/csirianni/private-data-lookup/actions/workflows/commits.yml)
 
 ## Overview
 
