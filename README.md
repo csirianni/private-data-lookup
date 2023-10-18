@@ -21,7 +21,7 @@ To run the frontend, `cd` into `/frontend` and run
 yarn dev 
 ```
 
-To run the backend, `cd` into the `/backend` and compile the executable:
+To run the backend, `cd` into the `/backend` and compile the program:
 
 ```console
 mkdir build && cd build
