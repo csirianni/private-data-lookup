@@ -9,7 +9,7 @@ brew install conan cmake
 conan install . --output-folder=build --build=missing
 ```
 
-Set up the `/build/` folder:
+Set up the `/build` folder:
 
 ```bash
 mkdir build && cd build
