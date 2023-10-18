@@ -6,16 +6,24 @@
 
 ## Instructions
 
-It's necessary to configure the `/frontend` and `/backend` folders initially. See the respective `README.md`s for more information.
+It's necessary to configure the `/frontend` and `/backend` folders initially. See the respective `README.md`s for more information. After configuration, you can run the application using the following commands.
 
-In order to run the frontend, `cd` into `/frontend` and run
+To run the frontend, `cd` into `/frontend` and run
 
 ```console
 yarn dev 
 ```
 
-In order to run the backend, `cd` into the `/backend` and run
+To run the backend, `cd` into the `/backend` and compile the executable:
 
 ```console
-./build/backend 
+mkdir build && cd build
+cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+cmake --build .
+```
+
+Then, you can simply run
+
+```console
+./backend
 ```
