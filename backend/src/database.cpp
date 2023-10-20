@@ -5,11 +5,11 @@
 namespace
 {
     // https://stackoverflow.com/questions/31146713/sqlite3-exec-callback-function-clarification
-    static int printRow(void *unused, int count, char **data, char **columns)
+    static int printRow(void *unused, int width, char **data, char **attributes)
     {
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < width; i++)
         {
-            printf("%s = %s\n", columns[i], data[i] ? data[i] : "NULL");
+            printf("%s = %s\n", attributes[i], data[i] ? data[i] : "NULL");
         }
         printf("\n");
         return 0;
