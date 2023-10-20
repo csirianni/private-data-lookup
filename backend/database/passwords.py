@@ -2,40 +2,42 @@ import random
 import string
 import csv
 
-'''
-Generates 20 passwords between 10-24 characters that contain:
-- at least 1 lowercase letter
-- at least 1 uppercase letter
-- at least 1 digit
-- 1 special character
 
-since when presented with these requirements, most users choose 1 special character and fill in the rest of the characters with letters and digits. Writes to passwords to a csv file.
-'''
-passwords, i = set(), 0
+def generate_passwords(num_passwords, max_chars=24) -> set[str]:
+    """Generate a set of passwords containing at least one lowercase letter,
+    at least one uppercase letter, at least one digit, and one special character.
 
-while i < 20:
-    # meet requirements:
-    password = random.choice(string.ascii_lowercase) # select 1 lowercase
-    password += random.choice(string.ascii_uppercase) # select 1 uppercase
-    password += random.choice(string.digits) # select 1 digit
-    password += random.choice(string.punctuation) # select 1 special symbol
+    :param num_passwords: the number of passwords generated
+    :param max_chars: the maximum number of characters in a password
+    :return: the set of generated passwords
+    """
+    MIN_CHARS = 10
 
-    # generate other characters
-    random_source = string.ascii_letters + string.digits
-    r = random.randint(6,20)
-    for _ in range(r):
-        password += random.choice(random_source)
+    passwords = set()
+    while len(passwords) < num_passwords:
+        # select one lowercase
+        password = random.choice(string.ascii_lowercase)
+        # select one uppercase
+        password += random.choice(string.ascii_uppercase)
+        # select one digit
+        password += random.choice(string.digits)
+        # select one special symbol
+        password += random.choice(string.punctuation)
 
-    # shuffle all characters
-    password_list = list(password)
-    random.SystemRandom().shuffle(password_list)
-    password = ''.join(password_list)
+        # generate other characters
+        character_options = string.ascii_letters + string.digits
+        length = random.randint(MIN_CHARS - len(password), max_chars - len(password))
+        for _ in range(length):
+            password += random.choice(character_options)
 
-    if password not in passwords:
-        passwords.add(password)
-        i += 1
+        # shuffle all characters
+        password = "".join(random.shuffle(list(password)))
 
-# write to csv file
-with open('./backend/database/breachedPasswords.csv', 'w', newline='') as csvfile:
-    writer = csv.writer(csvfile, delimiter = '\n')
-    writer.writerow(passwords)
+        if password not in passwords:
+            passwords.add(password)
+
+    return passwords
+
+
+# def write_passwords(file_path, passwords):
+#     with open(file_path, 'w', newline="") as file:
