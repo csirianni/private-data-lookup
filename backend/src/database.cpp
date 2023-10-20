@@ -4,11 +4,12 @@
 
 namespace
 {
-    static int printData(void *NotUsed, int argc, char **argv, char **azColName)
+    // https://stackoverflow.com/questions/31146713/sqlite3-exec-callback-function-clarification
+    static int printRow(void *unused, int count, char **data, char **columns)
     {
-        for (int i = 0; i < argc; i++)
+        for (int i = 0; i < count; i++)
         {
-            printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+            printf("%s = %s\n", columns[i], data[i] ? data[i] : "NULL");
         }
         printf("\n");
         return 0;
@@ -17,47 +18,59 @@ namespace
 
 namespace database
 {
-    void initializeDatabase(const char *file)
+    Database::Database(const std::string &file_path) : is_closed(false)
     {
-        if (std::filesystem::exists(file))
+        if (std::filesystem::exists(file_path))
         {
-            std::remove(file);
+            std::remove(file_path.c_str());
         }
 
-        sqlite3 *db;
-        int result = sqlite3_open_v2("passwords.db", &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
-        // TODO: improve this error handling
+        int result = sqlite3_open_v2(file_path.c_str(), &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
         if (result != SQLITE_OK)
         {
-            const char *errorMsg = sqlite3_errmsg(db);
-            fprintf(stderr, "SQLite error: %s\n", errorMsg);
+            const char *error_msg = sqlite3_errmsg(db);
+            fprintf(stderr, "SQLite error: %s\n", error_msg);
         }
+    }
 
-        // TODO: investigate IF NOT EXISTS
-        const char *table = "CREATE TABLE passwords (password TEXT);";
-        result = sqlite3_exec(db, table, NULL, NULL, NULL);
+    void Database::execute(const std::string &command)
+    {
+        int result = sqlite3_exec(db, command.c_str(), NULL, NULL, NULL);
         if (result != SQLITE_OK)
         {
-            const char *errorMsg = sqlite3_errmsg(db);
-            fprintf(stderr, "SQLite error: %s\n", errorMsg);
+            const char *error_msg = sqlite3_errmsg(db);
+            fprintf(stderr, "SQLite error: %s\n", error_msg);
         }
+    }
 
-        const char *insertion = "INSERT INTO passwords (password) VALUES ('chocolate1');";
-        result = sqlite3_exec(db, insertion, NULL, NULL, NULL);
+    void Database::printTable(const std::string &table)
+    {
+        const std::string query = "SELECT * FROM " + table + ";";
+        int result = sqlite3_exec(db, query.c_str(), printRow, NULL, NULL);
         if (result != SQLITE_OK)
         {
-            const char *errorMsg = sqlite3_errmsg(db);
-            fprintf(stderr, "SQLite error: %s\n", errorMsg);
+            const char *error_msg = sqlite3_errmsg(db);
+            fprintf(stderr, "SQLite error: %s\n", error_msg);
         }
+    }
 
-        const char *selection = "SELECT * FROM passwords";
-        result = sqlite3_exec(db, selection, printData, NULL, NULL);
-        if (result != SQLITE_OK)
-        {
-            const char *errorMsg = sqlite3_errmsg(db);
-            fprintf(stderr, "SQLite error: %s\n", errorMsg);
-        }
-
+    void Database::close()
+    {
         sqlite3_close(db);
+        is_closed = true;
+    }
+
+    Database::~Database()
+    {
+        if (!is_closed)
+        {
+            int result = sqlite3_close(db);
+            if (result != SQLITE_OK)
+            {
+                const char *error_msg = sqlite3_errmsg(db);
+                fprintf(stderr, "SQLite error: %s\n", error_msg);
+            }
+            std::abort();
+        }
     }
 }

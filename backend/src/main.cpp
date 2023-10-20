@@ -8,7 +8,10 @@
 
 int main()
 {
-    database::initializeDatabase("passwords.db");
+    database::Database db = database::Database("passwords.db");
+    db.execute("CREATE TABLE passwords (password TEXT);");
+    db.execute("INSERT INTO passwords (password) VALUES ('chocolate1');");
+    db.printTable("passwords");
 
     // declare crow application
     crow::SimpleApp app;
@@ -23,4 +26,5 @@ int main()
 
     // set the port, set the app to run on multiple threads, and run the app
     app.port(18080).multithreaded().run();
+    db.close();
 }
