@@ -3,8 +3,9 @@
 #include <string.h>
 
 #include "crow.h"
+#include <sqlite3.h>
 
-int main(void) {
+int main() {
     // delcare crow application
     crow::SimpleApp app; 
 
