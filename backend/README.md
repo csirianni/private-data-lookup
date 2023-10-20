@@ -28,3 +28,5 @@ To fix VS Code import errors with Crow, try adding the following line to your `s
 ```json
 "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
 ```
+
+[Source](https://stackoverflow.com/questions/58077908/linking-conan-include-to-vs-code)
