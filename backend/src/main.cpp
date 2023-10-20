@@ -9,7 +9,6 @@
 int main()
 {
     database::initializeDatabase("passwords.db");
-    printf("%s\n", "database initialized");
 
     // declare crow application
     crow::SimpleApp app;
