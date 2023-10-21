@@ -5,6 +5,11 @@ namespace passwords
     std::unordered_set<std::string> generatePasswords(const int &numPasswords, const int &maxChars)
     {
         int minChars = 10;
+
+        if (maxChars < minChars) {
+            return;
+        }
+
         std::unordered_set<std::string> passwords;
         std::string lowercase = "abcdefghijklmnopqrstuvwxyz";
         std::string uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -25,29 +30,33 @@ namespace passwords
                 {
                 case 0: // lowercase letter
                     hasLowercase = true;
-                    if (!(hasLowercase && hasUppercase && hasDigit && hasSymbol))
+                    if (!(hasLowercase && hasUppercase && hasDigit && hasSymbol)){
                         break;
+                    }
                     int index = rand() % lowercase.length();
                     password = password + lowercase[index];
                     break;
                 case 1: // uppercase letter
                     hasUppercase = true;
-                    if (!(hasLowercase && hasUppercase && hasDigit && hasSymbol))
+                    if (!(hasLowercase && hasUppercase && hasDigit && hasSymbol)) {
                         break;
+                    }
                     int index = rand() % uppercase.length();
                     password = password + uppercase[index];
                     break;
                 case 2: // digit
                     hasDigit = true;
-                    if (!(hasLowercase && hasUppercase && hasDigit && hasSymbol))
+                    if (!(hasLowercase && hasUppercase && hasDigit && hasSymbol)) {
                         break;
+                    }
                     int index = rand() % digits.length();
                     password = password + digits[index];
                     break;
                 case 3: // symbol
                     hasSymbol = true;
-                    if (!(hasLowercase && hasUppercase && hasDigit && hasSymbol))
+                    if (!(hasLowercase && hasUppercase && hasDigit && hasSymbol)) {
                         break;
+                    }
                     int index = rand() % symbols.length();
                     password = password + symbols[index];
                     break;
