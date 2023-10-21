@@ -1,4 +1,5 @@
-#include "passwords.hpp";
+#include <iostream>
+#include "passwords.hpp"
 
 namespace passwords
 {
@@ -7,7 +8,8 @@ namespace passwords
         int minChars = 10;
 
         if (maxChars < minChars) {
-            return;
+            std::cout << "Password must have a minimum length of 10 characters\n";
+            exit(0);
         }
 
         std::unordered_set<std::string> passwords;
@@ -26,6 +28,7 @@ namespace passwords
             for (int i = 0; i < length; i++)
             {
                 int charType = rand() % 4;
+                int index;
                 switch (charType)
                 {
                 case 0: // lowercase letter
@@ -33,7 +36,7 @@ namespace passwords
                     if (!(hasLowercase && hasUppercase && hasDigit && hasSymbol)){
                         break;
                     }
-                    int index = rand() % lowercase.length();
+                    index = rand() % lowercase.length();
                     password = password + lowercase[index];
                     break;
                 case 1: // uppercase letter
@@ -41,7 +44,7 @@ namespace passwords
                     if (!(hasLowercase && hasUppercase && hasDigit && hasSymbol)) {
                         break;
                     }
-                    int index = rand() % uppercase.length();
+                    index = rand() % uppercase.length();
                     password = password + uppercase[index];
                     break;
                 case 2: // digit
@@ -49,7 +52,7 @@ namespace passwords
                     if (!(hasLowercase && hasUppercase && hasDigit && hasSymbol)) {
                         break;
                     }
-                    int index = rand() % digits.length();
+                    index = rand() % digits.length();
                     password = password + digits[index];
                     break;
                 case 3: // symbol
@@ -57,7 +60,7 @@ namespace passwords
                     if (!(hasLowercase && hasUppercase && hasDigit && hasSymbol)) {
                         break;
                     }
-                    int index = rand() % symbols.length();
+                    index = rand() % symbols.length();
                     password = password + symbols[index];
                     break;
                 };
