@@ -5,9 +5,10 @@
 #include "crow.h"
 #include <sqlite3.h>
 #include "database.hpp"
+#include "passwords.hpp"
 
 int main()
-{
+{   
     database::Database db = database::Database("passwords.db");
     db.execute("CREATE TABLE passwords (password TEXT);");
     db.execute("INSERT INTO passwords (password) VALUES ('chocolate1');");
