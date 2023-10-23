@@ -14,6 +14,6 @@ namespace password
      * @param maxChars The maximum number of characters for a password.
      * @return std::unordered_set<std::string> 
      */
-    std::unordered_set<std::string> generatePasswords(const int &numPasswords, const int &maxChars);
+    std::unordered_set<std::string> generatePasswords(int num_passwords, int max_chars);
 }
 #endif // PASSWORDS_H

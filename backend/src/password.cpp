@@ -3,11 +3,12 @@
 
 namespace password
 {
-    std::unordered_set<std::string> generatePasswords(const int &numPasswords, const int &maxChars)
+    std::unordered_set<std::string> generatePasswords(int num_passwords, int max_chars)
     {
         const int min_chars = 10;
 
-        if (maxChars < min_chars) {
+        if (max_chars < min_chars)
+        {
             std::cout << "Password must have a minimum length of 10 characters\n";
             exit(0);
         }
@@ -16,55 +17,59 @@ namespace password
         const std::string lowercase = "abcdefghijklmnopqrstuvwxyz";
         const std::string uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         const std::string digits = "0123456789";
-        const std::string symbols = "!#$%&'()\\*+,-./:;<=>?@[]^_`{|}~\"";
+        const std::string symbols = "!#$%&()*+,-./:;<=>?@[]^_`{|}~";
 
-        while (passwords.size() < numPasswords)
+        while (passwords.size() < num_passwords)
         {
             // randomize length between minChars and maxChars
-            const size_t length = min_chars + rand() % ((maxChars + 1) - min_chars);
-            std::string password = ""; 
-            bool hasLowercase = false;
-            bool hasUppercase = false;
-            bool hasDigit = false;
-            bool hasSymbol = false;
+            const size_t length = min_chars + rand() % ((max_chars + 1) - min_chars);
+            std::string password = "";
+            bool has_lowercase = false;
+            bool has_uppercase = false;
+            bool has_digit = false;
+            bool has_symbol = false;
 
             while (password.length() < length)
             {
-                int charType = rand() % 4;
+                int char_type = rand() % 4;
                 int index;
-                switch (charType)
+                switch (char_type)
                 {
                 case 0: // lowercase letter
-                    if (hasLowercase && !(hasUppercase && hasDigit && hasSymbol)){
+                    if (has_lowercase && !(has_uppercase && has_digit && has_symbol))
+                    {
                         break;
                     }
                     index = rand() % lowercase.length();
                     password = password + lowercase[index];
-                    hasLowercase = true;
+                    has_lowercase = true;
                     break;
                 case 1: // uppercase letter
-                    if (hasUppercase && !(hasLowercase && hasDigit && hasSymbol)) {
+                    if (has_uppercase && !(has_lowercase && has_digit && has_symbol))
+                    {
                         break;
                     }
                     index = rand() % uppercase.length();
                     password = password + uppercase[index];
-                    hasUppercase = true;
+                    has_uppercase = true;
                     break;
                 case 2: // digit
-                    if (hasDigit && !(hasLowercase && hasUppercase && hasSymbol)) {
+                    if (has_digit && !(has_lowercase && has_uppercase && has_symbol))
+                    {
                         break;
                     }
                     index = rand() % digits.length();
                     password = password + digits[index];
-                    hasDigit = true;
+                    has_digit = true;
                     break;
                 case 3: // symbol
-                    if (hasSymbol && !(hasLowercase && hasUppercase && hasDigit)) {
+                    if (has_symbol && !(has_lowercase && has_uppercase && has_digit))
+                    {
                         break;
                     }
                     index = rand() % symbols.length();
                     password = password + symbols[index];
-                    hasSymbol = true;
+                    has_symbol = true;
                     break;
                 };
             };
