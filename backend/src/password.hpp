@@ -4,7 +4,7 @@
 #ifndef PASSWORDS_H
 #define PASSWORDS_H
 
-namespace passwords
+namespace password
 {
     /**
      * @brief Returns a set of passwords, where each password contains at least one lowercase 

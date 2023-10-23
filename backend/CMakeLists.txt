@@ -9,7 +9,7 @@ find_package(SQLite3 REQUIRED)
 set(SOURCES
     src/main.cpp
     src/database.cpp
-    src/passwords.cpp
+    src/password.cpp
 )
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -26,7 +26,8 @@ project(tests)
 find_package(Catch2 REQUIRED)
 
 set (TEST_SOURCE
-    tests/test.cpp
+    tests/testPasswordGenerator.cpp
+    src/password.cpp
 )
 
 add_executable(${PROJECT_NAME} ${TEST_SOURCE})

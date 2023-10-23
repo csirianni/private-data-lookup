@@ -3,9 +3,8 @@
 #include <string.h>
 
 #include "crow.h"
-#include <sqlite3.h>
 #include "database.hpp"
-#include "passwords.hpp"
+#include "password.hpp"
 
 int main()
 {   
