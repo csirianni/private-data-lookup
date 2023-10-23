@@ -12,7 +12,7 @@ namespace password
      * 
      * @param numPasswords The number of passwords to generate.
      * @param maxChars The maximum number of characters for a password.
-     * @return std::unordered_set<std::string> 
+     * @return std::unordered_set<std::string> The passwords generated. 
      */
     std::unordered_set<std::string> generatePasswords(int num_passwords, int max_chars);
 }

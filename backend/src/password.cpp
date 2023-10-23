@@ -7,10 +7,16 @@ namespace password
     {
         const int min_chars = 10;
 
-        if (max_chars < min_chars)
-        {
+        // ensure max_chars is greater than min_chars
+        try {
+            if (max_chars < min_chars)
+            {
+                throw (max_chars);
+            }
+        }
+        catch (int max_chars) {
             std::cout << "Password must have a minimum length of 10 characters\n";
-            exit(0);
+            std::cout << "You inputted a maximum length of " << max_chars << " characters \n";
         }
 
         std::unordered_set<std::string> passwords;
