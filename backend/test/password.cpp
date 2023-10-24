@@ -3,15 +3,18 @@
 #include <catch2/catch_test_macros.hpp>
 #include "../src/password.hpp"
 
-bool hasLettersAndDigit(const std::string &password)
+namespace
 {
-    const std::regex pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$");
-    return regex_match(password, pattern);
-}
+    bool hasLettersAndDigit(const std::string &password)
+    {
+        const std::regex pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$");
+        return regex_match(password, pattern);
+    }
 
-bool hasSymbol(const std::string &password)
-{
-    return password.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890") != std::string::npos;
+    bool hasSymbol(const std::string &password)
+    {
+        return password.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890") != std::string::npos;
+    }
 }
 
 TEST_CASE("Test generatePassword creates valid passwords")
