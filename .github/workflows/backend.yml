@@ -29,17 +29,17 @@ jobs:
     #   run: conan profile update settings.compiler.libcxx=libstdc++11 default
       
     - name: Install dependencies
-      working-directory: ./backend
-      run: conan install . -s build_type=${{env.BUILD_TYPE}} --output-folder=${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/backend
+      run: conan install . --output-folder=build --build=missing build_type=${{env.BUILD_TYPE}}
 
     - name: Configure CMake
       working-directory: ./backend
-      run: cmake . -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release 
+      run: cmake ${{github.workspace}}/backend -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build
       working-directory: ./backend
       # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: cmake --build ${{github.workspace}}/backend/build --config ${{env.BUILD_TYPE}}
 
   test:
     needs: build
