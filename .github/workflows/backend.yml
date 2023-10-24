@@ -47,5 +47,5 @@ jobs:
 
     steps:
     - name: Run tests
-      working-directory: ./backend
-      run: ./backend/build/test/pdl_test
+      working-directory: ${{github.workspace}}/backend/build
+      run: ./test/pdl_test
