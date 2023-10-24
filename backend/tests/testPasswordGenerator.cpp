@@ -21,9 +21,14 @@ TEST_CASE("Test generatePassword creates valid passwords")
     CHECK(password_set.size() == 3);
 
     for (const auto &password : password_set)
-    {   
+    {
         CHECK(password.length() >= 10);
         CHECK(hasLettersAndDigit(password));
         CHECK(hasSymbol(password));
     }
+}
+
+TEST_CASE("Test generatePassword exception")
+{
+    CHECK_THROWS_AS(password::generatePasswords(3, 9), std::invalid_argument);
 }
