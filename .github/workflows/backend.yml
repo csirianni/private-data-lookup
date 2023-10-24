@@ -30,7 +30,7 @@ jobs:
       
     - name: Install dependencies
       working-directory: ${{github.workspace}}/backend
-      run: conan install .. --output-folder=build --build=missing -s build_type=${{env.BUILD_TYPE}}
+      run: conan install . --output-folder=build --build=missing -s build_type=${{env.BUILD_TYPE}}
 
     - name: Configure CMake
       working-directory: ${{github.workspace}}/backend/build
