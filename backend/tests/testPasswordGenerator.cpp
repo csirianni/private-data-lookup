@@ -16,11 +16,11 @@ bool hasSymbol(const std::string &password)
 
 TEST_CASE("Test generatePassword creates valid passwords")
 {
-    std::unordered_set<std::string> passwordSet = password::generatePasswords(3, 12);
+    std::unordered_set<std::string> password_set = password::generatePasswords(3, 12);
     // function generated 3 passwords
-    CHECK(passwordSet.size() == 3);
+    CHECK(password_set.size() == 3);
 
-    for (const auto &password : passwordSet)
+    for (const auto &password : password_set)
     {   
         CHECK(password.length() >= 10);
         CHECK(hasLettersAndDigit(password));
