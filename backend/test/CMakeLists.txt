@@ -1,0 +1,11 @@
+find_package(Catch2 REQUIRED)
+
+set (TEST_SOURCE
+    testPasswordGenerator.cpp
+)
+
+add_executable(pdl_test ${TEST_SOURCE})
+
+target_link_libraries(pdl_test Catch2::Catch2WithMain database)
+
+target_include_directories(pdl_test PUBLIC ${CMAKE_SOURCE_DIR}/src)
