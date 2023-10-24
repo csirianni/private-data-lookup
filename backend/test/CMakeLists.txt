@@ -1,0 +1,11 @@
+find_package(Catch2 REQUIRED)
+
+set (TEST_SOURCE
+    password.cpp
+)
+
+add_executable(pdl_test ${TEST_SOURCE})
+
+target_link_libraries(pdl_test src Catch2::Catch2WithMain)
+
+target_include_directories(pdl_test PUBLIC ${CMAKE_SOURCE_DIR}/src)

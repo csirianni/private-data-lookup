@@ -1,0 +1,41 @@
+name: Backend
+
+on: [pull_request, push]
+  
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  test:
+    # The CMake configure and build commands are platform agnostic and should work equally
+    # well on Windows or Mac.  You can convert this to a matrix build if you need
+    # cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Get Conan
+      uses: turtlebrowser/get-conan@v1.0
+      
+    - name: Create default profile
+      working-directory: ./backend
+      run: conan profile detect
+      
+    - name: Install dependencies
+      working-directory: ${{github.workspace}}/backend
+      run: conan install . --output-folder=build --build=missing -s build_type=${{env.BUILD_TYPE}}
+
+    - name: Configure CMake
+      working-directory: ${{github.workspace}}/backend/build
+      run: cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      working-directory: ${{github.workspace}}/backend/build
+      run: cmake --build . --config ${{env.BUILD_TYPE}}
+
+    - name: Run tests
+      working-directory: ${{github.workspace}}/backend/build
+      run: ./test/pdl_test

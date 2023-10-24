@@ -48,8 +48,8 @@ namespace database
         ~Database();
 
     private:
-        sqlite3 *db;
-        bool is_closed;
+        sqlite3 *db_;
+        bool is_closed_;
     };
 }
 #endif // DATABASE_H
