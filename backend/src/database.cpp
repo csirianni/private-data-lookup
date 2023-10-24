@@ -18,27 +18,27 @@ namespace
 
 namespace database
 {
-    Database::Database(const std::string &file_path) : is_closed(false)
+    Database::Database(const std::string &file_path) : is_closed_(false)
     {
         if (std::filesystem::exists(file_path))
         {
             std::remove(file_path.c_str());
         }
 
-        int result = sqlite3_open_v2(file_path.c_str(), &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
+        int result = sqlite3_open_v2(file_path.c_str(), &db_, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
         if (result != SQLITE_OK)
         {
-            const char *error_msg = sqlite3_errmsg(db);
+            const char *error_msg = sqlite3_errmsg(db_);
             fprintf(stderr, "SQLite error: %s\n", error_msg);
         }
     }
 
     void Database::execute(const std::string &command)
     {
-        int result = sqlite3_exec(db, command.c_str(), NULL, NULL, NULL);
+        int result = sqlite3_exec(db_, command.c_str(), NULL, NULL, NULL);
         if (result != SQLITE_OK)
         {
-            const char *error_msg = sqlite3_errmsg(db);
+            const char *error_msg = sqlite3_errmsg(db_);
             fprintf(stderr, "SQLite error: %s\n", error_msg);
         }
     }
@@ -46,28 +46,28 @@ namespace database
     void Database::printTable(const std::string &table)
     {
         const std::string query = "SELECT * FROM " + table + ";";
-        int result = sqlite3_exec(db, query.c_str(), printRow, NULL, NULL);
+        int result = sqlite3_exec(db_, query.c_str(), printRow, NULL, NULL);
         if (result != SQLITE_OK)
         {
-            const char *error_msg = sqlite3_errmsg(db);
+            const char *error_msg = sqlite3_errmsg(db_);
             fprintf(stderr, "SQLite error: %s\n", error_msg);
         }
     }
 
     void Database::close()
     {
-        sqlite3_close(db);
-        is_closed = true;
+        sqlite3_close(db_);
+        is_closed_ = true;
     }
 
     Database::~Database()
     {
-        if (!is_closed)
+        if (!is_closed_)
         {
-            int result = sqlite3_close(db);
+            int result = sqlite3_close(db_);
             if (result != SQLITE_OK)
             {
-                const char *error_msg = sqlite3_errmsg(db);
+                const char *error_msg = sqlite3_errmsg(db_);
                 fprintf(stderr, "SQLite error: %s\n", error_msg);
             }
             std::abort();
