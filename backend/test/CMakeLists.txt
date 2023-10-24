@@ -1,7 +1,7 @@
 find_package(Catch2 REQUIRED)
 
 set (TEST_SOURCE
-    testPasswordGenerator.cpp
+    password.cpp
 )
 
 add_executable(pdl_test ${TEST_SOURCE})
