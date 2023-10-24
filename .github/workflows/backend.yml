@@ -29,8 +29,8 @@ jobs:
     #   run: conan profile update settings.compiler.libcxx=libstdc++11 default
       
     - name: Install dependencies
-      working-directory: ${{github.workspace}}/backend
-      run: conan install . --output-folder=build --build=missing -s build_type=${{env.BUILD_TYPE}}
+      working-directory: ${{github.workspace}}/backend/build
+      run: conan install .. --output-folder=build --build=missing -s build_type=${{env.BUILD_TYPE}}
 
     - name: Configure CMake
       working-directory: ./backend
