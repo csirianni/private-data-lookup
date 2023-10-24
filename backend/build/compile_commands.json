@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/build",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++  -I/Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/src -isystem /Users/stellaljung/.conan2/p/crowc005687fdc10e5/p/include -isystem /Users/stellaljung/.conan2/p/b/boostda6368c2c111d/p/include -isystem /Users/stellaljung/.conan2/p/b/sqlit979a017b3d7e3/p/include -stdlib=libc++ -O3 -DNDEBUG -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -o CMakeFiles/backend.dir/src/main.cpp.o -c /Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/src/main.cpp",
+  "file": "/Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/src/main.cpp",
+  "output": "CMakeFiles/backend.dir/src/main.cpp.o"
+},
+{
+  "directory": "/Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/build",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++  -I/Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/src -isystem /Users/stellaljung/.conan2/p/crowc005687fdc10e5/p/include -isystem /Users/stellaljung/.conan2/p/b/boostda6368c2c111d/p/include -isystem /Users/stellaljung/.conan2/p/b/sqlit979a017b3d7e3/p/include -stdlib=libc++ -O3 -DNDEBUG -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -o CMakeFiles/backend.dir/src/database.cpp.o -c /Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/src/database.cpp",
+  "file": "/Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/src/database.cpp",
+  "output": "CMakeFiles/backend.dir/src/database.cpp.o"
+},
+{
+  "directory": "/Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/build",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++  -I/Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/src -isystem /Users/stellaljung/.conan2/p/crowc005687fdc10e5/p/include -isystem /Users/stellaljung/.conan2/p/b/boostda6368c2c111d/p/include -isystem /Users/stellaljung/.conan2/p/b/sqlit979a017b3d7e3/p/include -stdlib=libc++ -O3 -DNDEBUG -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -o CMakeFiles/backend.dir/src/password.cpp.o -c /Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/src/password.cpp",
+  "file": "/Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/src/password.cpp",
+  "output": "CMakeFiles/backend.dir/src/password.cpp.o"
+},
+{
+  "directory": "/Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/build",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++  -isystem /Users/stellaljung/.conan2/p/b/catchad8a291c025fa/p/include -stdlib=libc++ -O3 -DNDEBUG -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -o CMakeFiles/tests.dir/tests/testPasswordGenerator.cpp.o -c /Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/tests/testPasswordGenerator.cpp",
+  "file": "/Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/tests/testPasswordGenerator.cpp",
+  "output": "CMakeFiles/tests.dir/tests/testPasswordGenerator.cpp.o"
+},
+{
+  "directory": "/Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/build",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++  -isystem /Users/stellaljung/.conan2/p/b/catchad8a291c025fa/p/include -stdlib=libc++ -O3 -DNDEBUG -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -o CMakeFiles/tests.dir/src/password.cpp.o -c /Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/src/password.cpp",
+  "file": "/Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/src/password.cpp",
+  "output": "CMakeFiles/tests.dir/src/password.cpp.o"
+}
+]

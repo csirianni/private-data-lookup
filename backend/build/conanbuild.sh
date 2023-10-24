@@ -1,0 +1,1 @@
+. "/Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/build/conanbuildenv-release-armv8.sh"

@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <iostream>
 
 #include "crow.h"
 #include "database.hpp"
