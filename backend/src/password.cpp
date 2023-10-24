@@ -8,13 +8,15 @@ namespace password
         const int min_chars = 10;
 
         // ensure max_chars is greater than min_chars
-        try {
+        try
+        {
             if (max_chars < min_chars)
             {
-                throw (max_chars);
+                throw(max_chars);
             }
         }
-        catch (int max_chars) {
+        catch (int max_chars)
+        {
             std::cout << "Password must have a minimum length of 10 characters\n";
             std::cout << "You inputted a maximum length of " << max_chars << " characters \n";
         }
@@ -27,7 +29,7 @@ namespace password
 
         while (passwords.size() < num_passwords)
         {
-            // randomize length between minChars and maxChars
+            // randomize length between min_chars and max_chars
             const size_t length = min_chars + rand() % ((max_chars + 1) - min_chars);
             std::string password = "";
             bool has_lowercase = false;
