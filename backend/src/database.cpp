@@ -56,7 +56,12 @@ namespace database
 
     void Database::close()
     {
-        sqlite3_close(db_);
+        int result = sqlite3_close(db_);
+        if (result != SQLITE_OK)
+        {
+            const char *error_msg = sqlite3_errmsg(db_);
+            fprintf(stderr, "SQLite error: %s\n", error_msg);
+        }
         is_closed_ = true;
     }
 
