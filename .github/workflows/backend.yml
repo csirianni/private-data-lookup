@@ -22,7 +22,7 @@ jobs:
       
     - name: Create default profile
       working-directory: ./backend
-      run: conan profile new default --detect
+      run: conan profile detect
       
     - name: Update profile
       working-directory: ./backend
