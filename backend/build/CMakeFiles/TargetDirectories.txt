@@ -1,4 +1,0 @@
-/Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/build/CMakeFiles/backend.dir
-/Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/build/CMakeFiles/tests.dir
-/Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/build/CMakeFiles/edit_cache.dir
-/Users/stellaljung/Desktop/cs2390/private-data-lookup/backend/build/CMakeFiles/rebuild_cache.dir
