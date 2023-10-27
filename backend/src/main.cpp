@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "crow.h"
+#include "crow/middlewares/cors.h"
 #include "database.hpp"
 #include "password.hpp"
 
@@ -19,16 +20,31 @@ int main()
     db.execute("INSERT INTO passwords (password) VALUES ('chocolate1');");
     db.printTable("passwords");
 
-    // declare crow application
-    crow::SimpleApp app;
+    // Enable CORS
+    crow::App<crow::CORSHandler> app;
 
-    // define endpoint at the root directory
+    // Customize CORS
+    auto &cors = app.get_middleware<crow::CORSHandler>();
+
+    // clang-format off
+    cors
+      .global()
+        .headers("*")
+        .methods("POST"_method, "GET"_method)
+      .prefix("/nocors")
+        .ignore();
+    // clang-format on
+
     CROW_ROUTE(app, "/")
     ([]()
      {
         crow::json::wvalue response;
         response["status"] = "success";
         return response; });
+
+    CROW_ROUTE(app, "/cors")
+    ([]()
+     { return "Check Access-Control-Allow-Origin header"; });
 
     // set the port, set the app to run on multiple threads, and run the app
     app.port(18080).multithreaded().run();

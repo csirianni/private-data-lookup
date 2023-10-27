@@ -54,6 +54,7 @@ export default function SignUp() {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+  const [serverResponse, setServerResponse] = useState<string>("fail");
   const [showSnackbar, setShowSnackbar] = useState<SnackbarState>({
     vertical: "top",
     horizontal: "center",
@@ -66,8 +67,31 @@ export default function SignUp() {
   };
 
   const checkSecurity = async () => {
+    console.log("Got to security check");
+    try {
+      const response = await fetch('http://localhost:18080', {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Access-Control-Allow-Headers': '*'
+        }
+      })
+        // .then(res => res.json())
+        // .then(res => JSON.stringify(res.status))
+        // .then(res => setServerResponse(res));
+      console.log("initial success");
+      console.log(response);
+      console.log(response.ok);
+      const jsonResponse = await response.json();
+      await console.log(JSON.stringify(jsonResponse.status));
+      await setServerResponse(jsonResponse.status);
+      await console.log(serverResponse);
+    }
+    catch (exception) { // unable to connect to the server
+      setServerResponse("fail");
+    }
     return {
-      status: "success", //"fail"
+      status: serverResponse,
       data: {
         post: {
           id: 1,
@@ -82,11 +106,15 @@ export default function SignUp() {
     event.preventDefault();
     setIsLoading(true);
     const response = await checkSecurity();
+    console.log("Got after security check");
     setIsLoading(false);
 
     if (response.status == "success") {
       router.push(`/success`);
-    } else {
+    } else if (response.status == "fail") {
+      setShowSnackbar({ ...showSnackbar, open: true })
+    }
+    else {
       setShowSnackbar({ ...showSnackbar, open: true });
     }
   };
@@ -104,9 +132,9 @@ export default function SignUp() {
     setIsStrongPassword(strongPasswordPattern.test(password));
     setIsValidForm(
       first.length > 0 &&
-        last.length > 0 &&
-        email.length > 0 &&
-        password === confirmPassword
+      last.length > 0 &&
+      email.length > 0 &&
+      password === confirmPassword
     );
   }, [password, confirmPassword, isValidForm, isStrongPassword]);
 
