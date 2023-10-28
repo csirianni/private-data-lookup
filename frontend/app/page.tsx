@@ -66,30 +66,52 @@ export default function SignUp() {
     setShowSnackbar({ ...showSnackbar, open: false });
   };
 
-  const checkSecurity = async () => {
-    console.log("Got to security check");
-    try {
-      const response = await fetch('http://localhost:18080', {
-        method: 'GET',
-        mode: 'cors',
-        headers: {
-          'Access-Control-Allow-Headers': '*'
+  const backendCheck = async () => {
+    console.log("Start of backend check");
+
+    const apiCall = await fetch('http://localhost:18080', {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Access-Control-Allow-Headers': '*'
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
         }
+        return response.json();
       })
-        // .then(res => res.json())
-        // .then(res => JSON.stringify(res.status))
-        // .then(res => setServerResponse(res));
-      console.log("initial success");
-      console.log(response);
-      console.log(response.ok);
-      const jsonResponse = await response.json();
-      await console.log(JSON.stringify(jsonResponse.status));
-      await setServerResponse(jsonResponse.status);
-      await console.log(serverResponse);
-    }
-    catch (exception) { // unable to connect to the server
-      setServerResponse("fail");
-    }
+      .then(data => {
+        console.log("data status in backendCheck fetch: " + data.status);
+        return data.status;
+      })
+      .then(status => {
+        console.log("status in backendCheck fetch: " + status);
+        setServerResponse(status);
+        console.log("serverResponse in backendCheck fetch: " + serverResponse);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+    console.log("End of backendCheck server response: " + serverResponse);
+    // // .then((res) => res.json())
+    // // .then((res) => { console.log(res), setServerResponse(JSON.stringify(res.status)) });
+    // // console.log(serverResponse);
+    // console.log("FETCH " + response);
+    // console.log("FETCH OK " + response.ok);
+    // const jsonResponse = await response.json();
+    // console.log("JSON RESPONSE " + jsonResponse);
+    // await setServerResponse(jsonResponse.status);
+    // await console.log(JSON.stringify(jsonResponse.status));
+    // await console.log(serverResponse);
+  }
+
+  const checkSecurity = async () => {
+    console.log("Started checkSecurity");
+    console.log("CheckSecurity server response pre backend check: " + serverResponse);
+    await backendCheck();
+    console.log("CheckSecurity server response post backend check: " + serverResponse);
     return {
       status: serverResponse,
       data: {
@@ -103,10 +125,13 @@ export default function SignUp() {
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    console.log("Started handlesubmit");
+    console.log("handleSubmit start serverResponse:" + serverResponse);
     event.preventDefault();
     setIsLoading(true);
     const response = await checkSecurity();
-    console.log("Got after security check");
+    console.log("In handlesubmit, after security check");
+    console.log("handleSubmit serverResponse post checkSecurity:" + serverResponse);
     setIsLoading(false);
 
     if (response.status == "success") {
