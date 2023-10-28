@@ -70,7 +70,7 @@ export default function SignUp() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
-    const response = await checkSecurity();
+    const response = await checkSecurity(); // makes an API call to the backend
     setIsLoading(false);
 
     if (response.status == "success") {
@@ -97,9 +97,9 @@ export default function SignUp() {
     setIsStrongPassword(strongPasswordPattern.test(password));
     setIsValidForm(
       first.length > 0 &&
-        last.length > 0 &&
-        email.length > 0 &&
-        password === confirmPassword
+      last.length > 0 &&
+      email.length > 0 &&
+      password === confirmPassword
     );
   }, [password, confirmPassword, isValidForm, isStrongPassword]);
 
