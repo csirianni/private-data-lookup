@@ -24,6 +24,7 @@ import Snackbar, { SnackbarOrigin } from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/navigation";
+import { checkSecurity } from "./handlers";
 
 // can change colors if we want
 const theme = createTheme({
@@ -45,16 +46,16 @@ interface SnackbarState extends SnackbarOrigin {
 
 export default function SignUp() {
   const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false);
-  const [isStrongPassword, setIsStrongPassword] = useState(false);
-  const [isValidForm, setIsValidForm] = useState(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isStrongPassword, setIsStrongPassword] = useState<boolean>(false);
+  const [isValidForm, setIsValidForm] = useState<boolean>(false);
   const [first, setFirst] = useState<string>("");
   const [last, setLast] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [serverResponse, setServerResponse] = useState<string>("fail");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errorText, setErrorText] = useState<string>("");
   const [showSnackbar, setShowSnackbar] = useState<SnackbarState>({
     vertical: "top",
     horizontal: "center",
@@ -66,80 +67,19 @@ export default function SignUp() {
     setShowSnackbar({ ...showSnackbar, open: false });
   };
 
-  const backendCheck = async () => {
-    console.log("Start of backend check");
-
-    const apiCall = await fetch('http://localhost:18080', {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Access-Control-Allow-Headers': '*'
-      }
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log("data status in backendCheck fetch: " + data.status);
-        return data.status;
-      })
-      .then(status => {
-        console.log("status in backendCheck fetch: " + status);
-        setServerResponse(status);
-        console.log("serverResponse in backendCheck fetch: " + serverResponse);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-    console.log("End of backendCheck server response: " + serverResponse);
-    // // .then((res) => res.json())
-    // // .then((res) => { console.log(res), setServerResponse(JSON.stringify(res.status)) });
-    // // console.log(serverResponse);
-    // console.log("FETCH " + response);
-    // console.log("FETCH OK " + response.ok);
-    // const jsonResponse = await response.json();
-    // console.log("JSON RESPONSE " + jsonResponse);
-    // await setServerResponse(jsonResponse.status);
-    // await console.log(JSON.stringify(jsonResponse.status));
-    // await console.log(serverResponse);
-  }
-
-  const checkSecurity = async () => {
-    console.log("Started checkSecurity");
-    console.log("CheckSecurity server response pre backend check: " + serverResponse);
-    await backendCheck();
-    console.log("CheckSecurity server response post backend check: " + serverResponse);
-    return {
-      status: serverResponse,
-      data: {
-        post: {
-          id: 1,
-          title: "mock data",
-          body: "nini is cool",
-        },
-      },
-    };
-  };
-
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    console.log("Started handlesubmit");
-    console.log("handleSubmit start serverResponse:" + serverResponse);
     event.preventDefault();
     setIsLoading(true);
     const response = await checkSecurity();
-    console.log("In handlesubmit, after security check");
-    console.log("handleSubmit serverResponse post checkSecurity:" + serverResponse);
     setIsLoading(false);
 
     if (response.status == "success") {
       router.push(`/success`);
     } else if (response.status == "fail") {
-      setShowSnackbar({ ...showSnackbar, open: true })
-    }
-    else {
+      setErrorText("Password was found in a previously breached dataset! Please try a different password.")
+      setShowSnackbar({ ...showSnackbar, open: true });
+    } else {
+      setErrorText("Server error: please try again later")
       setShowSnackbar({ ...showSnackbar, open: true });
     }
   };
@@ -157,9 +97,9 @@ export default function SignUp() {
     setIsStrongPassword(strongPasswordPattern.test(password));
     setIsValidForm(
       first.length > 0 &&
-      last.length > 0 &&
-      email.length > 0 &&
-      password === confirmPassword
+        last.length > 0 &&
+        email.length > 0 &&
+        password === confirmPassword
     );
   }, [password, confirmPassword, isValidForm, isStrongPassword]);
 
@@ -363,8 +303,7 @@ export default function SignUp() {
             onClose={handleClose}
             sx={{ width: "100%" }}
           >
-            Password was found in a previously breached dataset!
-            Please try a different password.
+            {errorText}
           </Alert>
         </Snackbar>
       </Container>
