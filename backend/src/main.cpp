@@ -8,41 +8,38 @@
 
 int main()
 {
-  database::Database db = database::Database("passwords.db");
-  db.execute("CREATE TABLE passwords (password TEXT);");
+    database::Database db = database::Database("passwords.db");
+    db.execute("CREATE TABLE passwords (password TEXT);");
 
-  // generate and insert the passwords into the database
-  std::unordered_set<std::string> password_set = password::generatePasswords(100, 20);
-  for (const auto &password : password_set)
-  {
-    db.execute("INSERT INTO passwords (password) VALUES ('" + password + "');");
-  }
-  db.execute("INSERT INTO passwords (password) VALUES ('chocolate1');");
-  db.printTable("passwords");
+    // generate and insert the passwords into the database
+    std::unordered_set<std::string> password_set = password::generatePasswords(100, 20);
+    for (const auto &password : password_set)
+    {
+        db.execute("INSERT INTO passwords (password) VALUES ('" + password + "');");
+    }
+    db.execute("INSERT INTO passwords (password) VALUES ('chocolate1');");
+    db.printTable("passwords");
 
-  // Enable CORS
-  crow::App<crow::CORSHandler> app;
+    // Enable CORS
+    crow::App<crow::CORSHandler> app;
 
-  // Customize CORS
-  auto &cors = app.get_middleware<crow::CORSHandler>();
+    // Customize CORS
+    auto &cors = app.get_middleware<crow::CORSHandler>();
 
-  cors
-      .global()
-      .headers("*")
-      .methods("POST"_method, "GET"_method);
+    cors.global().headers("*").methods("POST"_method, "GET"_method);
 
-  CROW_ROUTE(app, "/")
-  ([]()
-   {
+    CROW_ROUTE(app, "/")
+    ([]()
+     {
         crow::json::wvalue response;
         response["status"] = "success";
         return response; });
 
-  CROW_ROUTE(app, "/cors")
-  ([]()
-   { return "Check Access-Control-Allow-Origin header"; });
+    CROW_ROUTE(app, "/cors")
+    ([]()
+     { return "Check Access-Control-Allow-Origin header"; });
 
-  // set the port, set the app to run on multiple threads, and run the app
-  app.port(18080).multithreaded().run();
-  db.close();
+    // set the port, set the app to run on multiple threads, and run the app
+    app.port(18080).multithreaded().run();
+    db.close();
 }
