@@ -36,5 +36,4 @@ Then, you can simply run
 ./src/server
 ```
 
-Ensure that the backend is running with the frontend, otherwise you will 
-see a message of server errors on the front-end website. 
+Ensure that the backend is running with the frontend, otherwise you will see a message of server errors on the front-end website.
