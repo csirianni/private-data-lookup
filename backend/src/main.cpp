@@ -33,6 +33,15 @@ int main()
      {
         crow::json::wvalue response;
         response["status"] = "success";
+        response["data"] = "none";
+        return response; });
+
+    CROW_ROUTE(app, "/<string>")
+    ([](boost_swap_impl::string a)
+     {
+        crow::json::wvalue response;
+        response["status"] = "success";
+        response["data"] = a;
         return response; });
 
     CROW_ROUTE(app, "/cors")
