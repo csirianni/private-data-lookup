@@ -31,33 +31,23 @@ int main()
     cors
         .global()
         .headers("*")
-        .methods("POST"_method, "GET"_method);
+        .methods("POST"_method);
     // clang formatting on
 
     CROW_ROUTE(app, "/")
     ([]()
-     {
-        crow::json::wvalue response;
-        response["status"] = "success";
-        response["data"] = "none";
-        return response; });
+     { return 0; });
 
     CROW_ROUTE(app, "/passwords")
         .methods("POST"_method)([&password_set](const crow::request &req)
                                 {
         crow::json::wvalue response;
-        const boost_swap_impl::string userPassword = req.body;
+        std::string userPassword = req.body;
         const bool inBreachedPasswords = password_set.find(userPassword) != password_set.end();
-
         if (inBreachedPasswords){ // password is in the set
             response["status"] = "fail";
         } else {
             response["status"] = "success";
-        }
-        response["data"] = userPassword;
-        for (auto const &breached_password : password_set)
-        {
-            response[breached_password];
         }
         return response; });
 

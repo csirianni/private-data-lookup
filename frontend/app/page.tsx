@@ -75,7 +75,6 @@ export default function SignUp() {
 
     if (response.status == "success") {
       router.push(`/success`);
-      console.log("Password is " + response.data);
     } else if (response.status == "fail") {
       setErrorText("Password was found in a previously breached dataset! Please try a different password.")
       setShowSnackbar({ ...showSnackbar, open: true });
