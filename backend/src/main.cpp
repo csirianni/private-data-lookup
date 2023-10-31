@@ -5,6 +5,7 @@
 #include "crow/middlewares/cors.h"
 #include "database.hpp"
 #include "password.hpp"
+#include <unordered_set>
 
 int main()
 {
@@ -37,11 +38,21 @@ int main()
         return response; });
 
     CROW_ROUTE(app, "/<string>")
-    ([](boost_swap_impl::string a)
+    ([&](std::string password)
      {
         crow::json::wvalue response;
-        response["status"] = "success";
-        response["data"] = a;
+        const bool inBreachedPasswords = password_set.find(password) != password_set.end();
+
+        if (inBreachedPasswords){ // password is in the set
+            response["status"] = "fail";
+        } else {
+            response["status"] = "success";
+        }
+        response["data"] = password;
+        for (auto const &breached_password : password_set)
+        {
+            response[breached_password]
+        }
         return response; });
 
     CROW_ROUTE(app, "/cors")

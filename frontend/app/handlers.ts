@@ -2,7 +2,7 @@
 export const checkSecurity = async (password) => {
     try {
         const response = await fetch("http://localhost:18080/" + password, {
-            method: "GET",
+            method: "POST",
             mode: "cors",
             headers: {
                 "Access-Control-Allow-Headers": "*",
