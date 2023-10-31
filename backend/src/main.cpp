@@ -27,7 +27,12 @@ int main()
     // Customize CORS
     auto &cors = app.get_middleware<crow::CORSHandler>();
 
-    cors.global().headers("*").methods("POST"_method, "GET"_method);
+    // clang formatting off
+    cors
+        .global()
+        .headers("*")
+        .methods("POST"_method, "GET"_method);
+    // clang formatting on
 
     CROW_ROUTE(app, "/")
     ([]()
@@ -37,21 +42,22 @@ int main()
         response["data"] = "none";
         return response; });
 
-    CROW_ROUTE(app, "/<string>")
-    ([&](std::string password)
-     {
+    CROW_ROUTE(app, "/passwords")
+        .methods("POST"_method)([&password_set](const crow::request &req)
+                                {
         crow::json::wvalue response;
-        const bool inBreachedPasswords = password_set.find(password) != password_set.end();
+        const boost_swap_impl::string userPassword = req.body;
+        const bool inBreachedPasswords = password_set.find(userPassword) != password_set.end();
 
         if (inBreachedPasswords){ // password is in the set
             response["status"] = "fail";
         } else {
             response["status"] = "success";
         }
-        response["data"] = password;
+        response["data"] = userPassword;
         for (auto const &breached_password : password_set)
         {
-            response[breached_password]
+            response[breached_password];
         }
         return response; });
 
