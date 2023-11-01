@@ -18,7 +18,7 @@ int main()
     {
         db.execute("INSERT INTO passwords (password) VALUES ('" + password + "');");
     }
-    db.execute("INSERT INTO passwords (password) VALUES ('chocolate1');");
+    db.execute("INSERT INTO passwords (password) VALUES ('TestPass1&');"); // test password
     db.printTable("passwords");
 
     // Enable CORS
