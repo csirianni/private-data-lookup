@@ -7,11 +7,11 @@
 #include "password.hpp"
 #include <unordered_set>
 
-void testing(crow::App<crow::CORSHandler>* curr_app)
+/*
+    Testing the server can run and passwords will be posted.
+*/
+void test_api(crow::App<crow::CORSHandler> *curr_app)
 {
-    /*
-        Testing the server can run and passwords will be posted.
-    */
     curr_app->validate(); // Used to make sure all the route handlers are in order.
 
     {
@@ -60,7 +60,8 @@ int main()
     {
         db.execute("INSERT INTO passwords (password) VALUES ('" + password + "');");
     }
-    db.execute("INSERT INTO passwords (password) VALUES ('TestPass1&');"); // test password
+    password_set.insert("TestPass1&"); // test password
+    db.execute("INSERT INTO passwords (password) VALUES ('TestPass1&');");
     db.printTable("passwords");
 
     // Enable CORS
@@ -103,7 +104,7 @@ int main()
         }
         return response; });
 
-    testing(&app);
+    test_api(&app);
 
     // set the port, set the app to run on multiple threads, and run the app
     app.port(18080).multithreaded().run();
