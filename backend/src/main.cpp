@@ -34,26 +34,32 @@ int main()
         .methods("POST"_method);
     // clang formatting on
 
-    CROW_ROUTE(app, "/")
+    CROW_ROUTE(app, "/") // endpoint to establish server connection
     ([]()
-     { return 0; });
-
-    CROW_ROUTE(app, "/passwords")
+     {  crow::json::wvalue response;
+        response["status"] = "success";
+        response["data"] = "server is now running";
+        return response; });
+    CROW_ROUTE(app, "/allBreachedPasswords") // temporary endpoint for debugging, shows all passwords
+    ([&password_set]()
+     {  crow::json::wvalue response;
+        for (auto const &breached_password : password_set) // for each password in the set, add it as a json key 
+        {
+            response[breached_password];
+        }
+        return response; });
+    CROW_ROUTE(app, "/passwords") // endpoint to compute set intersection
         .methods("POST"_method)([&password_set](const crow::request &req)
                                 {
         crow::json::wvalue response;
-        std::string userPassword = req.body;
-        const bool inBreachedPasswords = password_set.find(userPassword) != password_set.end();
-        if (inBreachedPasswords){ // password is in the set
+        std::string userPassword = req.body; // user's password passed in the post request
+        const bool inBreachedPasswords = password_set.find(userPassword) != password_set.end(); 
+        if (inBreachedPasswords){ // password is in the breached password set
             response["status"] = "fail";
-        } else {
+        } else { // password is not in the breached password set
             response["status"] = "success";
         }
         return response; });
-
-    CROW_ROUTE(app, "/cors")
-    ([]()
-     { return "Check Access-Control-Allow-Origin header"; });
 
     // set the port, set the app to run on multiple threads, and run the app
     app.port(18080).multithreaded().run();
