@@ -34,8 +34,8 @@ int main()
 
     // initialize endpoints
     server::root(app);
-    server::allBreachedPasswords(app, password_set);
-    server::checkPassword(app, password_set);
+    server::passwords(app, password_set);
+    server::intersection(app, password_set);
 
     // set the port, set the app to run on multiple threads, and run the app
     app.port(18080).multithreaded().run();

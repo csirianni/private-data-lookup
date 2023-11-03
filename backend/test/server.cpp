@@ -5,30 +5,29 @@
 
 TEST_CASE("Test endpoints return response code 200")
 {
-    // Enable CORS
+    // enable CORS
     crow::App<crow::CORSHandler> app;
 
-    // Customize CORS
+    // customize CORS
     auto &cors = app.get_middleware<crow::CORSHandler>();
 
     cors.global().headers("*").methods("POST"_method);
 
-    // Create a mock password set
+    // create a mock password set
     std::unordered_set<std::string> password_set = password::generatePasswords(3, 12);
 
-    // Server endpoints
+    // initialize endpoints
     server::root(app);
-    server::allBreachedPasswords(app, password_set);
-    server::checkPassword(app, password_set);
+    server::passwords(app, password_set);
+    server::intersection(app, password_set);
 
-    // Check that all the route handlers were created
+    // check that all the route handlers were created
     app.validate();
 
-    // define response and request
     crow::request req;
     crow::response res;
 
-    SECTION("root")
+    SECTION("Root")
     {
         req.url = "/";
 
@@ -36,7 +35,7 @@ TEST_CASE("Test endpoints return response code 200")
         CHECK(res.code == 200);
     }
 
-    SECTION("breached passwords")
+    SECTION("Passwords")
     {
         req.url = "/passwords";
         req.method = "POST"_method;
@@ -48,9 +47,9 @@ TEST_CASE("Test endpoints return response code 200")
         CHECK(res.code == 200);
     }
 
-    SECTION("set intersection")
+    SECTION("Intersection")
     {
-        req.url = "/passwords";
+        req.url = "/intersection";
         req.method = "POST"_method;
         req.add_header("Access-Control-Allow-Headers", "*");
         req.add_header("Content-Type", "application/json");

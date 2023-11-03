@@ -21,7 +21,7 @@ namespace server
      * @param app The crow server.
      * @param passwords The set of all breached passwords.
      */
-    void allBreachedPasswords(crow::App<crow::CORSHandler> &app, const std::unordered_set<std::string> &password_set);
+    void passwords(crow::App<crow::CORSHandler> &app, const std::unordered_set<std::string> &passwords);
 
     /**
      * @brief Endpoint to compute set intersection.
@@ -29,6 +29,6 @@ namespace server
      * @param app The crow server.
      * @param passwords The set of all breached passwords.
      */
-    void checkPassword(crow::App<crow::CORSHandler> &app, const std::unordered_set<std::string> &password_set);
+    void intersection(crow::App<crow::CORSHandler> &app, const std::unordered_set<std::string> &passwords);
 }
 #endif // SERVER_H

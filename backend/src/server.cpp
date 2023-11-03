@@ -12,41 +12,44 @@ namespace server
         return response; });
     }
 
-    void allBreachedPasswords(crow::App<crow::CORSHandler> &app, const std::unordered_set<std::string> &password_set)
+    void passwords(crow::App<crow::CORSHandler> &app, const std::unordered_set<std::string> &passwords)
     {
-        CROW_ROUTE(app, "/allBreachedPasswords")
-        ([password_set]()
+        CROW_ROUTE(app, "/passwords")
+        // TODO: check capture with &
+        ([passwords]()
          {  crow::json::wvalue response;
-        for (auto const breached_password : password_set) // for each password in the set, add it as a json key 
+        // TODO: change this to be a list
+        for (auto const &breached_password : passwords) 
         {
             response[breached_password];
         }
         return response; });
     }
 
-    void checkPassword(crow::App<crow::CORSHandler> &app, const std::unordered_set<std::string> &password_set)
+    void intersection(crow::App<crow::CORSHandler> &app, const std::unordered_set<std::string> &passwords)
     {
-        CROW_ROUTE(app, "/passwords")
-            .methods("POST"_method)([&password_set](const crow::request &req)
+        CROW_ROUTE(app, "/intersection")
+            .methods("POST"_method)([passwords](const crow::request &req)
                                     {
         crow::json::wvalue response;
 
-        // user's password passed in the post request
         std::string user_password = req.body;
-
-        if(user_password.empty()){ // no user password
+        if (user_password.empty()) 
+        { 
             response["status"] = "error";
             return response;
         }
 
-        const bool in_breached_passwords = password_set.find(user_password) != password_set.end();
-        if (in_breached_passwords)
-        { // password is in the breached password set
+        const bool is_breached = passwords.find(user_password) != passwords.end();
+        if (is_breached)
+        { 
             response["status"] = "fail";
         }
-        else { // password is not in the breached password set
+        else 
+        { 
             response["status"] = "success";
         }
+
         return response; });
     }
 
