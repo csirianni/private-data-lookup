@@ -17,8 +17,8 @@ namespace server
         CROW_ROUTE(app, "/passwords")
         ([passwords]()
          {  crow::json::wvalue response;
-        // TODO: change this to be a list
         std::vector<std::string> result;
+        result.reserve(passwords.size());
         for (const auto &password : passwords) 
         {
             result.push_back(password);

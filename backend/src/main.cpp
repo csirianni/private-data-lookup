@@ -22,7 +22,6 @@ int main()
     // test password
     passwords.insert("TestPass1&");
     db.execute("INSERT INTO passwords (password) VALUES ('TestPass1&');");
-    db.printTable("passwords");
 
     // Enable CORS
     crow::App<crow::CORSHandler> app;
