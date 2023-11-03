@@ -31,13 +31,9 @@ int main()
 
     cors.global().headers("*").methods("POST"_method);
 
-    // endpoint to establish server connection
+    // Server endpoints
     server::root(app);
-
-    // endpoint to show all passwords
     server::allBreachedPasswords(app, password_set);
-
-    // endpoint to compute set intersection
     server::checkPassword(app, password_set);
 
     // set the port, set the app to run on multiple threads, and run the app

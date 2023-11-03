@@ -1,6 +1,5 @@
 #include "server.hpp"
 
-
 namespace server
 {
     void root(crow::App<crow::CORSHandler> &app)
