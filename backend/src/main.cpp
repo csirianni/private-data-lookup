@@ -19,7 +19,8 @@ int main()
     {
         db.execute("INSERT INTO passwords (password) VALUES ('" + password + "');");
     }
-    password_set.insert("TestPass1&"); // test password
+    // test password
+    password_set.insert("TestPass1&");
     db.execute("INSERT INTO passwords (password) VALUES ('TestPass1&');");
     db.printTable("passwords");
 
@@ -31,7 +32,7 @@ int main()
 
     cors.global().headers("*").methods("POST"_method);
 
-    // Server endpoints
+    // initialize endpoints
     server::root(app);
     server::allBreachedPasswords(app, password_set);
     server::checkPassword(app, password_set);

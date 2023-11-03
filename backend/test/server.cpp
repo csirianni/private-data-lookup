@@ -1,12 +1,8 @@
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch_test_macros.hpp>
-#include "../src/server.hpp"
-#include "../src/password.hpp"
+#include "server.hpp"
+#include "password.hpp"
 
-namespace
-{
-
-}
 TEST_CASE("Test endpoints return response code 200")
 {
     // Enable CORS

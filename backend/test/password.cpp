@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include <regex>
 #include <catch2/catch_test_macros.hpp>
-#include "../src/password.hpp"
+#include "password.hpp"
 
 namespace
 {
