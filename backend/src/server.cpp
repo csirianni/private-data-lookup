@@ -15,7 +15,6 @@ namespace server
     void passwords(crow::App<crow::CORSHandler> &app, const std::unordered_set<std::string> &passwords)
     {
         CROW_ROUTE(app, "/passwords")
-        // TODO: check capture with &
         ([passwords]()
          {  crow::json::wvalue response;
         // TODO: change this to be a list

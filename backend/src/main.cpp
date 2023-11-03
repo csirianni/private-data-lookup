@@ -14,13 +14,13 @@ int main()
     db.execute("CREATE TABLE passwords (password TEXT);");
 
     // generate and insert the passwords into the database
-    std::unordered_set<std::string> password_set = password::generatePasswords(100, 20);
-    for (const auto &password : password_set)
+    std::unordered_set<std::string> passwords = password::generatePasswords(100, 20);
+    for (const auto &password : passwords)
     {
         db.execute("INSERT INTO passwords (password) VALUES ('" + password + "');");
     }
     // test password
-    password_set.insert("TestPass1&");
+    passwords.insert("TestPass1&");
     db.execute("INSERT INTO passwords (password) VALUES ('TestPass1&');");
     db.printTable("passwords");
 
@@ -34,8 +34,8 @@ int main()
 
     // initialize endpoints
     server::root(app);
-    server::passwords(app, password_set);
-    server::intersection(app, password_set);
+    server::passwords(app, passwords);
+    server::intersection(app, passwords);
 
     // set the port, set the app to run on multiple threads, and run the app
     app.port(18080).multithreaded().run();

@@ -14,12 +14,12 @@ TEST_CASE("Test endpoints return response code 200")
     cors.global().headers("*").methods("POST"_method);
 
     // create a mock password set
-    std::unordered_set<std::string> password_set = password::generatePasswords(3, 12);
+    std::unordered_set<std::string> passwords = password::generatePasswords(3, 12);
 
     // initialize endpoints
     server::root(app);
-    server::passwords(app, password_set);
-    server::intersection(app, password_set);
+    server::passwords(app, passwords);
+    server::intersection(app, passwords);
 
     // check that all the route handlers were created
     app.validate();
