@@ -19,6 +19,6 @@ namespace server
      * @param password_set
      *
      */
-    // void checkPassword(crow::App<crow::CORSHandler> &app, const std::unordered_set<std::string> &password_set);
+    void checkPassword(crow::App<crow::CORSHandler> &app, const std::unordered_set<std::string> &password_set);
 }
 #endif // SERVER_H

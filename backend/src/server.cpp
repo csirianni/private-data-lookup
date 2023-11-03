@@ -1,5 +1,6 @@
 #include "server.hpp"
 
+
 namespace server
 {
     void root(crow::App<crow::CORSHandler> &app)
@@ -24,20 +25,25 @@ namespace server
         return response; });
     }
 
-    // void checkPassword(crow::App<crow::CORSHandler> &app, const std::unordered_set<std::string> &password_set)
-    // {
-    //     CROW_ROUTE(app, "/passwords") // endpoint to compute set intersection
-    //         .methods("POST"_method)([&password_set](const crow::request &req)
-    //                                 {
-    //     crow::json::wvalue response;
-    //     std::string userPassword = req.body; // user's password passed in the post request
-    //     const bool inBreachedPasswords = *password_set.find(userPassword) != *password_set.end(); 
-    //     if (inBreachedPasswords){ // password is in the breached password set
-    //         response["status"] = "fail";
-    //     } else { // password is not in the breached password set
-    //         response["status"] = "success";
-    //     }
-    //     return response; });
-    // }
+    void checkPassword(crow::App<crow::CORSHandler> &app, const std::unordered_set<std::string> &password_set)
+    {
+        CROW_ROUTE(app, "/passwords")
+            .methods("POST"_method)([&password_set](const crow::request &req)
+                                    {
+        crow::json::wvalue response;
+
+        // user's password passed in the post request
+        std::string user_password = req.body;
+
+        const bool in_breached_passwords = password_set.find(user_password) != password_set.end();
+        if (in_breached_passwords)
+        { // password is in the breached password set
+            response["status"] = "fail";
+        }
+        else { // password is not in the breached password set
+            response["status"] = "success";
+        }
+        return response; });
+    }
 
 };
