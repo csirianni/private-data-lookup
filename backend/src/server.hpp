@@ -11,26 +11,23 @@ namespace server
     /**
      * @brief Endpoint to check the server is running.
      *
-     * @param app - crow server 
-     * @note crow does not use const-reference
+     * @param app The crow server.
      */
     void root(crow::App<crow::CORSHandler> &app);
 
     /**
-     * @brief Endpoint to show all breached passwords
+     * @brief Endpoint to show all breached passwords.
      *
-     * @param app - crow server
-     * @param password_set - set of all breached passwords
-     * @note crow does not use const-reference
+     * @param app The crow server.
+     * @param passwords The set of all breached passwords.
      */
     void allBreachedPasswords(crow::App<crow::CORSHandler> &app, const std::unordered_set<std::string> &password_set);
 
     /**
      * @brief Endpoint to compute set intersection.
-     * 
-     * @param app - crow server
-     * @param password_set  - set of all breached passwords
-     * @note crow does not use const-reference
+     *
+     * @param app The crow server.
+     * @param passwords The set of all breached passwords.
      */
     void checkPassword(crow::App<crow::CORSHandler> &app, const std::unordered_set<std::string> &password_set);
 }
