@@ -1,44 +1,66 @@
+#define CATCH_CONFIG_MAIN
 #include <catch2/catch_test_macros.hpp>
+#include "../src/server.hpp"
+#include "../src/password.hpp"
 
-/*
-    Testing the server can run and passwords will be posted.
-*/
-void test_api(crow::App<crow::CORSHandler> *curr_app)
+namespace
 {
-    curr_app->validate(); // Used to make sure all the route handlers are in order.
 
+}
+TEST_CASE("Test endpoints return response code 200")
+{
+    // Enable CORS
+    crow::App<crow::CORSHandler> app;
+
+    // Customize CORS
+    auto &cors = app.get_middleware<crow::CORSHandler>();
+
+    cors.global().headers("*").methods("POST"_method);
+
+    // Create a mock password set
+    std::unordered_set<std::string> password_set = password::generatePasswords(3, 12);
+
+    // Server endpoints
+    server::root(app);
+    server::allBreachedPasswords(app, password_set);
+    server::checkPassword(app, password_set);
+
+    // Check that all the route handlers were created
+    app.validate();
+
+    // define response and request
+    crow::request req;
+    crow::response res;
+
+    SECTION("root")
     {
-        crow::request req;
-        crow::response res;
-
-        // Test the endpoint for running the server
         req.url = "/";
-        curr_app->handle(req, res);
-        if (res.code == 200)
-        {
-            boost_swap_impl::cout << "Server test: success connecting to endpoint to run the server \n\n";
-        }
-        else
-        {
-            boost_swap_impl::cerr << "Set Intersection Test error: " + boost_swap_impl::to_string(res.code) + "\n\n";
-        }
 
-        // Test the endpoint for compute set intersection
+        app.handle(req, res);
+        CHECK(res.code == 200);
+    }
+
+    SECTION("breached passwords")
+    {
         req.url = "/passwords";
         req.method = "POST"_method;
         req.add_header("Access-Control-Allow-Headers", "*");
         req.add_header("Content-Type", "application/json");
         req.body = "TestPass1&";
 
-        // res will contain a code of 200, and a response body of "success"
-        curr_app->handle(req, res);
-        if (res.code == 200)
-        {
-            boost_swap_impl::cout << "Set Intersection Test: success connecting to endpoint to compute set intersection \n\n";
-        }
-        else
-        {
-            boost_swap_impl::cerr << "Set Intersection Test error: " + boost_swap_impl::to_string(res.code) + "\n\n";
-        }
+        app.handle(req, res);
+        CHECK(res.code == 200);
+    }
+
+    SECTION("set intersection")
+    {
+        req.url = "/passwords";
+        req.method = "POST"_method;
+        req.add_header("Access-Control-Allow-Headers", "*");
+        req.add_header("Content-Type", "application/json");
+        req.body = "TestPass1&";
+
+        app.handle(req, res);
+        CHECK(res.code == 200);
     }
 }
