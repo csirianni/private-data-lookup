@@ -38,10 +38,6 @@ TEST_CASE("Test endpoints return response code 200")
     SECTION("Passwords")
     {
         req.url = "/passwords";
-        req.method = "POST"_method;
-        req.add_header("Access-Control-Allow-Headers", "*");
-        req.add_header("Content-Type", "application/json");
-        req.body = "TestPass1&";
 
         app.handle(req, res);
         CHECK(res.code == 200);
