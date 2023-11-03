@@ -18,10 +18,12 @@ namespace server
         ([passwords]()
          {  crow::json::wvalue response;
         // TODO: change this to be a list
-        for (auto const &breached_password : passwords) 
+        std::vector<std::string> result;
+        for (const auto &password : passwords) 
         {
-            response[breached_password];
+            result.push_back(password);
         }
+        response["passwords"] = result;
         return response; });
     }
 
