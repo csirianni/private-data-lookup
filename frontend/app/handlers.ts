@@ -1,7 +1,7 @@
 // Make API call to server to check if password was found in breached dataset
 export const checkSecurity = async (password: string) => {
     try {
-        const response = await fetch("http://localhost:18080/passwords", {
+        const response = await fetch("http://localhost:18080/intersection", {
             method: "POST",
             mode: "cors",
             headers: {
