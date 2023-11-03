@@ -17,6 +17,8 @@ import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -25,6 +27,7 @@ import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/navigation";
 import { checkSecurity } from "./handlers";
+import PasswordChecklist from "react-password-checklist";
 
 // can change colors if we want
 const theme = createTheme({
@@ -34,12 +37,6 @@ const theme = createTheme({
     },
 });
 
-/* check that string contains number, upper case, lower case, special character,
-and at least 10 characters */
-const strongPasswordPattern = new RegExp(
-    "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^da-zA-Z]).{10,}$"
-);
-
 interface SnackbarState extends SnackbarOrigin {
     open: boolean;
 }
@@ -47,7 +44,7 @@ interface SnackbarState extends SnackbarOrigin {
 export default function SignUp() {
     const router = useRouter();
     const [showPassword, setShowPassword] = useState<boolean>(false);
-    const [isStrongPassword, setIsStrongPassword] = useState<boolean>(false);
+    const [isValidPassword, setIsValidPassword] = useState<boolean>(false);
     const [isValidForm, setIsValidForm] = useState<boolean>(false);
     const [first, setFirst] = useState<string>("");
     const [last, setLast] = useState<string>("");
@@ -67,7 +64,9 @@ export default function SignUp() {
         setShowSnackbar({ ...showSnackbar, open: false });
     };
 
-    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (
+        event: FormEvent<HTMLFormElement>
+    ) => {
         event.preventDefault();
         setIsLoading(true);
         const response = await checkSecurity(); // makes an API call to the backend
@@ -76,10 +75,12 @@ export default function SignUp() {
         if (response.status == "success") {
             router.push(`/success`);
         } else if (response.status == "fail") {
-            setErrorText("Password was found in a previously breached dataset! Please try a different password.")
+            setErrorText(
+                "Password was found in a previously breached dataset! Please try a different password."
+            );
             setShowSnackbar({ ...showSnackbar, open: true });
         } else {
-            setErrorText("Server error: please try again later")
+            setErrorText("Server error: please try again later");
             setShowSnackbar({ ...showSnackbar, open: true });
         }
     };
@@ -94,23 +95,21 @@ export default function SignUp() {
     };
 
     useEffect(() => {
-        setIsStrongPassword(strongPasswordPattern.test(password));
-        setIsValidForm(
-            first.length > 0 &&
-            last.length > 0 &&
-            email.length > 0 &&
-            password === confirmPassword
-        );
-    }, [password, confirmPassword, isValidForm, isStrongPassword]);
+        setIsValidForm(first.length > 0 && last.length > 0 && email.length > 0);
+    }, [first, last, email]);
 
-    const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
-        props,
-        ref
-    ) {
-        return (
-            <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
-        );
-    });
+    const Alert = forwardRef<HTMLDivElement, AlertProps>(
+        function Alert(props, ref) {
+            return (
+                <MuiAlert
+                    elevation={6}
+                    ref={ref}
+                    variant="filled"
+                    {...props}
+                />
+            );
+        }
+    );
 
     return (
         <ThemeProvider theme={theme}>
@@ -159,7 +158,9 @@ export default function SignUp() {
                                     id="firstName"
                                     label="First Name"
                                     aria-label="first name"
-                                    onChange={(event) => setFirst(event.target.value)}
+                                    onChange={(event) =>
+                                        setFirst(event.target.value)
+                                    }
                                     autoFocus
                                 />
                             </Grid>
@@ -172,7 +173,9 @@ export default function SignUp() {
                                     name="lastName"
                                     aria-label="last name"
                                     autoComplete="family-name"
-                                    onChange={(event) => setLast(event.target.value)}
+                                    onChange={(event) =>
+                                        setLast(event.target.value)
+                                    }
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -184,7 +187,9 @@ export default function SignUp() {
                                     name="email"
                                     aria-label="email address"
                                     autoComplete="email"
-                                    onChange={(event) => setEmail(event.target.value)}
+                                    onChange={(event) =>
+                                        setEmail(event.target.value)
+                                    }
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -196,7 +201,11 @@ export default function SignUp() {
                                     id="password"
                                     autoComplete="new-password"
                                     aria-label="password"
-                                    type={showPassword ? "text" : "password"}
+                                    type={
+                                        showPassword
+                                            ? "text"
+                                            : "password"
+                                    }
                                     onChange={(event) =>
                                         setPassword(event.target.value)
                                     }
@@ -227,7 +236,11 @@ export default function SignUp() {
                                     label="Confirm your password"
                                     id="confirm-password"
                                     aria-label="confirm password"
-                                    type={showPassword ? "text" : "password"}
+                                    type={
+                                        showPassword
+                                            ? "text"
+                                            : "password"
+                                    }
                                     onChange={(event) =>
                                         setConfirmPassword(event.target.value)
                                     }
@@ -254,16 +267,35 @@ export default function SignUp() {
                                 aria-label="password requirements"
                                 component="div"
                                 variant="inherit"
-                                className="px-4"
+                                className="p-4"
                             >
-                                <p className="-mb-2">Password must contain:</p>
-                                <ul>
-                                    <li>At least 10 characters</li>
-                                    <li>At least 1 lowercase character</li>
-                                    <li>At least 1 uppercase character</li>
-                                    <li>At least 1 number</li>
-                                    <li>At least 1 special character</li>
-                                </ul>
+                                <PasswordChecklist
+                                    rules={[
+                                        "minLength",
+                                        "lowercase",
+                                        "capital",
+                                        "number",
+                                        "specialChar",
+                                        "match",
+                                    ]}
+                                    messages={{
+                                        specialChar: "Password has a special character.",
+                                    }}
+                                    minLength={10}
+                                    value={password}
+                                    valueAgain={confirmPassword}
+                                    onChange={(isValid) =>
+                                        setIsValidPassword(isValid)
+                                    }
+                                    iconComponents={{
+                                        ValidIcon: (
+                                            <CheckIcon className="text-green-500 pt-1" />
+                                        ),
+                                        InvalidIcon: (
+                                            <CloseIcon className="opacity-70 pt-1" />
+                                        ),
+                                    }}
+                                />
                             </Typography>
                         </Grid>
                         <Button
@@ -273,7 +305,9 @@ export default function SignUp() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                             disabled={
-                                !isStrongPassword || !isValidForm || isLoading
+                                !isValidPassword ||
+                                !isValidForm ||
+                                isLoading
                             }
                         >
                             {isLoading ? (
