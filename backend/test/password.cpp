@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include <regex>
 #include <catch2/catch_test_macros.hpp>
-#include "../src/password.hpp"
+#include "password.hpp"
 
 namespace
 {
@@ -19,11 +19,11 @@ namespace
 
 TEST_CASE("Test generatePassword creates valid passwords")
 {
-    std::unordered_set<std::string> password_set = password::generatePasswords(3, 12);
+    std::unordered_set<std::string> passwords = password::generatePasswords(3, 12);
     // function generated 3 passwords
-    CHECK(password_set.size() == 3);
+    CHECK(passwords.size() == 3);
 
-    for (const auto &password : password_set)
+    for (const auto &password : passwords)
     {
         CHECK(password.length() >= 10);
         CHECK(hasLettersAndDigit(password));

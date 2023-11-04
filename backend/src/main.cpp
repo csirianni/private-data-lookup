@@ -1,10 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unordered_set>
 #include "crow.h"
 #include "crow/middlewares/cors.h"
 #include "database.hpp"
 #include "password.hpp"
+#include "server.hpp"
 
 int main()
 {
@@ -12,13 +14,14 @@ int main()
     db.execute("CREATE TABLE passwords (password TEXT);");
 
     // generate and insert the passwords into the database
-    std::unordered_set<std::string> password_set = password::generatePasswords(100, 20);
-    for (const auto &password : password_set)
+    std::unordered_set<std::string> passwords = password::generatePasswords(100, 20);
+    for (const auto &password : passwords)
     {
         db.execute("INSERT INTO passwords (password) VALUES ('" + password + "');");
     }
-    db.execute("INSERT INTO passwords (password) VALUES ('chocolate1');");
-    db.printTable("passwords");
+    // test password
+    passwords.insert("TestPass1&");
+    db.execute("INSERT INTO passwords (password) VALUES ('TestPass1&');");
 
     // Enable CORS
     crow::App<crow::CORSHandler> app;
@@ -26,18 +29,12 @@ int main()
     // Customize CORS
     auto &cors = app.get_middleware<crow::CORSHandler>();
 
-    cors.global().headers("*").methods("POST"_method, "GET"_method);
+    cors.global().headers("*").methods("POST"_method);
 
-    CROW_ROUTE(app, "/")
-    ([]()
-     {
-        crow::json::wvalue response;
-        response["status"] = "success";
-        return response; });
-
-    CROW_ROUTE(app, "/cors")
-    ([]()
-     { return "Check Access-Control-Allow-Origin header"; });
+    // initialize endpoints
+    server::root(app);
+    server::passwords(app, passwords);
+    server::intersection(app, passwords);
 
     // set the port, set the app to run on multiple threads, and run the app
     app.port(18080).multithreaded().run();
