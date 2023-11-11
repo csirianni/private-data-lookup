@@ -1,8 +1,32 @@
+"use strict";
+/**
+ * from frontend/app:
+ * compile: tsc ./psi.ts
+ * to run: node ./psi.js
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.applySeed = void 0;
 var sodium = require("libsodium-wrappers-sumo");
 function hashToPoint(input) {
     var hash = sodium.crypto_generichash(sodium.crypto_core_ristretto255_HASHBYTES, sodium.from_string(input));
     return sodium.crypto_core_ristretto255_from_hash(hash);
 }
+/**
+ *
+ * @param input the string to be encrypted
+ * @returns input with a secret key applied and the key's inverse
+ */
+function applySeed(input) {
+    // generate random seed
+    var seed = sodium.crypto_core_ristretto255_scalar_random();
+    // get seed inverse
+    var seedInverse = sodium.crypto_core_ristretto255_scalar_invert(seed);
+    var point = hashToPoint(input);
+    // apply seed
+    var seededInput = sodium.crypto_scalarmult_ristretto255(seed, point);
+    return [seededInput, seedInverse];
+}
+exports.applySeed = applySeed;
 function PSI() {
     var password = "Password123!";
     // Find intersection of these two sets.
@@ -10,17 +34,14 @@ function PSI() {
         "Password",
         "Kinan",
         "Alice",
-        "Password123",
+        "Password123!",
         "Patrick",
     ];
     // Client and Server come up with two secret seeds.
-    var a = sodium.crypto_core_ristretto255_scalar_random();
-    var aInverse = sodium.crypto_core_ristretto255_scalar_invert(a);
     var b = sodium.crypto_core_ristretto255_scalar_random();
     // Client phase 1 - applies seed A to user's password
     // (client password)^a
-    var point = hashToPoint(password);
-    var clientPasswordA = sodium.crypto_scalarmult_ristretto255(a, point);
+    var _a = applySeed(password), clientPasswordA = _a[0], aInverse = _a[1];
     // End of Client phase 1.
     // Server phase 1 - applies seed B to all breached passwords
     // (breached password)^b
@@ -29,13 +50,10 @@ function PSI() {
         return sodium.crypto_scalarmult_ristretto255(b, point);
     });
     // End of Server phase 1.
-    // Client and Server now exchange seeded sets.
     // Server phase 2 - applies seed B to (user password)^a
     // (client password)^ab
     var clientPasswordAB = sodium.crypto_scalarmult_ristretto255(b, clientPasswordA);
     // End of Server phase 2.
-    // One more round of exchanging sets.
-    // Say we are Alice, we now have access to bobSet2 and aliceSet2.
     var options = new Set(serverSetB.map(function (element) {
         return element.join("");
     }));

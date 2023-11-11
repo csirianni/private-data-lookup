@@ -1,13 +1,16 @@
-import {
-    crypto_pwhash_str,
-    crypto_pwhash_str_verify,
-    crypto_pwhash_OPSLIMIT_INTERACTIVE,
-    crypto_pwhash_MEMLIMIT_INTERACTIVE,
-} from "libsodium-wrappers-sumo";
+
+// 1. send post request with secret key A
+// 2. await server response with {(client password)^ab, breachedPasswordSet^(b)}
+// 3. apply inverse to (client password)^ab and create set from breachedPasswordSet^(b)
+// 4. compute set intersection.
+
+import { applySeed } from "./psi";
 
 // Make API call to server to check if password was found in breached dataset
-export const checkSecurity = async (password: string) => {
+export async function checkSecurity(password: string) {
     try {
+        const [seededPassword, keyInverse] = applySeed(password);
+
         const response = await fetch(
             "http://localhost:18080/intersection",
             {
@@ -27,8 +30,3 @@ export const checkSecurity = async (password: string) => {
         return { status: "error" };
     }
 };
-
-// Encrypt password using libsodium's ristretto.
-function encrypt(password: string) {
-    return;
-}
