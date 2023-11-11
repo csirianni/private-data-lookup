@@ -1,5 +1,4 @@
 var sodium = require("libsodium-wrappers-sumo");
-// const { Print } = require("./util/util.js");
 function hashToPoint(input) {
     var hash = sodium.crypto_generichash(sodium.crypto_core_ristretto255_HASHBYTES, sodium.from_string(input));
     return sodium.crypto_core_ristretto255_from_hash(hash);
@@ -11,7 +10,7 @@ function PSI() {
         "Password",
         "Kinan",
         "Alice",
-        "Password123!",
+        "Password123",
         "Patrick",
     ];
     // Client and Server come up with two secret seeds.

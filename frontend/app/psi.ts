@@ -1,5 +1,9 @@
+/**
+ * from frontend/app:
+ * compile: tsc ./psi.ts
+ * to run: node ./psi.js
+ */
 const sodium = require("libsodium-wrappers-sumo");
-// const { Print } = require("./util/util.js");
 
 function hashToPoint(input: string) {
     const hash = sodium.crypto_generichash(
@@ -16,7 +20,7 @@ function PSI() {
         "Password",
         "Kinan",
         "Alice",
-        "Password123!",
+        "Password123",
         "Patrick",
     ];
 
