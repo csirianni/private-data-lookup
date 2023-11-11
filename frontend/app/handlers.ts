@@ -8,19 +8,6 @@ import {
 // Make API call to server to check if password was found in breached dataset
 export const checkSecurity = async (password: string) => {
     try {
-        // hash the password
-        const passwordHash = crypto_pwhash_str(
-            password,
-            crypto_pwhash_OPSLIMIT_INTERACTIVE,
-            crypto_pwhash_MEMLIMIT_INTERACTIVE
-        );
-        if (!crypto_pwhash_str_verify(passwordHash, password)) {
-            console.log("unable to hash password");
-            return { status: "error" };
-        }
-
-        // TODO: encrypt 
-
         const response = await fetch(
             "http://localhost:18080/intersection",
             {
