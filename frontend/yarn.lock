@@ -470,6 +470,18 @@
   resolved "https://registry.npmjs.org/@types/json5/-/json5-0.0.29.tgz"
   integrity sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==
 
+"@types/libsodium-wrappers-sumo@^0.7.8":
+  version "0.7.8"
+  resolved "https://registry.npmjs.org/@types/libsodium-wrappers-sumo/-/libsodium-wrappers-sumo-0.7.8.tgz"
+  integrity sha512-N2+df4MB/A+W0RAcTw7A5oxKgzD+Vh6Ye7lfjWIi5SdTzVLfHPzxUjhwPqHLO5Ev9fv/+VHl+sUaUuTg4fUPqw==
+  dependencies:
+    "@types/libsodium-wrappers" "*"
+
+"@types/libsodium-wrappers@*":
+  version "0.7.13"
+  resolved "https://registry.npmjs.org/@types/libsodium-wrappers/-/libsodium-wrappers-0.7.13.tgz"
+  integrity sha512-KeAKtlObirLJk/na6jHBFEdTDjDfFS6Vcr0eG2FjiHKn3Nw8axJFfIu0Y9TpwaauRldQBj/pZm/MHtK76r6OWg==
+
 "@types/node-fetch@^2.6.7":
   version "2.6.7"
   resolved "https://registry.npmjs.org/@types/node-fetch/-/node-fetch-2.6.7.tgz"
@@ -1995,6 +2007,18 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
+libsodium-sumo@^0.7.13:
+  version "0.7.13"
+  resolved "https://registry.npmjs.org/libsodium-sumo/-/libsodium-sumo-0.7.13.tgz"
+  integrity sha512-zTGdLu4b9zSNLfovImpBCbdAA4xkpkZbMnSQjP8HShyOutnGjRHmSOKlsylh1okao6QhLiz7nG98EGn+04cZjQ==
+
+libsodium-wrappers-sumo@^0.7.13:
+  version "0.7.13"
+  resolved "https://registry.npmjs.org/libsodium-wrappers-sumo/-/libsodium-wrappers-sumo-0.7.13.tgz"
+  integrity sha512-lz4YdplzDRh6AhnLGF2Dj2IUj94xRN6Bh8T0HLNwzYGwPehQJX6c7iYVrFUPZ3QqxE0bqC+K0IIqqZJYWumwSQ==
+  dependencies:
+    libsodium-sumo "^0.7.13"
+
 lilconfig@^2.0.5, lilconfig@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/lilconfig/-/lilconfig-2.1.0.tgz"
@@ -2409,7 +2433,7 @@ react-is@^18.2.0:
 
 react-password-checklist@^1.5.0:
   version "1.5.0"
-  resolved "https://registry.yarnpkg.com/react-password-checklist/-/react-password-checklist-1.5.0.tgz#b9955f90eeea1924c8e2b9f4d7ab2dc2b73ca28c"
+  resolved "https://registry.npmjs.org/react-password-checklist/-/react-password-checklist-1.5.0.tgz"
   integrity sha512-LjhF6fHZB3Ouv8ijcUvMPmpLoFZ0fjf5q55bXTYXdkj+zJai+u4B8QOaqVU5/VRE9o+rCeI/PvwnWoUir1CIaQ==
 
 react-transition-group@^4.4.5:
