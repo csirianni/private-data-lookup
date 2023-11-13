@@ -7,6 +7,7 @@
 #include "database.hpp"
 #include "password.hpp"
 #include "server.hpp"
+#include "sodium.h"
 
 int main()
 {
@@ -15,6 +16,14 @@ int main()
 
     // generate and insert the passwords into the database
     std::unordered_set<std::string> passwords = password::generatePasswords(100, 20);
+    // 1. generate secret key b
+    unsigned char b[crypto_core_ristretto255_SCALARBYTES];
+    crypto_core_ristretto255_scalar_random(b);
+    // 2. encrypt each password with b (and hash to point)
+
+    // helper
+
+    // 3. insert into database
     for (const auto &password : passwords)
     {
         db.execute("INSERT INTO passwords (password) VALUES ('" + password + "');");
