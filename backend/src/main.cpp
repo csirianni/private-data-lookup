@@ -8,6 +8,7 @@
 #include "password.hpp"
 #include "server.hpp"
 #include "sodium.h"
+#include "cryptography.hpp"
 
 int main()
 {
@@ -20,6 +21,7 @@ int main()
     unsigned char b[crypto_core_ristretto255_SCALARBYTES];
     crypto_core_ristretto255_scalar_random(b);
     // 2. encrypt each password with b (and hash to point)
+    std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b);
 
     // helper
 
