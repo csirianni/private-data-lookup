@@ -30,6 +30,15 @@ namespace server
      * @param app The crow server.
      * @param passwords The set of all breached passwords.
      */
-    void intersection(crow::App<crow::CORSHandler> &app, const std::vector<std::string> &passwords, unsigned char *b);
+    void intersection(crow::App<crow::CORSHandler> &app, const std::unordered_set<std::string> &passwords);
+
+        /**
+     * @brief Endpoint apply secret key b to user password and breached passwords.
+     *
+     * @param app The crow server.
+     * @param passwords The vector of all breached passwords.
+     * @param b The secret key.
+     */
+    void breachedPasswords(crow::App<crow::CORSHandler> &app, const std::vector<std::string> &passwords, unsigned char *b);
 }
 #endif // SERVER_H

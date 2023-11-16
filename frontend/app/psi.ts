@@ -69,7 +69,7 @@ export async function checkSecurity(password: string) {
         const [seededPassword, keyInverse] = applySeed(password);
 
         const response = await fetch(
-            "http://localhost:18080/intersection",
+            "http://localhost:18080/breachedPasswords",
             {
                 method: "POST",
                 mode: "cors",
