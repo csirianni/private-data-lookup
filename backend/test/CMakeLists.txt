@@ -3,6 +3,7 @@ find_package(Catch2 REQUIRED)
 set (TEST_SOURCE
     password.cpp
     server.cpp
+    cryptography.cpp
 )
 
 add_executable(pdl_test ${TEST_SOURCE})
