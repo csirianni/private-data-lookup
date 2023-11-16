@@ -31,7 +31,7 @@ namespace cryptography
     std::string encryptPassword(const std::string password, unsigned char *b) {
         // multiply by b
         unsigned char encryptedPassword[crypto_core_ristretto255_BYTES];
-        crypto_scalarmult_ristretto255_base(encryptedPassword, b);
+        crypto_scalarmult_ristretto255(encryptedPassword, b, (const unsigned char *)password.c_str());
         std::string encryptedPasswordStr(reinterpret_cast<char*>(encryptedPassword));
         return encryptedPasswordStr;
     }
