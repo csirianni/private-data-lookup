@@ -1,6 +1,5 @@
 #include "cryptography.hpp"
 #include "sodium.h"
-#include <string>
 
 namespace cryptography
 {
