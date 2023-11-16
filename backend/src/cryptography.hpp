@@ -13,7 +13,6 @@ namespace cryptography
      */
     std::vector<std::string> encrypt(const std::unordered_set<std::string> &passwords,
                                      unsigned char *b);
-
-    std::string encryptPassword(const std::string password, unsigned char *b);
-
+    // TODO add documentation
+    std::string encryptPassword(const unsigned char *, unsigned char *b);
 }
