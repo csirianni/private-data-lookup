@@ -47,7 +47,7 @@ TEST_CASE("Test encryptPassword")
         crypto_core_ristretto255_from_hash(point, hash);
 
         // encrypt password
-        std::string encryptedPasswordStr = cryptography::encryptPassword(point, b);
+        std::string encryptedPasswordStr = cryptography::encryptPoint(point, b);
         unsigned char encryptedPassword[crypto_core_ristretto255_BYTES];
         std::memcpy(encryptedPassword, encryptedPasswordStr.data(), crypto_core_ristretto255_BYTES);
 

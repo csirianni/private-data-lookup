@@ -27,7 +27,7 @@ namespace cryptography
         return result;
     }
 
-    std::string encryptPassword(const unsigned char *point, unsigned char *b)
+    std::string encryptPoint(const unsigned char *point, unsigned char *b)
     {
         // multiply by b
         unsigned char encryptedPassword[crypto_core_ristretto255_BYTES];
