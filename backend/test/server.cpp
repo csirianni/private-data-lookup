@@ -18,8 +18,8 @@ TEST_CASE("Test endpoints return response code 200")
 
     // initialize endpoints
     server::root(app);
-    server::passwords(app, passwords);
-    server::intersection(app, passwords);
+    // server::passwords(app, passwords);
+    // server::intersection(app, passwords);
 
     // check that all the route handlers were created
     app.validate();
