@@ -54,6 +54,13 @@ TEST_CASE("Test encryptPassword")
         // unencrypt the password with the inverse of b
         unsigned char decryptedPassword[crypto_core_ristretto255_BYTES];
         crypto_scalarmult_ristretto255(decryptedPassword, inverse, encryptedPassword);
-        CHECK(std::memcmp(decryptedPassword, point, crypto_core_ristretto255_BYTES) == 0);
+
+        unsigned char expectedHash[crypto_core_ristretto255_HASHBYTES];
+        crypto_generichash(expectedHash, sizeof expectedHash, (const unsigned char *)password.data(), password.length(), NULL, 0);
+        unsigned char expectedPoint[crypto_core_ristretto255_BYTES];
+        crypto_core_ristretto255_from_hash(expectedPoint, expectedHash);
+
+        CHECK(std::memcmp(expectedPoint, point, crypto_core_ristretto255_BYTES) == 0);
+        CHECK(std::memcmp(expectedHash, hash, crypto_core_ristretto255_BYTES) == 0);
     }
 }
