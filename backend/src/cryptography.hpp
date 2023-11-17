@@ -20,9 +20,6 @@ namespace cryptography
      * @param password the point to encrypt
      * @param b the secret key
      * @return std::string the encrypted password
-     *
-     * @warning The password must be hashed to a point before being passed to this function.
-     * @warning The result of this function is not a string, but a vector of bytes (excluding the null terminator).
      */
-    std::string encryptPoint(const std::string &password, unsigned char *b);
+    std::string encryptPassword(const std::string &password, unsigned char *b);
 }
