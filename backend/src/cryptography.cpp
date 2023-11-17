@@ -27,8 +27,13 @@ namespace cryptography
         return result;
     }
 
-    std::string encryptPoint(const unsigned char *point, unsigned char *b)
+    std::string encryptPoint(const std::string &password, unsigned char *b)
     {
+        // hash password to point
+        unsigned char hash[crypto_core_ristretto255_HASHBYTES];
+        crypto_generichash(hash, sizeof hash, (const unsigned char *)password.data(), password.length(), NULL, 0);
+        unsigned char point[crypto_core_ristretto255_BYTES];
+        crypto_core_ristretto255_from_hash(point, hash);
         // multiply by b
         unsigned char encryptedPassword[crypto_core_ristretto255_BYTES];
         crypto_scalarmult_ristretto255(encryptedPassword, b, point);

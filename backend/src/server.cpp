@@ -69,9 +69,9 @@ namespace server
             return response;
         }
 
-        std::string password = cryptography::encryptPoint(reinterpret_cast<const unsigned char*>(user_password.data()), b);
+        // std::string password = cryptography::encryptPoint(reinterpret_cast<const unsigned char*>(user_password.data()), b);
         response["status"] = "success";
-        response["userPassword"] = password;
+        // response["userPassword"] = password;
         response["breachedPasswords"] = passwords;
         
         return response; });

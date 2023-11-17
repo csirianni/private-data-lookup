@@ -40,14 +40,8 @@ TEST_CASE("Test encryptPassword")
         crypto_core_ristretto255_scalar_invert(inverse, b);
         const std::string password = "TestPass1&";
 
-        // hash password to point
-        unsigned char hash[crypto_core_ristretto255_HASHBYTES];
-        crypto_generichash(hash, sizeof hash, (const unsigned char *)password.data(), password.length(), NULL, 0);
-        unsigned char point[crypto_core_ristretto255_BYTES];
-        crypto_core_ristretto255_from_hash(point, hash);
-
         // encrypt password
-        std::string encryptedPasswordStr = cryptography::encryptPoint(point, b);
+        std::string encryptedPasswordStr = cryptography::encryptPoint(password, b);
         unsigned char encryptedPassword[crypto_core_ristretto255_BYTES];
         std::memcpy(encryptedPassword, encryptedPasswordStr.data(), crypto_core_ristretto255_BYTES);
 
@@ -60,7 +54,6 @@ TEST_CASE("Test encryptPassword")
         unsigned char expectedPoint[crypto_core_ristretto255_BYTES];
         crypto_core_ristretto255_from_hash(expectedPoint, expectedHash);
 
-        CHECK(std::memcmp(expectedPoint, point, crypto_core_ristretto255_BYTES) == 0);
-        CHECK(std::memcmp(expectedHash, hash, crypto_core_ristretto255_BYTES) == 0);
+        CHECK(std::memcmp(expectedPoint, decryptedPassword, crypto_core_ristretto255_BYTES) == 0);
     }
 }
