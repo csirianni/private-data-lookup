@@ -39,6 +39,6 @@ namespace server
      * @param passwords The vector of all breached passwords.
      * @param b The secret key.
      */
-    void breachedPasswords(crow::App<crow::CORSHandler> &app, const std::vector<std::string> &passwords, unsigned char *b);
+    void breachedPasswords(crow::App<crow::CORSHandler> &app, const std::vector<unsigned char *> &passwords, unsigned char *b);
 }
 #endif // SERVER_H
