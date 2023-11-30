@@ -18,7 +18,7 @@ function hashToPoint(input: string): Uint8Array {
  * @param input the string to be encrypted
  * @returns input with a secret key applied and the key's inverse
  */
-function applySeed(input: string): [string, Uint8Array] {
+function applySeed(input: string): [ArrayBuffer, Uint8Array] {
     // generate random seed
     const seed = sodium.crypto_core_ristretto255_scalar_random();
     // get seed inverse
@@ -30,8 +30,8 @@ function applySeed(input: string): [string, Uint8Array] {
         seed,
         point
     );
-    const seededInputStr = sodium.to_base64(seededInput);
-    return [seededInputStr, seedInverse];
+    console.log(new TextDecoder().decode(seededInput.buffer));
+    return [seededInput.buffer, seedInverse];
 }
 
 function computeIntersection(

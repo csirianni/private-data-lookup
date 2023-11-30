@@ -62,17 +62,21 @@ namespace server
                                     {
         crow::json::wvalue response;
 
-        std::string user_password = req.body;
-        if (user_password.empty()) 
+        if (req.body.empty()) 
         { 
             response["status"] = "error";
             return response;
         }
 
-        std::string password = cryptography::encryptPassword(user_password, b);
-        response["status"] = "success";
-        response["userPassword"] = password;
-        response["breachedPasswords"] = passwords;
+        unsigned char user_password[req.body.size()+1];
+        memcpy(user_password, req.body.c_str(), req.body.size()+1);
+        std::cout << user_password << std::endl;
+        std::cout << sizeof(user_password) << std::endl;
+
+        // unsigned char* password = cryptography::encryptPassword(user_password, b);
+        // response["status"] = "success";
+        // response["userPassword"] = password;
+        // response["breachedPasswords"] = passwords;
         
         return response; });
     }
