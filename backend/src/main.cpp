@@ -22,7 +22,7 @@ int main()
     unsigned char b[crypto_core_ristretto255_SCALARBYTES];
     crypto_core_ristretto255_scalar_random(b);
     // 2. encrypt each password with b (and hash to point)
-    std::vector<unsigned char*> encrypted_passwords = cryptography::encrypt(passwords, b);
+    std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b);
 
     // helper
 

@@ -14,8 +14,8 @@ namespace cryptography
      * @param b the secret key
      * @return std::string the encrypted password
      */
+    std::string encryptPassword(const std::string &password, unsigned char *b);
 
-    unsigned char *encryptPassword(const std::string &password, unsigned char *b);
     /**
      * @brief Encrypt the provided set of passwords using secret key b.
      *
@@ -23,8 +23,8 @@ namespace cryptography
      * @param b the secret key
      * @return std::vector<std::string> the encrypted passwords
      */
-    std::vector<unsigned char *> encrypt(const std::unordered_set<std::string> &passwords,
-                                         unsigned char *b);
+    std::vector<std::string> encrypt(const std::unordered_set<std::string> &passwords,
+                                     unsigned char *b);
 
     unsigned char *encryptUserPassword(unsigned char *password, size_t length, unsigned char *b);
 }

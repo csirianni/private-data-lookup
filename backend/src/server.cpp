@@ -55,29 +55,25 @@ namespace server
         return response; });
     }
 
-    void breachedPasswords(crow::App<crow::CORSHandler> &app, const std::vector<unsigned char*> &passwords, unsigned char *b)
+    void breachedPasswords(crow::App<crow::CORSHandler> &app, const std::vector<std::string> &passwords, unsigned char *b)
     {
         CROW_ROUTE(app, "/breachedPasswords")
             .methods("POST"_method)([passwords, b](const crow::request &req)
                                     {
         crow::json::wvalue response;
 
-        if (req.body.empty()) 
+        std::string user_password = req.body.data();
+        printf("%s", user_password.c_str());
+        if (user_password.empty()) 
         { 
             response["status"] = "error";
             return response;
         }
 
-        unsigned char user_password[req.body.size()+1];
-        memcpy(user_password, req.body.c_str(), req.body.size()+1);
-        std::cout << user_password << std::endl;
-        std::cout << sizeof(user_password) << std::endl;
-
-        // TODO: get length from request
-        unsigned char* password = cryptography::encryptUserPassword(user_password, 0, b);
+        std::string password = cryptography::encryptPassword(user_password, b);
         response["status"] = "success";
         response["userPassword"] = password;
-        // response["breachedPasswords"] = passwords;
+        response["breachedPasswords"] = passwords;
         
         return response; });
     }
