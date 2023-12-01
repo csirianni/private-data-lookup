@@ -5,7 +5,7 @@ type ServerResponse = {
     breachedPasswords: string[];
 };
 
-function hashToPoint(input: string): Uint8Array {
+export function hashToPoint(input: string): Uint8Array {
     const hash = sodium.crypto_generichash(
         sodium.crypto_core_ristretto255_HASHBYTES,
         sodium.from_string(input)
@@ -18,7 +18,7 @@ function hashToPoint(input: string): Uint8Array {
  * @param input the string to be encrypted
  * @returns input with a secret key applied and the key's inverse
  */
-function applySeed(input: string): [ArrayBuffer, Uint8Array] {
+export function applySeed(input: string): [Uint8Array, Uint8Array] {
     // generate random seed
     const seed = sodium.crypto_core_ristretto255_scalar_random();
     // get seed inverse
@@ -26,12 +26,12 @@ function applySeed(input: string): [ArrayBuffer, Uint8Array] {
         sodium.crypto_core_ristretto255_scalar_invert(seed);
     const point = hashToPoint(input);
     // apply seed
-    const seededInput = sodium.crypto_scalarmult_ristretto255(
+    const seededPassword = sodium.crypto_scalarmult_ristretto255(
         seed,
         point
     );
-    console.log(new TextDecoder().decode(seededInput.buffer));
-    return [seededInput.buffer, seedInverse];
+    console.log("seeded password: ", new TextDecoder().decode(seededPassword.buffer));
+    return [seededPassword, seedInverse];
 }
 
 function computeIntersection(
@@ -81,6 +81,7 @@ export async function checkSecurity(password: string) {
             }
         );
         const data = await response.json();
+        console.log(data)
         if (computeIntersection(data, keyInverse)) {
             return { status: "success" };
         } else {
