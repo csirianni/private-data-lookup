@@ -24,7 +24,7 @@ namespace cryptography
      * @return std::vector<std::string> the encrypted passwords
      */
     std::vector<unsigned char *> encrypt(const std::unordered_set<std::string> &passwords,
-                                     unsigned char *b);
+                                         unsigned char *b);
 
-    unsigned char *encryptUserPassword(unsigned char *password, unsigned char *b);
+    unsigned char *encryptUserPassword(unsigned char *password, size_t length, unsigned char *b);
 }

@@ -73,7 +73,8 @@ namespace server
         std::cout << user_password << std::endl;
         std::cout << sizeof(user_password) << std::endl;
 
-        unsigned char* password = cryptography::encryptUserPassword(user_password, b);
+        // TODO: get length from request
+        unsigned char* password = cryptography::encryptUserPassword(user_password, 0, b);
         response["status"] = "success";
         response["userPassword"] = password;
         // response["breachedPasswords"] = passwords;

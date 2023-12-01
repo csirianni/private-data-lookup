@@ -109,7 +109,6 @@ TEST_CASE("Test encryptPassword fails WHYY")
     free(encryptedPassword2);
 }
 
-/*
 TEST_CASE("Test encryptUserPassword")
 {
     // generate constants
@@ -117,10 +116,13 @@ TEST_CASE("Test encryptUserPassword")
     crypto_core_ristretto255_scalar_random(b);
     unsigned char inverse[crypto_core_ristretto255_SCALARBYTES];
     crypto_core_ristretto255_scalar_invert(inverse, b);
-    unsigned char password[crypto_core_ristretto255_BYTES] = "TestPass1&";
+    std::string password = "TestPassword&";
+    unsigned char passwordBuffer[crypto_core_ristretto255_BYTES];
+    memcpy(passwordBuffer, password.data(), password.length());
+    CHECK(std::memcmp(passwordBuffer, password.data(), password.length()) == 0);
 
     // encrypt password
-    unsigned char *encryptedPassword = cryptography::encryptUserPassword(password, b);
+    unsigned char *encryptedPassword = cryptography::encryptUserPassword(passwordBuffer, password.length(), b);
 
     // unencrypt the password with the inverse of b
     unsigned char decryptedPassword[crypto_core_ristretto255_BYTES];
@@ -128,10 +130,10 @@ TEST_CASE("Test encryptUserPassword")
 
     // compute expected value
     unsigned char expectedHash[crypto_core_ristretto255_HASHBYTES];
-    crypto_generichash(expectedHash, sizeof expectedHash, password, sizeof password, NULL, 0);
+    crypto_generichash(expectedHash, sizeof expectedHash, passwordBuffer, password.length(), NULL, 0);
     unsigned char expectedPoint[crypto_core_ristretto255_BYTES];
     crypto_core_ristretto255_from_hash(expectedPoint, expectedHash);
 
     CHECK(std::memcmp(expectedPoint, decryptedPassword, crypto_core_ristretto255_BYTES) == 0);
+    free(encryptedPassword);
 }
-*/
