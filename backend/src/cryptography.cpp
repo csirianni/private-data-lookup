@@ -13,10 +13,9 @@ namespace cryptography
         crypto_core_ristretto255_from_hash(point, hash);
 
         // encrypt password
-        unsigned char encryptedPassword[crypto_core_ristretto255_BYTES];
+        unsigned char *encryptedPassword = (unsigned char *)malloc(crypto_core_ristretto255_BYTES);
         crypto_scalarmult_ristretto255(encryptedPassword, b, point);
         return encryptedPassword;
-        // return std::string(encryptedPassword, encryptedPassword + crypto_core_ristretto255_BYTES);
     }
 
     unsigned char *encryptUserPassword(unsigned char *password, unsigned char *b)

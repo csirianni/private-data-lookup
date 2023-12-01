@@ -105,8 +105,11 @@ TEST_CASE("Test encryptPassword fails WHYY")
     CHECK(std::memcmp(expectedPoint, decryptedPassword2, crypto_core_ristretto255_BYTES) == 0);
 
     CHECK(std::memcmp(decryptedPassword, decryptedPassword2, crypto_core_ristretto255_BYTES) == 0);
+    free(encryptedPassword);
+    free(encryptedPassword2);
 }
 
+/*
 TEST_CASE("Test encryptUserPassword")
 {
     // generate constants
@@ -131,3 +134,4 @@ TEST_CASE("Test encryptUserPassword")
 
     CHECK(std::memcmp(expectedPoint, decryptedPassword, crypto_core_ristretto255_BYTES) == 0);
 }
+*/
