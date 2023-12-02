@@ -1,3 +1,5 @@
+import { base64 } from "rfc4648";
+
 const sodium = require("libsodium-wrappers-sumo");
 
 type ServerResponse = {
@@ -43,7 +45,7 @@ function computeIntersection(
 
     const options = new Set(
         serverSet.map(function (element) {
-            return element;
+            return base64.parse(element).join("");
         })
     );
 
@@ -51,7 +53,7 @@ function computeIntersection(
     // so now ((user password)^ab)^-a = (user password)^b
     const clientPasswordB = sodium.crypto_scalarmult_ristretto255(
         aInverse,
-        sodium.from_string(password)
+        base64.parse(password)
     );
     // End of Client phase 2.
 
@@ -61,6 +63,14 @@ function computeIntersection(
     }
 
     return false;
+}
+
+function isEqual(arr1: Uint8Array, arr2: Uint8Array): boolean {
+    if (arr1.length !== arr2.length) {
+        return false
+    }
+
+    return arr1.every((value, index) => value === arr2[index])
 }
 
 // Make API call to server to check if password was found in breached dataset
@@ -77,7 +87,7 @@ export async function checkSecurity(password: string) {
                     "Access-Control-Allow-Headers": "*", // cors setting
                     "Content-Type": "application/json",
                 },
-                body: seededPassword,
+                body: base64.stringify(seededPassword),
             }
         );
         const data = await response.json();

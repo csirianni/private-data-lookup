@@ -61,19 +61,20 @@ namespace server
             .methods("POST"_method)([passwords, b](const crow::request &req)
                                     {
         crow::json::wvalue response;
-
         std::string user_password = req.body.data();
-        printf("%s", user_password.c_str());
         if (user_password.empty()) 
         { 
             response["status"] = "error";
             return response;
         }
 
-        std::string password = cryptography::encryptPassword(user_password, b);
+        std::string encrypted_password = cryptography::encryptPassword(crow::utility::base64decode(user_password, user_password.size()), b);
+        std::vector<std::string> mock;
+        mock.push_back(crow::utility::base64encode("Chocolate&1", std::string("Chocolate&1").size()));
+
         response["status"] = "success";
-        response["userPassword"] = password;
-        response["breachedPasswords"] = passwords;
+        response["userPassword"] = crow::utility::base64encode(encrypted_password, encrypted_password.size());
+        response["breachedPasswords"] = mock;
         
         return response; });
     }

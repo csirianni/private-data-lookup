@@ -18,7 +18,8 @@
         "node-fetch": "^2.6.7",
         "react": "^18",
         "react-dom": "^18",
-        "react-password-checklist": "^1.5.0"
+        "react-password-checklist": "^1.5.0",
+        "rfc4648": "^1.5.3"
     },
     "devDependencies": {
         "@types/jest": "^29.5.10",
