@@ -1,12 +1,14 @@
 find_package(Catch2 REQUIRED)
+find_package(nlohmann_json 3.11.3 REQUIRED)
 
 set (TEST_SOURCE
     password.cpp
     server.cpp
+    cryptography.cpp
 )
 
 add_executable(pdl_test ${TEST_SOURCE})
 
-target_link_libraries(pdl_test src Catch2::Catch2WithMain)
+target_link_libraries(pdl_test src Catch2::Catch2WithMain nlohmann_json::nlohmann_json)
 
 target_include_directories(pdl_test PUBLIC ${CMAKE_SOURCE_DIR}/src)

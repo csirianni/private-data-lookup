@@ -1,12 +1,14 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
+#include <string>
 #include <unordered_set>
 #include "crow.h"
 #include "crow/middlewares/cors.h"
 #include "database.hpp"
 #include "password.hpp"
 #include "server.hpp"
+#include "sodium.h"
+#include "cryptography.hpp"
 
 int main()
 {
@@ -15,12 +17,20 @@ int main()
 
     // generate and insert the passwords into the database
     std::unordered_set<std::string> passwords = password::generatePasswords(100, 20);
+    passwords.insert("TestPass1&");
+    passwords.insert("ChocolateCake1!");
+    // 1. generate secret key b
+    unsigned char b[crypto_core_ristretto255_SCALARBYTES];
+    crypto_core_ristretto255_scalar_random(b);
+    // 2. encrypt each password with b (and hash to point)
+    std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b);
+
+    // 3. insert into database
     for (const auto &password : passwords)
     {
         db.execute("INSERT INTO passwords (password) VALUES ('" + password + "');");
     }
     // test password
-    passwords.insert("TestPass1&");
     db.execute("INSERT INTO passwords (password) VALUES ('TestPass1&');");
 
     // Enable CORS
@@ -33,8 +43,7 @@ int main()
 
     // initialize endpoints
     server::root(app);
-    server::passwords(app, passwords);
-    server::intersection(app, passwords);
+    server::breachedPasswords(app, encrypted_passwords, b);
 
     // set the port, set the app to run on multiple threads, and run the app
     app.port(18080).multithreaded().run();

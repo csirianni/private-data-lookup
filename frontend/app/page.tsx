@@ -26,7 +26,7 @@ import Snackbar, { SnackbarOrigin } from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/navigation";
-import { checkSecurity } from "./handlers";
+import { checkSecurity } from "./psi";
 import PasswordChecklist from "react-password-checklist";
 
 // can change colors if we want
