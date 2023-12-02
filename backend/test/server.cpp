@@ -2,6 +2,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include "server.hpp"
 #include "password.hpp"
+#include "cryptography.hpp"
+#include "sodium.h"
 
 TEST_CASE("Test endpoints return response code 200")
 {
@@ -20,6 +22,11 @@ TEST_CASE("Test endpoints return response code 200")
     server::root(app);
     server::passwords(app, passwords);
     server::intersection(app, passwords);
+
+    unsigned char b[crypto_core_ristretto255_SCALARBYTES];
+    crypto_core_ristretto255_scalar_random(b);
+    std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b);
+    server::breachedPasswords(app, encrypted_passwords, b);
 
     // check that all the route handlers were created
     app.validate();
@@ -46,6 +53,18 @@ TEST_CASE("Test endpoints return response code 200")
     SECTION("Intersection")
     {
         req.url = "/intersection";
+        req.method = "POST"_method;
+        req.add_header("Access-Control-Allow-Headers", "*");
+        req.add_header("Content-Type", "application/json");
+        req.body = "TestPass1&";
+
+        app.handle(req, res);
+        CHECK(res.code == 200);
+    }
+
+    SECTION("Breached Passwords")
+    {
+        req.url = "/breachedPasswords";
         req.method = "POST"_method;
         req.add_header("Access-Control-Allow-Headers", "*");
         req.add_header("Content-Type", "application/json");
