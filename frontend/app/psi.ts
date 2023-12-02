@@ -39,29 +39,18 @@ function computeIntersection(
     data: ServerResponse,
     aInverse: Uint8Array
 ): boolean {
-    const password = data.userPassword;
-    const serverSet = data.breachedPasswords;
-
-    const options = new Set(
-        serverSet.map(function (element) {
-            return base64.parse(element).join("");
-        })
-    );
+    const userPassword = base64.parse(data.userPassword);
+    const breachedPasswords = new Set((data.breachedPasswords).map(function (element) { return base64.parse(element).join(""); }));
 
     // Client phase 2 - applies inverse seed A to (user password)^ab
     // so now ((user password)^ab)^-a = (user password)^b
     const clientPasswordB = sodium.crypto_scalarmult_ristretto255(
         aInverse,
-        base64.parse(password)
+        userPassword
     );
     // End of Client phase 2.
 
-    if (options.has(clientPasswordB.join(""))) {
-        console.log(clientPasswordB.join(""));
-        return true;
-    }
-
-    return false;
+    return breachedPasswords.has(clientPasswordB.join(""));
 }
 
 // Make API call to server to check if password was found in breached dataset
