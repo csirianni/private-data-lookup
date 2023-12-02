@@ -42,8 +42,6 @@ int main()
 
     // initialize endpoints
     server::root(app);
-    server::passwords(app, passwords);
-    server::intersection(app, passwords);
     server::breachedPasswords(app, encrypted_passwords, b);
 
     // set the port, set the app to run on multiple threads, and run the app
