@@ -33,7 +33,7 @@ namespace server
     void intersection(crow::App<crow::CORSHandler> &app, const std::unordered_set<std::string> &passwords);
 
     /**
-     * @brief Endpoint apply secret key b to user password and breached passwords.
+     * @brief Endpoint to serve the user password and breached passwords raised to the power of b.
      *
      * @param app The crow server.
      * @param passwords The vector of all breached passwords.
