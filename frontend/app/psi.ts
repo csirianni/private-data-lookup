@@ -65,14 +65,6 @@ function computeIntersection(
     return false;
 }
 
-function isEqual(arr1: Uint8Array, arr2: Uint8Array): boolean {
-    if (arr1.length !== arr2.length) {
-        return false
-    }
-
-    return arr1.every((value, index) => value === arr2[index])
-}
-
 // Make API call to server to check if password was found in breached dataset
 export async function checkSecurity(password: string) {
     try {
