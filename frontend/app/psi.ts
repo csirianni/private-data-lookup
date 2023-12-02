@@ -83,9 +83,9 @@ export async function checkSecurity(password: string) {
         );
         const data = await response.json();
         if (computeIntersection(data, keyInverse)) {
-            return { status: "success" };
-        } else {
             return { status: "fail" };
+        } else {
+            return { status: "success" };
         }
     } catch (error) {
         console.error("Error fetching data:", error);
