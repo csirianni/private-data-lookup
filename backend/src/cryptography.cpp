@@ -3,7 +3,6 @@
 
 namespace cryptography
 {
-
     std::string encryptPassword(const std::string &password, unsigned char *b)
     {
         // hash password to point
@@ -16,22 +15,6 @@ namespace cryptography
         unsigned char encryptedPassword[crypto_core_ristretto255_BYTES];
         crypto_scalarmult_ristretto255(encryptedPassword, b, point);
         return std::string(encryptedPassword, encryptedPassword + crypto_core_ristretto255_BYTES);
-    }
-
-    // TODO: should type signature be const unsigned char*
-
-    unsigned char *encryptUserPassword(unsigned char *password, size_t length, unsigned char *b)
-    {
-        // hash password to point
-        unsigned char hash[crypto_core_ristretto255_HASHBYTES];
-        crypto_generichash(hash, sizeof hash, password, length, NULL, 0);
-        unsigned char point[crypto_core_ristretto255_BYTES];
-        crypto_core_ristretto255_from_hash(point, hash);
-
-        // encrypt password
-        unsigned char *encryptedPassword = (unsigned char *)malloc(crypto_core_ristretto255_BYTES);
-        crypto_scalarmult_ristretto255(encryptedPassword, b, point);
-        return encryptedPassword;
     }
 
     std::vector<std::string> encrypt(const std::unordered_set<std::string> &passwords, unsigned char *b)
