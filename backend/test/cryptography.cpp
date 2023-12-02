@@ -15,7 +15,7 @@ TEST_CASE("Test encryptPassword")
         const std::string password = "TestPass1&";
 
         // encrypt password
-        std::string encryptedPasswordStr = cryptography::encryptPassword(password, b);
+        std::string encryptedPasswordStr = cryptography::hashAndEncryptPassword(password, b);
         unsigned char encryptedPassword[crypto_core_ristretto255_BYTES];
         memcpy(encryptedPassword, encryptedPasswordStr.data(), crypto_core_ristretto255_BYTES);
 

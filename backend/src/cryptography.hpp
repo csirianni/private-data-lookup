@@ -14,6 +14,8 @@ namespace cryptography
      * @param b the secret key
      * @return std::string the encrypted password
      */
+    std::string hashAndEncryptPassword(const std::string &password, unsigned char *b);
+
     std::string encryptPassword(const std::string &password, unsigned char *b);
 
     /**
