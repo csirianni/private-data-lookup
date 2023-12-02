@@ -18,6 +18,7 @@ int main()
     // generate and insert the passwords into the database
     std::unordered_set<std::string> passwords = password::generatePasswords(100, 20);
     passwords.insert("TestPass1&");
+    passwords.insert("ChocolateCake1!");
     // 1. generate secret key b
     unsigned char b[crypto_core_ristretto255_SCALARBYTES];
     crypto_core_ristretto255_scalar_random(b);
