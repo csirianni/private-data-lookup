@@ -1,6 +1,22 @@
 #include "server.hpp"
 #include "cryptography.hpp"
 
+namespace
+{
+    std::vector<std::string> encodePasswords(const std::vector<std::string> &passwords)
+    {
+        std::vector<std::string> result;
+        result.reserve(passwords.size());
+
+        for (const auto &password : passwords)
+        {
+            result.push_back(crow::utility::base64encode(password, password.size()));
+        }
+
+        return result;
+    }
+}
+
 namespace server
 {
     void root(crow::App<crow::CORSHandler> &app)
@@ -69,11 +85,12 @@ namespace server
         }
 
         std::string encrypted_password = cryptography::encryptPassword(crow::utility::base64decode(user_password, user_password.size()), b);
-        std::vector<std::string> mock;
-        mock.push_back(crow::utility::base64encode("Chocolate&1", std::string("Chocolate&1").size()));
 
         response["status"] = "success";
         response["userPassword"] = crow::utility::base64encode(encrypted_password, encrypted_password.size());
+        // response["breachedPasswords"] = encodePasswords(passwords);
+        std::vector<std::string> mock;
+        mock.push_back(crow::utility::base64encode("Chocolate&1", std::string("Chocolate&1").size()));
         response["breachedPasswords"] = mock;
         
         return response; });
