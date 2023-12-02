@@ -88,10 +88,7 @@ namespace server
 
         response["status"] = "success";
         response["userPassword"] = crow::utility::base64encode(encrypted_password, encrypted_password.size());
-        // response["breachedPasswords"] = encodePasswords(passwords);
-        std::vector<std::string> mock;
-        mock.push_back(crow::utility::base64encode("Chocolate&1", std::string("Chocolate&1").size()));
-        response["breachedPasswords"] = mock;
+        response["breachedPasswords"] = encodePasswords(passwords);
         
         return response; });
     }

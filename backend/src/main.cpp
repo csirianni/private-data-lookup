@@ -24,8 +24,6 @@ int main()
     // 2. encrypt each password with b (and hash to point)
     std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b);
 
-    // helper
-
     // 3. insert into database
     for (const auto &password : passwords)
     {
