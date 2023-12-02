@@ -10,7 +10,7 @@ type ServerResponse = {
 export function hashToPoint(input: string): Uint8Array {
     const hash = sodium.crypto_generichash(
         sodium.crypto_core_ristretto255_HASHBYTES,
-        sodium.from_string(input)
+        sodium.from_string(input),
     );
     return sodium.crypto_core_ristretto255_from_hash(hash);
 }
@@ -32,7 +32,6 @@ export function applySeed(input: string): [Uint8Array, Uint8Array] {
         seed,
         point
     );
-    console.log("seeded password: ", new TextDecoder().decode(seededPassword.buffer));
     return [seededPassword, seedInverse];
 }
 
@@ -83,7 +82,6 @@ export async function checkSecurity(password: string) {
             }
         );
         const data = await response.json();
-        console.log(data)
         if (computeIntersection(data, keyInverse)) {
             return { status: "success" };
         } else {
