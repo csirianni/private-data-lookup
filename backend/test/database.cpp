@@ -5,12 +5,13 @@
 
 TEST_CASE("Test Database class")
 {
-    std::ofstream file("test.db");
+    std::string path = "test.db";
+    std::ofstream file(path);
     REQUIRE(file.is_open());
 
     SECTION("Execute SELECT query")
     {
-        database::Database db = database::Database("test.db");
+        database::Database db = database::Database(path);
         REQUIRE_NOTHROW(db.execute("CREATE TABLE names (name TEXT);"));
 
         std::vector<std::string> names = {"Cedric", "Stella", "Jessica"};
@@ -29,5 +30,5 @@ TEST_CASE("Test Database class")
         db.close();
     }
 
-    REQUIRE(std::remove("test.db") == 0);
+    REQUIRE(std::remove(path.c_str()) == 0);
 }
