@@ -1,6 +1,7 @@
 #include <filesystem>
 #include <sqlite3.h>
 #include "database.hpp"
+#include "spdlog/spdlog.h"
 
 namespace
 {
@@ -42,8 +43,8 @@ namespace database
         }
         else
         {
-            printf("Database created successfully\n");
-            printf("SQLite version: %s\n", sqlite3_libversion());
+            spdlog::info("Database created successfully");
+            spdlog::info("SQLite version: {}", sqlite3_libversion());
         }
     }
 

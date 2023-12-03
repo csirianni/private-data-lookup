@@ -9,9 +9,12 @@
 #include "server.hpp"
 #include "sodium.h"
 #include "cryptography.hpp"
+#include "spdlog/spdlog.h"
 
 int main(int argc, char *argv[])
 {
+    spdlog::set_level(spdlog::level::debug);
+
     if (argc < 2 || argc > 3)
     {
         printf("Usage: %s <database file> [--rebuild]\n", argv[0]);
@@ -48,10 +51,21 @@ int main(int argc, char *argv[])
     std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b);
 
     // 3. insert into database
-    // TODO: changet this to encrypted_passwords after encoding
+    // TODO: change this to encrypted_passwords after encoding
     for (const auto &password : passwords)
     {
         db.execute("INSERT INTO passwords (password) VALUES ('" + password + "');");
+    }
+
+    std::function<std::string(sqlite3_stmt *)> callback = [](sqlite3_stmt *stmt)
+    {
+        return std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+    };
+    std::vector<std::string> test = db.execute("SELECT * FROM passwords;", callback);
+
+    for (const auto &password : test)
+    {
+        printf("%s\n", password.c_str());
     }
 
     // Enable CORS
