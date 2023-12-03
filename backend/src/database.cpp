@@ -28,8 +28,15 @@ namespace database
         int result = sqlite3_open_v2(file_path.c_str(), &db_, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
         if (result != SQLITE_OK)
         {
+            // TODO: improve error handling
+            // TODO: add logging
             const char *error_msg = sqlite3_errmsg(db_);
             fprintf(stderr, "SQLite error: %s\n", error_msg);
+        }
+        else
+        {
+            printf("Database created successfully\n");
+            printf("SQLite version: %s\n", sqlite3_libversion());
         }
     }
 

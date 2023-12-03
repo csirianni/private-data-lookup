@@ -28,6 +28,24 @@ namespace database
          */
         void execute(const std::string &command);
 
+        template <typename T>
+        std::vector<T> execute(const std::string &command, std::function<T(sqlite3_stmt *)> callback)
+        {
+            sqlite3_stmt *stmt;
+            if (sqlite3_prepare_v2(db_, command.c_str(), -1, &stmt, NULL) != SQLITE_OK)
+            {
+                const char *error_msg = sqlite3_errmsg(db_);
+                fprintf(stderr, "SQLite error: %s\n", error_msg);
+            }
+            std::vector<T> result;
+            // TODO: vector reserve
+            while (sqlite3_step(stmt) == SQLITE_ROW)
+            {
+                result.push_back(callback(stmt));
+            }
+            return result;
+        }
+
         /**
          * @brief Print the rows of the provided table.
          *

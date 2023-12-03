@@ -19,9 +19,11 @@ int main()
     std::unordered_set<std::string> passwords = password::generatePasswords(100, 20);
     passwords.insert("TestPass1&");
     passwords.insert("ChocolateCake1!");
+
     // 1. generate secret key b
     unsigned char b[crypto_core_ristretto255_SCALARBYTES];
     crypto_core_ristretto255_scalar_random(b);
+
     // 2. encrypt each password with b (and hash to point)
     std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b);
 
@@ -32,6 +34,17 @@ int main()
     }
     // test password
     db.execute("INSERT INTO passwords (password) VALUES ('TestPass1&');");
+
+    std::function<std::string(sqlite3_stmt *)> callback = [](sqlite3_stmt *stmt)
+    {
+        return std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+    };
+    std::vector<std::string> test = db.execute("SELECT * FROM passwords;", callback);
+
+    for (const auto &password : test)
+    {
+        printf("%s\n", password.c_str());
+    }
 
     // Enable CORS
     crow::App<crow::CORSHandler> app;
