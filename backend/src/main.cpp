@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
     // TODO: change this to encrypted_passwords after encoding
     for (const auto &password : passwords)
     {
+        // TODO: encode password before inserting
         db.execute("INSERT INTO passwords (password) VALUES ('" + password + "');");
     }
 
@@ -71,6 +72,7 @@ int main(int argc, char *argv[])
 
     // initialize endpoints
     server::root(app);
+    // TODO: remove encrypted_passwords from parameters
     server::breachedPasswords(app, encrypted_passwords, b);
 
     // set the port, set the app to run on multiple threads, and run the app
