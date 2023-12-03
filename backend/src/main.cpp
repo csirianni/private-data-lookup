@@ -36,7 +36,11 @@ int main(int argc, char *argv[])
     }
 
     database::Database db = database::Database(argv[1], rebuild);
-    db.execute("CREATE TABLE passwords (password TEXT);");
+    if (rebuild)
+    {
+
+        db.execute("CREATE TABLE passwords (password TEXT);");
+    }
 
     // generate and insert the passwords into the database
     std::unordered_set<std::string> passwords = password::generatePasswords(100, 20);
@@ -55,17 +59,6 @@ int main(int argc, char *argv[])
     for (const auto &password : passwords)
     {
         db.execute("INSERT INTO passwords (password) VALUES ('" + password + "');");
-    }
-
-    std::function<std::string(sqlite3_stmt *)> callback = [](sqlite3_stmt *stmt)
-    {
-        return std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
-    };
-    std::vector<std::string> test = db.execute("SELECT * FROM passwords;", callback);
-
-    for (const auto &password : test)
-    {
-        printf("%s\n", password.c_str());
     }
 
     // Enable CORS
