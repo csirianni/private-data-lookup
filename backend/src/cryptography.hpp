@@ -16,6 +16,7 @@ namespace cryptography
      */
     std::string hashAndEncryptPassword(const std::string &password, unsigned char *b);
 
+    // TODO: add documentation
     std::string encryptPassword(const std::string &password, unsigned char *b);
 
     /**

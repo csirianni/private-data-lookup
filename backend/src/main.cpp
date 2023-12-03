@@ -28,22 +28,10 @@ int main()
     std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b);
 
     // 3. insert into database
+    // TODO: changet this to encrypted_passwords after encoding
     for (const auto &password : passwords)
     {
         db.execute("INSERT INTO passwords (password) VALUES ('" + password + "');");
-    }
-    // test password
-    db.execute("INSERT INTO passwords (password) VALUES ('TestPass1&');");
-
-    std::function<std::string(sqlite3_stmt *)> callback = [](sqlite3_stmt *stmt)
-    {
-        return std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
-    };
-    std::vector<std::string> test = db.execute("SELECT * FROM passwords;", callback);
-
-    for (const auto &password : test)
-    {
-        printf("%s\n", password.c_str());
     }
 
     // Enable CORS

@@ -44,6 +44,7 @@ namespace server
 
         std::string encrypted_password = cryptography::encryptPassword(crow::utility::base64decode(user_password, user_password.size()), b);
 
+        // TODO: use database for passwords
         response["status"] = "success";
         response["userPassword"] = crow::utility::base64encode(encrypted_password, encrypted_password.size());
         response["breachedPasswords"] = encodePasswords(passwords);

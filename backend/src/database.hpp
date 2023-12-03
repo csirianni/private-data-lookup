@@ -30,6 +30,7 @@ namespace database
          */
         void execute(const std::string &command);
 
+        // TODO: add documentation
         template <typename T>
         std::vector<T> execute(const std::string &command, std::function<T(sqlite3_stmt *)> callback)
         {
