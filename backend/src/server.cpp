@@ -1,7 +1,5 @@
 #include "server.hpp"
-#include "cryptography.hpp"
 #include "sqlite3.h"
-#include "database.hpp"
 
 namespace
 {
@@ -31,11 +29,10 @@ namespace server
         return response; });
     }
 
-    // TODO: add db to parameters
-    void breachedPasswords(crow::App<crow::CORSHandler> &app, const std::vector<std::string> &passwords, unsigned char *b)
+    void breachedPasswords(crow::App<crow::CORSHandler> &app, database::Database &db, unsigned char *b)
     {
         CROW_ROUTE(app, "/breachedPasswords")
-            .methods("POST"_method)([passwords, b](const crow::request &req)
+            .methods("POST"_method)([&db, b](const crow::request &req)
                                     {
         crow::json::wvalue response;
         std::string user_password = req.body.data();
@@ -47,18 +44,14 @@ namespace server
 
         std::string encrypted_password = cryptography::encryptPassword(crow::utility::base64decode(user_password, user_password.size()), b);
 
-        // std::function <std::string(sqlite3_stmt *)> callback = [](sqlite3_stmt *stmt) {
-        //     return std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
-        // };
-        // // TODO: use db to get passwords
-        // std::vector<std::string> result = database::Database("passwords.db").execute("SELECT * FROM passwords;", callback);
+        std::function <std::string(sqlite3_stmt *)> callback = [](sqlite3_stmt *stmt) {
+            return std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+        };
+        std::vector<std::string> result = db.execute("SELECT * FROM passwords;", callback);
 
-
-        // TODO: use database for passwords
         response["status"] = "success";
         response["userPassword"] = crow::utility::base64encode(encrypted_password, encrypted_password.size());
-        // TODO: no longer encode because passwords are already encoded
-        response["breachedPasswords"] = encodePasswords(passwords);
+        response["breachedPasswords"] = result;
         
         return response; });
     }

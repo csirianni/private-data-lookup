@@ -1,6 +1,8 @@
 #include <string>
 #include <unordered_set>
 #include <vector>
+#include "database.hpp"
+#include "cryptography.hpp"
 #include "crow.h"
 #include "crow/middlewares/cors.h"
 
@@ -20,9 +22,9 @@ namespace server
      * @brief Endpoint to serve the user password and breached passwords raised to the power of b.
      *
      * @param app The crow server.
-     * @param passwords The vector of all breached passwords.
+     * @param db The database of all breached passwords.
      * @param b The secret key.
      */
-    void breachedPasswords(crow::App<crow::CORSHandler> &app, const std::vector<std::string> &passwords, unsigned char *b);
+    void breachedPasswords(crow::App<crow::CORSHandler> &app, database::Database &db, unsigned char *b);
 }
 #endif // SERVER_H
