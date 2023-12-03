@@ -37,7 +37,6 @@ namespace database
         if (result != SQLITE_OK)
         {
             // TODO: improve error handling
-            // TODO: add logging
             const char *error_msg = sqlite3_errmsg(db_);
             fprintf(stderr, "SQLite error: %s\n", error_msg);
         }
@@ -89,8 +88,8 @@ namespace database
             {
                 const char *error_msg = sqlite3_errmsg(db_);
                 fprintf(stderr, "SQLite error: %s\n", error_msg);
+                std::abort();
             }
-            std::abort();
         }
     }
 }
