@@ -20,9 +20,15 @@ namespace database
          *
          * @warning If a file already exists at the provided path, it is replaced.
          * @param file_path The path for the .db file.
-         * @param rebuild Whether or not to rebuild the database.
+         * @param build Whether or not to build the database.
          */
-        Database(const std::string &file_path, bool rebuild = false);
+        Database(const std::string &file_path, bool build = false);
+
+        /**
+         * @brief Open a connection with the SQLite database.
+         * 
+         */
+        void open(const std::string &file_path);
 
         /**
          * @brief Execute the provided SQL command.

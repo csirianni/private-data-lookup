@@ -17,26 +17,26 @@ int main(int argc, char *argv[])
 
     if (argc < 2 || argc > 3)
     {
-        printf("Usage: %s <database file> [--rebuild]\n", argv[0]);
+        printf("Usage: %s <database file> [--build]\n", argv[0]);
         return 1;
     }
 
-    bool rebuild = false;
+    bool build = false;
     if (argc == 3)
     {
-        if (std::string(argv[2]) == "--rebuild")
+        if (std::string(argv[2]) == "--build")
         {
-            rebuild = true;
+            build = true;
         }
         else
         {
-            printf("Usage: %s <database file> [--rebuild]\n", argv[0]);
+            printf("Usage: %s <database file> [--build]\n", argv[0]);
             return 1;
         }
     }
 
-    database::Database db = database::Database(argv[1], rebuild);
-    if (rebuild)
+    database::Database db = database::Database(argv[1], build);
+    if (build)
     {
 
         db.execute("CREATE TABLE passwords (password TEXT);");

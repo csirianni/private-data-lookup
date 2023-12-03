@@ -19,26 +19,33 @@ namespace
 
 namespace database
 {
-    Database::Database(const std::string &file_path, bool rebuild) : is_closed_(false)
+    Database::Database(const std::string &file_path, bool build) : is_closed_(false)
     {
-        if (rebuild)
+        // rebuild the database:: if file exists, remove the file
+        if (build && std::filesystem::exists(file_path))
         {
-            if (!std::filesystem::exists(file_path))
-            {
-                throw std::runtime_error("Cannot rebuild file that does not exist");
-            }
             if (std::remove(file_path.c_str()) != 0)
             {
                 throw std::runtime_error("Unable to remove file");
             }
         }
-
-        int result = sqlite3_open_v2(file_path.c_str(), &db_, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
-        if (result != SQLITE_OK)
+        // use existing database: if file does not exist, throw an error
+        else if (!build && !std::filesystem::exists(file_path))
         {
-            // TODO: improve error handling
+            throw std::runtime_error("File does not exist. Use --build to create a new database");
+        }
+
+        // open the database (will create a file path if it does not exist)
+        open(file_path);
+    }
+
+    void Database::open(const std::string &file_path)
+    {
+        int result = sqlite3_open_v2(file_path.c_str(), &db_, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
+        if (result != SQLITE_OK) // database could not be opened
+        {
             const char *error_msg = sqlite3_errmsg(db_);
-            fprintf(stderr, "SQLite error: %s\n", error_msg);
+            throw std::runtime_error(std::string("SQLite error: ") + error_msg);
         }
         else
         {

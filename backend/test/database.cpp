@@ -30,14 +30,16 @@ TEST_CASE("Test Database class")
         db.close();
     }
 
-    SECTION("Allow rebuild")
+    SECTION("Allow build")
     {
-        // try to rebuild a file that doesn't exist
-        REQUIRE_THROWS_AS(database::Database("random.db", true).close(), std::runtime_error);
-        // rebuild the file
-        REQUIRE_NOTHROW(database::Database(path, true).close());
-        // reuse the same file
+        // !build and file does not exist: runtime error
+        REQUIRE_THROWS_AS(database::Database("random.db").close(), std::runtime_error);
+        // !build and file exists: reuse the same file
         REQUIRE_NOTHROW(database::Database(path).close());
+        // build and file exists: replace the file
+        REQUIRE_NOTHROW(database::Database(path, true).close());
+        // build and file does not exist: create a new file
+        REQUIRE_NOTHROW(database::Database(path, true).close());
     }
 
     REQUIRE(std::remove(path.c_str()) == 0);
