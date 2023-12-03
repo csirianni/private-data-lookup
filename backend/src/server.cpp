@@ -42,12 +42,18 @@ namespace server
             return response;
         }
 
-        std::string encrypted_password = cryptography::encryptPassword(crow::utility::base64decode(user_password, user_password.size()), b);
-
+        // get all passwords from database
         std::function <std::string(sqlite3_stmt *)> callback = [](sqlite3_stmt *stmt) {
             return std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
         };
         std::vector<std::string> result = db.execute("SELECT * FROM passwords;", callback);
+
+        // decode b secret key from database
+        std::string b = db.execute("SELECT * FROM secret;", callback)[0];
+        b = crow::utility::base64decode(b, b.size());
+
+        // encrypt user password
+        std::string encrypted_password = cryptography::encryptPassword(crow::utility::base64decode(user_password, user_password.size()), b);
 
         response["status"] = "success";
         response["userPassword"] = crow::utility::base64encode(encrypted_password, encrypted_password.size());

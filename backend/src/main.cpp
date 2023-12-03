@@ -38,28 +38,36 @@ int main(int argc, char *argv[])
     database::Database db = database::Database(argv[1], build);
     if (build)
     {
+        // create password table
+        db.execute("CREATE TABLE passwords (password TEXT, secret_key TEXT);");
 
-        db.execute("CREATE TABLE passwords (password TEXT);");
+        // generate and insert the passwords into the database
+        std::unordered_set<std::string> passwords = password::generatePasswords(100, 20);
+        passwords.insert("TestPass1&");
+        passwords.insert("ChocolateCake1!");
+
+        // 1. generate secret key b
+        unsigned char b[crypto_core_ristretto255_SCALARBYTES];
+        crypto_core_ristretto255_scalar_random(b);
+
+        // 2. encrypt each password with b (and hash to point)
+        std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b);
+
+        // 3. insert into database
+        for (const auto &password : encrypted_passwords)
+        {
+            // encode password before inserting into database
+            db.execute("INSERT INTO passwords (password) VALUES ('" + crow::utility::base64encode(password, password.size()) + "');");
+        }
+
+        // insert key b into database
+        db.execute("INSERT INTO passwords (secret_key) VALUES ('" + crow::utility::base64encode(std::string(reinterpret_cast<const char *>(b), crypto_core_ristretto255_SCALARBYTES), crypto_core_ristretto255_SCALARBYTES) + "');");
     }
-
-    // generate and insert the passwords into the database
-    std::unordered_set<std::string> passwords = password::generatePasswords(100, 20);
-    passwords.insert("TestPass1&");
-    passwords.insert("ChocolateCake1!");
-
-    // 1. generate secret key b
-    unsigned char b[crypto_core_ristretto255_SCALARBYTES];
-    crypto_core_ristretto255_scalar_random(b);
-
-    // 2. encrypt each password with b (and hash to point)
-    std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b);
-
-    // 3. insert into database
-    for (const auto &password : encrypted_passwords)
-    {
-        // encode password before inserting into database
-        db.execute("INSERT INTO passwords (password) VALUES ('" + crow::utility::base64encode(password, password.size()) + "');");
-    }
+    // // error check if !build but passwords table does not exist in the file passed in
+    // else if (!build && db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='passwords';").empty())
+    // {
+    //     throw std::runtime_error("Passwords table does not exist. Use --build to create a new database");
+    // }
 
     // Enable CORS
     crow::App<crow::CORSHandler> app;
