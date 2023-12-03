@@ -1,5 +1,6 @@
 #include <sqlite3.h>
 #include <vector>
+#include <functional>
 
 #ifndef DATABASE_H
 #define DATABASE_H
