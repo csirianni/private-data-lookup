@@ -17,11 +17,17 @@ cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 cmake --build .
 ```
 
-From `/backend`, start the server:
+From `/backend`, start the server with our precomputed database:
 
 ```bash
-cd build && ./backend
+build/src/server build/passwords.db 
 ```
+
+or specify a new database path with the build flag:
+```bash
+build/src/server <path_to_database> --build
+```
+
 
 To fix VS Code import errors with Crow, try adding the following line to your `settings.json`:
 
