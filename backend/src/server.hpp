@@ -23,8 +23,7 @@ namespace server
      *
      * @param app The crow server.
      * @param db The database of all breached passwords.
-     * @param b The secret key.
      */
-    void breachedPasswords(crow::App<crow::CORSHandler> &app, database::Database &db, unsigned char *b);
+    void breachedPasswords(crow::App<crow::CORSHandler> &app, database::Database &db);
 }
 #endif // SERVER_H

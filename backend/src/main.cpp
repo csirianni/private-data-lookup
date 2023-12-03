@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     if (build)
     {
         // create password table
-        db.execute("CREATE TABLE passwords (password TEXT, secret_key TEXT);");
+        db.execute("CREATE TABLE passwords (password TEXT);");
 
         // generate and insert the passwords into the database
         std::unordered_set<std::string> passwords = password::generatePasswords(100, 20);
@@ -60,8 +60,11 @@ int main(int argc, char *argv[])
             db.execute("INSERT INTO passwords (password) VALUES ('" + crow::utility::base64encode(password, password.size()) + "');");
         }
 
-        // insert key b into database
-        db.execute("INSERT INTO passwords (secret_key) VALUES ('" + crow::utility::base64encode(std::string(reinterpret_cast<const char *>(b), crypto_core_ristretto255_SCALARBYTES), crypto_core_ristretto255_SCALARBYTES) + "');");
+        // create key table
+        db.execute("CREATE TABLE secret (key TEXT);");
+
+        // encode key b and insert into database
+        db.execute("INSERT INTO secret (key) VALUES ('" + crow::utility::base64encode(std::string(reinterpret_cast<const char *>(b), crypto_core_ristretto255_SCALARBYTES), crypto_core_ristretto255_SCALARBYTES) + "');");
     }
     // // error check if !build but passwords table does not exist in the file passed in
     // else if (!build && db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='passwords';").empty())
@@ -79,7 +82,7 @@ int main(int argc, char *argv[])
 
     // initialize endpoints
     server::root(app);
-    server::breachedPasswords(app, db, b);
+    server::breachedPasswords(app, db);
 
     // set the port, set the app to run on multiple threads, and run the app
     app.port(18080).multithreaded().run();

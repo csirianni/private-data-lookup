@@ -45,7 +45,7 @@ TEST_CASE("Test endpoints using handler")
         db.execute("INSERT INTO passwords (password) VALUES ('" + crow::utility::base64encode(password, password.size()) + "');");
     }
 
-    server::breachedPasswords(app, db, b);
+    server::breachedPasswords(app, db);
 
     // check that all the route handlers were created
     app.validate();

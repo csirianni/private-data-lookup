@@ -29,10 +29,10 @@ namespace server
         return response; });
     }
 
-    void breachedPasswords(crow::App<crow::CORSHandler> &app, database::Database &db, unsigned char *b)
+    void breachedPasswords(crow::App<crow::CORSHandler> &app, database::Database &db)
     {
         CROW_ROUTE(app, "/breachedPasswords")
-            .methods("POST"_method)([&db, b](const crow::request &req)
+            .methods("POST"_method)([&db](const crow::request &req)
                                     {
         crow::json::wvalue response;
         std::string user_password = req.body.data();
@@ -48,13 +48,16 @@ namespace server
         };
         std::vector<std::string> result = db.execute("SELECT * FROM passwords;", callback);
 
-        // decode b secret key from database
-        std::string b = db.execute("SELECT * FROM secret;", callback)[0];
-        b = crow::utility::base64decode(b, b.size());
+        // get b secret key from database
+        std::string encodedB = db.execute("SELECT * FROM secret;", callback)[0];
+        // decode secret key b
+        std::string decodedB = crow::utility::base64decode(encodedB, encodedB.size());
+
+        // copy secret key b into an unsigned char* 
+        unsigned char *b = (unsigned char *)decodedB.data();
 
         // encrypt user password
         std::string encrypted_password = cryptography::encryptPassword(crow::utility::base64decode(user_password, user_password.size()), b);
-
         response["status"] = "success";
         response["userPassword"] = crow::utility::base64encode(encrypted_password, encrypted_password.size());
         response["breachedPasswords"] = result;
