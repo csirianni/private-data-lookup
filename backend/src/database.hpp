@@ -20,6 +20,7 @@ namespace database
          *
          * @warning If a file already exists at the provided path, it is replaced.
          * @param file_path The path for the .db file.
+         * @param rebuild Whether or not to rebuild the database.
          */
         Database(const std::string &file_path, bool rebuild = false);
 
@@ -30,7 +31,14 @@ namespace database
          */
         void execute(const std::string &command);
 
-        // TODO: add documentation
+        /**
+         * @brief Execute the provided SQL command and load each row into a vector using the callback function.
+         *
+         * @tparam T The type of the vector to be returned.
+         * @param command The command to be executed.
+         * @param callback The callback function to be used to load each row into the vector.
+         * @return std::vector<T> The vector containing the rows of the table.
+         */
         template <typename T>
         std::vector<T> execute(const std::string &command, std::function<T(sqlite3_stmt *)> callback)
         {
