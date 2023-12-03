@@ -43,6 +43,7 @@ namespace database
             {
                 result.push_back(callback(stmt));
             }
+            sqlite3_finalize(stmt);
             return result;
         }
 
