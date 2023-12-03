@@ -55,11 +55,10 @@ int main(int argc, char *argv[])
     std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b);
 
     // 3. insert into database
-    // TODO: change this to encrypted_passwords after encoding
-    for (const auto &password : passwords)
+    for (const auto &password : encrypted_passwords)
     {
-        // TODO: encode password before inserting
-        db.execute("INSERT INTO passwords (password) VALUES ('" + password + "');");
+        // encode password before inserting into database
+        db.execute("INSERT INTO passwords (password) VALUES ('" + crow::utility::base64encode(password, password.size()) + "');");
     }
 
     // Enable CORS
@@ -72,8 +71,7 @@ int main(int argc, char *argv[])
 
     // initialize endpoints
     server::root(app);
-    // TODO: remove encrypted_passwords from parameters
-    server::breachedPasswords(app, encrypted_passwords, b);
+    server::breachedPasswords(app, db, b);
 
     // set the port, set the app to run on multiple threads, and run the app
     app.port(18080).multithreaded().run();
