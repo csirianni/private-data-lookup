@@ -21,7 +21,7 @@ namespace database
          * @warning If a file already exists at the provided path, it is replaced.
          * @param file_path The path for the .db file.
          */
-        Database(const std::string &file_path);
+        Database(const std::string &file_path, bool rebuild = false);
 
         /**
          * @brief Execute the provided SQL command.

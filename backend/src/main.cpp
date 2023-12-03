@@ -10,9 +10,29 @@
 #include "sodium.h"
 #include "cryptography.hpp"
 
-int main()
+int main(int argc, char *argv[])
 {
-    database::Database db = database::Database("passwords.db");
+    if (argc < 2 || argc > 3)
+    {
+        printf("Usage: %s <database file> [--rebuild]\n", argv[0]);
+        return 1;
+    }
+
+    bool rebuild = false;
+    if (argc == 3)
+    {
+        if (std::string(argv[2]) == "--rebuild")
+        {
+            rebuild = true;
+        }
+        else
+        {
+            printf("Usage: %s <database file> [--rebuild]\n", argv[0]);
+            return 1;
+        }
+    }
+
+    database::Database db = database::Database(argv[1], rebuild);
     db.execute("CREATE TABLE passwords (password TEXT);");
 
     // generate and insert the passwords into the database

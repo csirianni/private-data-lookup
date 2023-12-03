@@ -18,11 +18,18 @@ namespace
 
 namespace database
 {
-    Database::Database(const std::string &file_path) : is_closed_(false)
+    Database::Database(const std::string &file_path, bool rebuild) : is_closed_(false)
     {
-        if (std::filesystem::exists(file_path))
+        if (rebuild)
         {
-            std::remove(file_path.c_str());
+            if (!std::filesystem::exists(file_path))
+            {
+                throw std::runtime_error("Cannot rebuild file that does not exist");
+            }
+            if (std::remove(file_path.c_str()) != 0)
+            {
+                throw std::runtime_error("Unable to remove file");
+            }
         }
 
         int result = sqlite3_open_v2(file_path.c_str(), &db_, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
