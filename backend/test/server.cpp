@@ -24,9 +24,10 @@ TEST_CASE("Test endpoints using handler")
     std::ofstream file(path);
     REQUIRE(file.is_open());
 
-    // create the database
+    // create the database, with tables passwords and secret
     database::Database db = database::Database(path);
     REQUIRE_NOTHROW(db.execute("CREATE TABLE passwords (password TEXT);"));
+    REQUIRE_NOTHROW(db.execute("CREATE TABLE secret (key TEXT);"));
 
     // create a mock password set
     std::unordered_set<std::string> passwords = password::generatePasswords(3, 12);
@@ -44,6 +45,9 @@ TEST_CASE("Test endpoints using handler")
         // encode password before inserting into database
         db.execute("INSERT INTO passwords (password) VALUES ('" + crow::utility::base64encode(password, password.size()) + "');");
     }
+
+    // encode key b and insert into database
+    db.execute("INSERT INTO secret (key) VALUES ('" + crow::utility::base64encode(std::string(reinterpret_cast<const char *>(b), crypto_core_ristretto255_SCALARBYTES), crypto_core_ristretto255_SCALARBYTES) + "');");
 
     server::breachedPasswords(app, db);
 
