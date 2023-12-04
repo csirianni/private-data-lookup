@@ -30,6 +30,24 @@ TEST_CASE("Test Database class")
         db.close();
     }
 
+    SECTION("Rebuild the database of names, database should be empty")
+    {
+        database::Database db = database::Database(path, true);
+
+        // callback function to check if the database is empty
+        std::function<bool(sqlite3_stmt *)> callback = [](sqlite3_stmt *stmt)
+        {
+            int count = atoi(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+            return count == 0;
+        };
+
+        // query the sqlite_schema table to check if the database is empty
+        std::vector<bool> result = db.execute("SELECT COUNT(*) FROM sqlite_schema;", callback);
+        CHECK(result.front() == true);
+
+        db.close();
+    }
+
     SECTION("Allow build")
     {
         // !build and file does not exist: runtime error
