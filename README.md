@@ -33,7 +33,7 @@ cmake --build .
 Then, you can simply run
 
 ```console
-./src/server
+build/src/server <database filepath>
 ```
 
 Ensure that the backend is running with the frontend, otherwise you will see a message of server errors on the front-end website.

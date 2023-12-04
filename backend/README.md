@@ -17,17 +17,15 @@ cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 cmake --build .
 ```
 
-From `/backend`, start the server with our precomputed database:
+From `/backend`, start the server. Use the `--build` flag to create or rebuild a database for the breached passwords or omit it to use an existing one:
+
+```bash
+build/src/server <database filepath> --build
+```
 
 ```bash
 build/src/server build/passwords.db 
 ```
-
-or specify a new database path with the build flag:
-```bash
-build/src/server <path_to_database> --build
-```
-
 
 To fix VS Code import errors with Crow, try adding the following line to your `settings.json`:
 
@@ -42,5 +40,10 @@ To fix VS Code import errors with Crow, try adding the following line to your `s
 After building, you can run tests from `/backend`:
 
 ```bash
-cd build && ./tests
+cd build && ./test/pdl_test	
+```
+
+or alternatively:
+```bash
+make check
 ```
