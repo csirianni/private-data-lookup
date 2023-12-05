@@ -35,6 +35,13 @@ int main(int argc, char *argv[])
         }
     }
 
+    // check if file does not end in .db
+    std::string file_path = argv[1];
+    if (file_path.find(".db") != file_path.length() - 3)
+    {
+        throw std::invalid_argument("File does not end in .db. Use the correct file extension to open the database.");
+    }
+
     database::Database db = database::Database(argv[1], build);
     if (build)
     {

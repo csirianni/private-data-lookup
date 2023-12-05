@@ -85,7 +85,7 @@ TEST_CASE("Test Database class")
 
     SECTION("Build flags")
     {
-        // !build and file does not exist: runtime error
+        // !build and file does not exist: invalid argument error
         REQUIRE_THROWS_AS(database::Database(failpath).close(), std::invalid_argument);
         // !build and file exists: reopen
         REQUIRE_NOTHROW(database::Database(path).close());
