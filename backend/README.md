@@ -24,7 +24,7 @@ build/src/server <database filepath> --build
 ```
 
 ```bash
-build/src/server build/passwords.db 
+build/src/server data/passwords.db 
 ```
 
 To fix VS Code import errors with Crow, try adding the following line to your `settings.json`:
