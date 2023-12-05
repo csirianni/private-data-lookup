@@ -36,11 +36,6 @@ namespace database
         }
 
         // open the database (will create a file path if it does not exist)
-        open(file_path);
-    }
-
-    void Database::open(const std::string &file_path)
-    {
         int result = sqlite3_open_v2(file_path.c_str(), &db_, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
         if (result != SQLITE_OK) // database could not be opened
         {
