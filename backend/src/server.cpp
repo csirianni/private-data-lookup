@@ -49,12 +49,12 @@ namespace server
         std::vector<std::string> result = db.execute("SELECT * FROM passwords;", callback);
 
         // get b secret key from database
-        std::string encodedB = db.execute("SELECT * FROM secret;", callback)[0];
+        std::string encoded_b = db.execute("SELECT * FROM secret;", callback)[0];
         // decode secret key b
-        std::string decodedB = crow::utility::base64decode(encodedB, encodedB.size());
+        std::string decoded_b = crow::utility::base64decode(encoded_b, encoded_b.size());
 
         // copy secret key b into an unsigned char* 
-        unsigned char *b = (unsigned char *)decodedB.data();
+        unsigned char *b = (unsigned char *)decoded_b.data();
 
         // encrypt user password
         std::string encrypted_password = cryptography::encryptPassword(crow::utility::base64decode(user_password, user_password.size()), b);
