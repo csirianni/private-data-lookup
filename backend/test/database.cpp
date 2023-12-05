@@ -35,7 +35,7 @@ TEST_CASE("Test Database class")
         db.close();
     }
 
-    SECTION("Reopening a database has persistent storage")
+    SECTION("Access persistent storage in database")
     {
         // reopen database
         database::Database reopen_db = database::Database(path);
