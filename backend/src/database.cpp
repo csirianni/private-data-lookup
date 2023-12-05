@@ -21,7 +21,7 @@ namespace database
 {
     Database::Database(const std::string &file_path, bool build) : is_closed_(false)
     {
-        // rebuild the database:: if file exists, remove the file
+        // build the database:: if file exists, remove the file
         if (build && std::filesystem::exists(file_path))
         {
             if (std::remove(file_path.c_str()) != 0)
