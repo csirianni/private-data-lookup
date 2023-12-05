@@ -45,10 +45,10 @@ TEST_CASE("Test Database class")
         std::function<bool(sqlite3_stmt *)> callback_names_table = [](sqlite3_stmt *stmt)
         {
             int count = atoi(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
-            return count > 0;
+            return count;
         };
         std::vector<bool> result_names_table = reopen_db.execute("SELECT COUNT(*) FROM sqlite_schema WHERE name = 'names';", callback_names_table);
-        CHECK(result_names_table.front() == true);
+        CHECK(result_names_table.front() == 1);
 
         // check if the previously inserted names are still there
         std::function<std::string(sqlite3_stmt *)> callback_each_name = [](sqlite3_stmt *stmt)
@@ -56,6 +56,7 @@ TEST_CASE("Test Database class")
             return std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
         };
         std::vector<std::string> result_each_name = reopen_db.execute("SELECT * FROM names;", callback_each_name);
+        CHECK(result_each_name.size() == 3);
         CHECK(result_each_name == names);
 
         reopen_db.close();
