@@ -30,7 +30,7 @@ TEST_CASE("Test endpoints using handler")
     REQUIRE_NOTHROW(db.execute("CREATE TABLE secret (key TEXT);"));
 
     // create a mock password set
-    std::unordered_set<std::string> passwords = password::generatePasswords(3, 12);
+    std::unordered_set<std::string> passwords = {"TestPass1&", "ChocolateCake1!", "LoveMyDogs3$"};
 
     // 1. generate secret key b
     unsigned char b[crypto_core_ristretto255_SCALARBYTES];
