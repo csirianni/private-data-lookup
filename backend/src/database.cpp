@@ -32,7 +32,7 @@ namespace database
         // use existing database: if file does not exist, throw an error
         else if (!build && !std::filesystem::exists(file_path))
         {
-            throw std::runtime_error("File does not exist. Use --build to create a new database");
+            throw std::invalid_argument("File does not exist. Use --build to create a new database");
         }
 
         // open the database (will create a file path if it does not exist)
