@@ -5,15 +5,15 @@ namespace
 {
     std::vector<std::string> encodePasswords(const std::vector<std::string> &passwords)
     {
-        std::vector<std::string> result;
-        result.reserve(passwords.size());
+        std::vector<std::string> breached_passwords;
+        breached_passwords.reserve(passwords.size());
 
         for (const auto &password : passwords)
         {
-            result.push_back(crow::utility::base64encode(password, password.size()));
+            breached_passwords.push_back(crow::utility::base64encode(password, password.size()));
         }
 
-        return result;
+        return breached_passwords;
     }
 }
 
@@ -46,7 +46,7 @@ namespace server
         std::function <std::string(sqlite3_stmt *)> callback = [](sqlite3_stmt *stmt) {
             return std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
         };
-        std::vector<std::string> result = db.execute("SELECT * FROM passwords;", callback);
+        std::vector<std::string> breached_passwords = db.execute("SELECT * FROM passwords;", callback);
 
         // get b secret key from database
         std::string encoded_b = db.execute("SELECT * FROM secret;", callback)[0];
@@ -60,7 +60,7 @@ namespace server
         std::string encrypted_password = cryptography::encryptPassword(crow::utility::base64decode(user_password, user_password.size()), b);
         response["status"] = "success";
         response["userPassword"] = crow::utility::base64encode(encrypted_password, encrypted_password.size());
-        response["breachedPasswords"] = result;
+        response["breachedPasswords"] = breached_passwords;
         
         return response; });
     }
