@@ -69,6 +69,7 @@ export default function SignUp() {
     ) => {
         event.preventDefault();
         setIsLoading(true);
+        await new Promise(r => setTimeout(r, 2500));
         const response = await checkSecurity(password); // makes an API call with the user's password
         setIsLoading(false);
 
