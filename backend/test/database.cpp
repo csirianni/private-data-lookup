@@ -73,12 +73,12 @@ TEST_CASE("Test Database class")
             int count = atoi(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
 
             // there is nothing in the database
-            return (count == 0);
+            return count;
         };
 
         // query the sqlite_schema table to check that the database is empty
         std::vector<bool> result = db.execute("SELECT COUNT(*) FROM sqlite_schema;", callback);
-        CHECK(result.front() == true);
+        CHECK(result.front() == 0);
 
         db.close();
     }
