@@ -23,7 +23,7 @@ namespace database
         {
             if (std::remove(file_path.c_str()) != 0)
             {
-                throw std::runtime_error("Unable to remove file");
+                throw std::filesystem::filesystem_error("Unable to remove file", std::error_code(errno, std::generic_category()));
             }
         }
         // use existing database: if file does not exist, throw an error

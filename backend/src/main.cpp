@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
         // encode key b and insert into database
         db.execute("INSERT INTO secret (key) VALUES ('" + crow::utility::base64encode(std::string(reinterpret_cast<const char *>(b), crypto_core_ristretto255_SCALARBYTES), crypto_core_ristretto255_SCALARBYTES) + "');");
     }
-    if (!build)
+    else
     {
         // error check if !build but passwords table does not exist in the file passed in
         std::function<bool(sqlite3_stmt *)> callback = [](sqlite3_stmt *stmt)
@@ -82,11 +82,12 @@ int main(int argc, char *argv[])
             return count;
         };
 
-        // check if passwords table exists
-        std::vector<bool> result = db.execute("SELECT COUNT(*) FROM sqlite_schema WHERE name = 'passwords';", callback);
-        if (result.front() == 0) // no passwords table exists
+        // check if passwords and key table exists
+        std::vector<bool> password_result = db.execute("SELECT COUNT(*) FROM sqlite_schema WHERE name = 'passwords';", callback);
+        std::vector<bool> secret_result = db.execute("SELECT COUNT(*) FROM sqlite_schema WHERE name = 'secret';", callback);
+        if (password_result.front() == 0 || secret_result.front() == 0) // no passwords or no key table exists
         {
-            throw std::runtime_error("Passwords table does not exist. Use --build to create a new database");
+            throw std::invalid_argument("Passwords and/or secret key table does not exist. Use --build to create a new database");
         }
     }
 
