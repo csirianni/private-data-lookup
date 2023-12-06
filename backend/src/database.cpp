@@ -34,7 +34,8 @@ namespace database
 
         // open the database (will create a file path if it does not exist)
         int result = sqlite3_open_v2(file_path.c_str(), &db_, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
-        if (result != SQLITE_OK) // database could not be opened
+        // database could not be opened
+        if (result != SQLITE_OK)
         {
             const char *error_msg = sqlite3_errmsg(db_);
             throw std::runtime_error(std::string("SQLite error: ") + error_msg);
