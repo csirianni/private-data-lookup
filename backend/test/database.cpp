@@ -40,12 +40,12 @@ TEST_CASE("Test Database class")
             std::vector<std::string> names = {"Cedric", "Stella", "Jessica"};
 
             // check if the names table is still there
-            std::function<bool(sqlite3_stmt *)> callback_names_table = [](sqlite3_stmt *stmt)
+            std::function<int(sqlite3_stmt *)> callback_names_table = [](sqlite3_stmt *stmt)
             {
                 int count = atoi(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
                 return count;
             };
-            std::vector<bool> result_names_table = reopen_db.execute("SELECT COUNT(*) FROM sqlite_schema WHERE name = 'names';", callback_names_table);
+            std::vector<int> result_names_table = reopen_db.execute("SELECT COUNT(*) FROM sqlite_schema WHERE name = 'names';", callback_names_table);
             CHECK(result_names_table.front() == 1);
 
             // check if the previously inserted names are still there
@@ -65,7 +65,7 @@ TEST_CASE("Test Database class")
                 database::Database db = database::Database(path, true);
 
                 // callback function to capture the counts of executing the query
-                std::function<bool(sqlite3_stmt *)> callback = [](sqlite3_stmt *stmt)
+                std::function<int(sqlite3_stmt *)> callback = [](sqlite3_stmt *stmt)
                 {
                     int count = atoi(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
 
@@ -74,7 +74,7 @@ TEST_CASE("Test Database class")
                 };
 
                 // query the sqlite_schema table to check that the database is empty
-                std::vector<bool> result = db.execute("SELECT COUNT(*) FROM sqlite_schema;", callback);
+                std::vector<int> result = db.execute("SELECT COUNT(*) FROM sqlite_schema;", callback);
                 CHECK(result.front() == 0);
 
                 db.close();
