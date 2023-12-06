@@ -73,7 +73,8 @@ int main(int argc, char *argv[])
         // encode key b and insert into database
         db.execute("INSERT INTO secret (key) VALUES ('" + crow::utility::base64encode(std::string(reinterpret_cast<const char *>(b), crypto_core_ristretto255_SCALARBYTES), crypto_core_ristretto255_SCALARBYTES) + "');");
     }
-    if(! build){
+    if (!build)
+    {
         // error check if !build but passwords table does not exist in the file passed in
         std::function<bool(sqlite3_stmt *)> callback = [](sqlite3_stmt *stmt)
         {
@@ -88,7 +89,7 @@ int main(int argc, char *argv[])
             throw std::runtime_error("Passwords table does not exist. Use --build to create a new database");
         }
     }
-    
+
     // Enable CORS
     crow::App<crow::CORSHandler> app;
 
