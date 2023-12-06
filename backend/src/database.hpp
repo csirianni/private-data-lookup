@@ -52,7 +52,7 @@ namespace database
             if (sqlite3_prepare_v2(db_, command.c_str(), -1, &stmt, NULL) != SQLITE_OK)
             {
                 const char *error_msg = sqlite3_errmsg(db_);
-                fprintf(stderr, "SQLite error: %s\n", error_msg);
+                throw std::runtime_error(std::string("SQLite error: ") + error_msg);
             }
             std::vector<T> result;
             // TODO: vector reserve

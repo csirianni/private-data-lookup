@@ -1,22 +1,5 @@
 #include "server.hpp"
 #include "sqlite3.h"
-
-namespace
-{
-    std::vector<std::string> encodePasswords(const std::vector<std::string> &passwords)
-    {
-        std::vector<std::string> breached_passwords;
-        breached_passwords.reserve(passwords.size());
-
-        for (const auto &password : passwords)
-        {
-            breached_passwords.push_back(crow::utility::base64encode(password, password.size()));
-        }
-
-        return breached_passwords;
-    }
-}
-
 namespace server
 {
     void root(crow::App<crow::CORSHandler> &app)

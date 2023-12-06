@@ -55,7 +55,7 @@ namespace database
         if (result != SQLITE_OK)
         {
             const char *error_msg = sqlite3_errmsg(db_);
-            fprintf(stderr, "SQLite error: %s\n", error_msg);
+            throw std::runtime_error(std::string("SQLite error: ") + error_msg);
         }
     }
 
@@ -66,7 +66,7 @@ namespace database
         if (result != SQLITE_OK)
         {
             const char *error_msg = sqlite3_errmsg(db_);
-            fprintf(stderr, "SQLite error: %s\n", error_msg);
+            throw std::runtime_error(std::string("SQLite error: ") + error_msg);
         }
     }
 
