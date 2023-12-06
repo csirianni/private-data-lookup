@@ -28,12 +28,6 @@ namespace database
         Database(const std::string &file_path, bool build = false);
 
         /**
-         * @brief Open a connection with the SQLite database.
-         * 
-         */
-        void open(const std::string &file_path);
-
-        /**
          * @brief Execute the provided SQL command.
          *
          * @param command The command to be executed.
