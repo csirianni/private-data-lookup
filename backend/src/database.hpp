@@ -1,6 +1,9 @@
 #include <sqlite3.h>
 #include <vector>
+#include <stdexcept>
 #include <functional>
+#include <filesystem>
+#include "spdlog/spdlog.h"
 
 #ifndef DATABASE_H
 #define DATABASE_H

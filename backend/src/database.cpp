@@ -1,7 +1,4 @@
-#include <filesystem>
-#include <sqlite3.h>
 #include "database.hpp"
-#include "spdlog/spdlog.h"
 
 namespace
 {
