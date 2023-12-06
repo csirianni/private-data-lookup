@@ -86,7 +86,7 @@ namespace database
             if (result != SQLITE_OK)
             {
                 const char *error_msg = sqlite3_errmsg(db_);
-                fprintf(stderr, "SQLite error: %s\n", error_msg);
+                spdlog::error("SQLite error: {}", error_msg);
                 std::abort();
             }
         }
