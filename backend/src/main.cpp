@@ -73,12 +73,22 @@ int main(int argc, char *argv[])
         // encode key b and insert into database
         db.execute("INSERT INTO secret (key) VALUES ('" + crow::utility::base64encode(std::string(reinterpret_cast<const char *>(b), crypto_core_ristretto255_SCALARBYTES), crypto_core_ristretto255_SCALARBYTES) + "');");
     }
-    // // error check if !build but passwords table does not exist in the file passed in
-    // else if (!build && db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='passwords';").empty())
-    // {
-    //     throw std::runtime_error("Passwords table does not exist. Use --build to create a new database");
-    // }
+    if(! build){
+        // error check if !build but passwords table does not exist in the file passed in
+        std::function<bool(sqlite3_stmt *)> callback = [](sqlite3_stmt *stmt)
+        {
+            int count = atoi(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+            return count;
+        };
 
+        // check if passwords table exists
+        std::vector<bool> result = db.execute("SELECT COUNT(*) FROM sqlite_schema WHERE name = 'passwords';", callback);
+        if (result.front() == 0) // no passwords table exists
+        {
+            throw std::runtime_error("Passwords table does not exist. Use --build to create a new database");
+        }
+    }
+    
     // Enable CORS
     crow::App<crow::CORSHandler> app;
 
