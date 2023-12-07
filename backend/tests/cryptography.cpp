@@ -2,6 +2,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include "cryptography.hpp"
 #include "sodium.h"
+#include <cstring>
 
 TEST_CASE("Test hashAndEncryptPassword without leaked byte")
 {
