@@ -1,22 +1,5 @@
 #include "server.hpp"
-#include "cryptography.hpp"
-
-namespace
-{
-    std::vector<std::string> encodePasswords(const std::vector<std::string> &passwords)
-    {
-        std::vector<std::string> result;
-        result.reserve(passwords.size());
-
-        for (const auto &password : passwords)
-        {
-            result.push_back(crow::utility::base64encode(password, password.size()));
-        }
-
-        return result;
-    }
-}
-
+#include "sqlite3.h"
 namespace server
 {
     void root(crow::App<crow::CORSHandler> &app)
@@ -29,10 +12,10 @@ namespace server
         return response; });
     }
 
-    void breachedPasswords(crow::App<crow::CORSHandler> &app, const std::vector<std::string> &passwords, unsigned char *b)
+    void breachedPasswords(crow::App<crow::CORSHandler> &app, database::Database &db)
     {
         CROW_ROUTE(app, "/breachedPasswords")
-            .methods("POST"_method)([passwords, b](const crow::request &req)
+            .methods("POST"_method)([&db](const crow::request &req)
                                     {
         crow::json::wvalue response;
         std::string user_password = req.body.data();
@@ -42,12 +25,25 @@ namespace server
             return response;
         }
 
-        std::string encrypted_password = cryptography::encryptPassword(crow::utility::base64decode(user_password, user_password.size()), b);
-        // std::string encrypted_password = cryptography::encryptPassword("TestPass1&", b);
+        // get all passwords from database
+        std::function <std::string(sqlite3_stmt *)> callback = [](sqlite3_stmt *stmt) {
+            return std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+        };
+        std::vector<std::string> breached_passwords = db.execute("SELECT * FROM passwords;", callback);
 
+        // get b secret key from database
+        std::string encoded_b = db.execute("SELECT * FROM secret;", callback)[0];
+        // decode secret key b
+        std::string decoded_b = crow::utility::base64decode(encoded_b, encoded_b.size());
+
+        // copy secret key b into an unsigned char* 
+        unsigned char *b = (unsigned char *)decoded_b.data();
+
+        // encrypt user password
+        std::string encrypted_password = cryptography::encryptPassword(crow::utility::base64decode(user_password, user_password.size()), b);
         response["status"] = "success";
         response["userPassword"] = crow::utility::base64encode(encrypted_password, encrypted_password.size());
-        response["breachedPasswords"] = encodePasswords(passwords);
+        response["breachedPasswords"] = breached_passwords;
         
         return response; });
     }

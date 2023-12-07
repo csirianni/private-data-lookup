@@ -1,5 +1,3 @@
-#include <filesystem>
-#include <sqlite3.h>
 #include "database.hpp"
 
 namespace
@@ -18,18 +16,34 @@ namespace
 
 namespace database
 {
-    Database::Database(const std::string &file_path) : is_closed_(false)
+    Database::Database(const std::string &file_path, bool build) : is_closed_(false)
     {
-        if (std::filesystem::exists(file_path))
+        // build the database:: if file exists, remove the file
+        if (build && std::filesystem::exists(file_path))
         {
-            std::remove(file_path.c_str());
+            if (std::remove(file_path.c_str()) != 0)
+            {
+                throw std::filesystem::filesystem_error("Unable to remove file", std::error_code(errno, std::generic_category()));
+            }
+        }
+        // use existing database: if file does not exist, throw an error
+        else if (!build && !std::filesystem::exists(file_path))
+        {
+            throw std::invalid_argument("File does not exist. Use --build to create a new database");
         }
 
+        // open the database (will create a file path if it does not exist)
         int result = sqlite3_open_v2(file_path.c_str(), &db_, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
+        // database could not be opened
         if (result != SQLITE_OK)
         {
             const char *error_msg = sqlite3_errmsg(db_);
-            fprintf(stderr, "SQLite error: %s\n", error_msg);
+            throw std::runtime_error(std::string("SQLite error: ") + error_msg);
+        }
+        else
+        {
+            spdlog::info("Database created successfully");
+            spdlog::info("SQLite version: {}", sqlite3_libversion());
         }
     }
 
@@ -39,7 +53,7 @@ namespace database
         if (result != SQLITE_OK)
         {
             const char *error_msg = sqlite3_errmsg(db_);
-            fprintf(stderr, "SQLite error: %s\n", error_msg);
+            throw std::runtime_error(std::string("SQLite error: ") + error_msg);
         }
     }
 
@@ -50,7 +64,7 @@ namespace database
         if (result != SQLITE_OK)
         {
             const char *error_msg = sqlite3_errmsg(db_);
-            fprintf(stderr, "SQLite error: %s\n", error_msg);
+            throw std::runtime_error(std::string("SQLite error: ") + error_msg);
         }
     }
 
@@ -73,9 +87,9 @@ namespace database
             if (result != SQLITE_OK)
             {
                 const char *error_msg = sqlite3_errmsg(db_);
-                fprintf(stderr, "SQLite error: %s\n", error_msg);
+                spdlog::error("SQLite error: {}", error_msg);
+                std::abort();
             }
-            std::abort();
         }
     }
 }

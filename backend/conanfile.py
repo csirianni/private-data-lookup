@@ -11,6 +11,7 @@ class BackendRecipe(ConanFile):
         self.requires("catch2/3.4.0")
         self.requires("libsodium/1.0.18")
         self.requires("nlohmann_json/3.11.3")
+        self.requires("spdlog/1.12.0")
 
     def build_requirements(self):
         self.tool_requires("cmake/3.22.6")

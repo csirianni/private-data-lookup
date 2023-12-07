@@ -6,7 +6,7 @@ namespace cryptography
 {
 
     /**
-     * @brief Encrypt the provided point using secret key b.
+     * @brief Hash and encrypt the provided password using secret key b.
      *
      * This function converts the provided password to a point on an elliptic curve and then encrypts it using the provided secret key.
      *
@@ -16,6 +16,15 @@ namespace cryptography
      */
     std::string hashAndEncryptPassword(const std::string &password, unsigned char *b);
 
+    /**
+     * @brief Encrypt the provided password using secret key b.
+     *
+     * This function does not hash the provided password before encrypting it.
+     *
+     * @param password the password to encrypt
+     * @param b the secret key
+     * @return std::string the encrypted password
+     */
     std::string encryptPassword(const std::string &password, unsigned char *b);
 
     /**

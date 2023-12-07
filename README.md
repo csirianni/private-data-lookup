@@ -30,10 +30,15 @@ cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 cmake --build .
 ```
 
-Then, you can simply run
-
+Then, you can simply run this command on an existing database:
+Database file paths should end in .db, like "passwords.db"
 ```console
-./src/server
+build/src/server <database filepath>
+```
+
+If you want to build a new database from a new or existing database, you can use the --build flag after the filepath. 
+```console
+build/src/server <database filepath> --build
 ```
 
 Ensure that the backend is running with the frontend, otherwise you will see a message of server errors on the front-end website.

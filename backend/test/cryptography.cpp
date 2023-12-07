@@ -3,7 +3,7 @@
 #include "cryptography.hpp"
 #include "sodium.h"
 
-TEST_CASE("Test encryptPassword")
+TEST_CASE("Test hashAndEncryptPassword")
 {
     for (int i = 0; i < 30; ++i)
     {

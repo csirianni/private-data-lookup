@@ -16,16 +16,40 @@ TEST_CASE("Test endpoints using handler")
 
     cors.global().headers("*").methods("POST"_method);
 
-    // create a mock password set
-    std::unordered_set<std::string> passwords = password::generatePasswords(3, 12);
-
     // initialize endpoints
     server::root(app);
 
+    // open a database file
+    std::string path = "test.db";
+    std::ofstream file(path);
+    REQUIRE(file.is_open());
+
+    // create the database, with tables passwords and secret
+    database::Database db = database::Database(path);
+    REQUIRE_NOTHROW(db.execute("CREATE TABLE passwords (password TEXT);"));
+    REQUIRE_NOTHROW(db.execute("CREATE TABLE secret (key TEXT);"));
+
+    // create a mock password set
+    std::unordered_set<std::string> passwords = {"TestPass1&", "ChocolateCake1!", "LoveMyDogs3$"};
+
+    // 1. generate secret key b
     unsigned char b[crypto_core_ristretto255_SCALARBYTES];
     crypto_core_ristretto255_scalar_random(b);
+
+    // 2. encrypt each password with b (and hash to point)
     std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b);
-    server::breachedPasswords(app, encrypted_passwords, b);
+
+    // 3. insert into database
+    for (const auto &password : encrypted_passwords)
+    {
+        // encode password before inserting into database
+        db.execute("INSERT INTO passwords (password) VALUES ('" + crow::utility::base64encode(password, password.size()) + "');");
+    }
+
+    // encode key b and insert into database
+    db.execute("INSERT INTO secret (key) VALUES ('" + crow::utility::base64encode(std::string(reinterpret_cast<const char *>(b), crypto_core_ristretto255_SCALARBYTES), crypto_core_ristretto255_SCALARBYTES) + "');");
+
+    server::breachedPasswords(app, db);
 
     // check that all the route handlers were created
     app.validate();
