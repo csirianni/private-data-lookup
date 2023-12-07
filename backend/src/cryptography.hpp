@@ -2,6 +2,9 @@
 #include <string>
 #include <unordered_set>
 
+#ifndef CRYPTOGRAPHY_H
+#define CRYPTOGRAPHY_H
+
 namespace cryptography
 {
 
@@ -12,9 +15,10 @@ namespace cryptography
      *
      * @param password the password to encrypt
      * @param b the secret key
+     * @param offset the number of bytes to leak
      * @return std::string the encrypted password
      */
-    std::string hashAndEncryptPassword(const std::string &password, unsigned char *b);
+    std::string hashAndEncryptPassword(const std::string &password, unsigned char *b, int offset=0);
 
     /**
      * @brief Encrypt the provided password using secret key b.
@@ -37,3 +41,5 @@ namespace cryptography
     std::vector<std::string> encrypt(const std::unordered_set<std::string> &passwords,
                                      unsigned char *b);
 }
+
+#endif

@@ -3,7 +3,7 @@
 
 namespace cryptography
 {
-    std::string hashAndEncryptPassword(const std::string &password, unsigned char *b)
+    std::string hashAndEncryptPassword(const std::string &password, unsigned char *b, int offset)
     {
         // hash password to point
         unsigned char hash[crypto_core_ristretto255_HASHBYTES];
@@ -12,9 +12,11 @@ namespace cryptography
         crypto_core_ristretto255_from_hash(point, hash);
 
         // encrypt password
-        unsigned char encryptedPassword[crypto_core_ristretto255_BYTES];
-        crypto_scalarmult_ristretto255(encryptedPassword, b, point);
-        return std::string(encryptedPassword, encryptedPassword + crypto_core_ristretto255_BYTES);
+        unsigned char encryptedPassword[crypto_core_ristretto255_BYTES + offset];
+        crypto_scalarmult_ristretto255(encryptedPassword + offset, b, point);
+        memcpy(encryptedPassword, point, offset);
+
+        return std::string(encryptedPassword, encryptedPassword + crypto_core_ristretto255_BYTES + offset);
     }
 
     std::string encryptPassword(const std::string &password, unsigned char *b)
