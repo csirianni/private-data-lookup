@@ -21,7 +21,7 @@ export function hashToPoint(input: string): Uint8Array {
  * @param input the string to be encrypted
  * @returns input with a secret key applied and the key's inverse
  */
-export function applySeed(input: string): [Uint8Array, Uint8Array] {
+export function applySeed(input: string, offset=0): [Uint8Array, Uint8Array] {
     // generate random seed
     const seed = sodium.crypto_core_ristretto255_scalar_random();
     // get seed inverse
@@ -29,19 +29,24 @@ export function applySeed(input: string): [Uint8Array, Uint8Array] {
         sodium.crypto_core_ristretto255_scalar_invert(seed);
     const point = hashToPoint(input);
     // apply seed
+    const leakedBytes = point.subarray(0, offset);
     const seededPassword = sodium.crypto_scalarmult_ristretto255(
         seed,
         point
     );
-    return [seededPassword, seedInverse];
+    var leakedSeededPassword = new Uint8Array(offset + seededPassword.length);
+    leakedSeededPassword.set(leakedBytes, 0);
+    leakedSeededPassword.set(seededPassword, offset);
+    return [leakedSeededPassword, seedInverse];
 }
 
 function computeIntersection(
     data: ServerResponse,
-    aInverse: Uint8Array
+    aInverse: Uint8Array, 
+    offset = 0
 ): boolean {
     const userPassword = base64.parse(data.userPassword);
-    const breachedPasswords = new Set((data.breachedPasswords).map(function (element) { return base64.parse(element).join(""); }));
+    const breachedPasswords = new Set((data.breachedPasswords).map(function (element) { return base64.parse(element).subarray(offset).join(""); }));
 
     // Client phase 2 - applies inverse seed A to (user password)^ab
     // so now ((user password)^ab)^-a = (user password)^b
@@ -55,9 +60,9 @@ function computeIntersection(
 }
 
 // Make API call to server to check if password was found in breached dataset
-export async function checkSecurity(password: string) {
+export async function checkSecurity(password: string, offset = 0) {
     try {
-        const [seededPassword, keyInverse] = applySeed(password);
+        const [seededPassword, keyInverse] = applySeed(password, offset);
 
         const response = await fetch(
             "http://localhost:18080/breachedPasswords",
@@ -72,7 +77,7 @@ export async function checkSecurity(password: string) {
             }
         );
         const data = await response.json();
-        if (computeIntersection(data, keyInverse)) {
+        if (computeIntersection(data, keyInverse, offset)) {
             return { status: "fail" };
         } else {
             return { status: "success" };
