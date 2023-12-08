@@ -44,7 +44,8 @@ int main(int argc, char *argv[])
 
     database::Database db = database::Database(argv[1], build);
     if (build)
-    {
+    {   
+        int offset = 1;
         // create password table
         db.execute("CREATE TABLE passwords (password TEXT);");
 
@@ -58,7 +59,7 @@ int main(int argc, char *argv[])
         crypto_core_ristretto255_scalar_random(b);
 
         // 2. encrypt each password with b (and hash to point)
-        std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b);
+        std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b, offset);
 
         // 3. insert into database
         for (const auto &password : encrypted_passwords)

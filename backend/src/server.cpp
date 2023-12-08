@@ -40,9 +40,10 @@ namespace server
         unsigned char *b = (unsigned char *)decoded_b.data();
 
         // encrypt user password
-        std::string encrypted_password = cryptography::encryptPassword(crow::utility::base64decode(user_password, user_password.size()), b);
+        int offset = 1;
+        std::string encrypted_password = cryptography::encryptPassword(crow::utility::base64decode(user_password, user_password.size()), b, offset);
         response["status"] = "success";
-        response["userPassword"] = crow::utility::base64encode(encrypted_password, encrypted_password.size());
+        response["userPassword"] = crow::utility::base64encode(encrypted_password, encrypted_password.size()+offset);
         response["breachedPasswords"] = breached_passwords;
         
         return response; });
