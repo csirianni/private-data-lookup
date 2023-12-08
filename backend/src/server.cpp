@@ -43,7 +43,7 @@ namespace server
         int offset = 1;
         std::string encrypted_password = cryptography::encryptPassword(crow::utility::base64decode(user_password, user_password.size()), b, offset);
         response["status"] = "success";
-        response["userPassword"] = crow::utility::base64encode(encrypted_password, encrypted_password.size()+offset);
+        response["userPassword"] = crow::utility::base64encode(encrypted_password, encrypted_password.size());
         response["breachedPasswords"] = breached_passwords;
         
         return response; });

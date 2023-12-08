@@ -21,12 +21,11 @@ namespace cryptography
 
     std::string encryptPassword(const std::string &password, unsigned char *b, int offset)
     {
-        // encrypt password
-        const unsigned char *data = (const unsigned char *)password.data();
-        unsigned char encryptedPassword[crypto_core_ristretto255_BYTES + offset];
-        crypto_scalarmult_ristretto255(encryptedPassword + offset, b, data);
-        memcpy(encryptedPassword, data, offset);
-        return std::string(encryptedPassword, encryptedPassword + crypto_core_ristretto255_BYTES+offset);
+        std::string rawPassword = password.substr(offset, crypto_core_ristretto255_BYTES);
+        const unsigned char *data = (const unsigned char *)rawPassword.data();
+        unsigned char encryptedPassword[crypto_core_ristretto255_BYTES];
+        crypto_scalarmult_ristretto255(encryptedPassword, b, data);
+        return std::string(encryptedPassword, encryptedPassword + crypto_core_ristretto255_BYTES);
     }
 
     std::vector<std::string> encrypt(const std::unordered_set<std::string> &passwords, unsigned char *b, int offset)
