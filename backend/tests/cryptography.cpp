@@ -3,7 +3,7 @@
 #include "cryptography.hpp"
 #include "sodium.h"
 
-TEST_CASE("Test hashAndEncryptPassword without leaked byte")
+TEST_CASE("Test hashAndEncryptPassword")
 {
     // generate constants
     const std::string password = "TestPass1&";
@@ -40,18 +40,19 @@ TEST_CASE("Test hashAndEncryptPassword without leaked byte")
     {
         for (int i = 0; i < 30; ++i)
         {
+            const size_t offset = 1;
             // encrypt password
-            std::string encryptedPasswordStr = cryptography::hashAndEncryptPassword(password, b, 1);
-            unsigned char encryptedPassword[crypto_core_ristretto255_BYTES + 1];
-            memcpy(encryptedPassword, encryptedPasswordStr.data(), crypto_core_ristretto255_BYTES + 1);
+            std::string encryptedPasswordStr = cryptography::hashAndEncryptPassword(password, b, offset);
+            unsigned char encryptedPassword[crypto_core_ristretto255_BYTES + offset];
+            memcpy(encryptedPassword, encryptedPasswordStr.data(), crypto_core_ristretto255_BYTES + offset);
 
             // decrypt password
-            unsigned char decryptedPassword[crypto_core_ristretto255_BYTES + 1];
-            int result = crypto_scalarmult_ristretto255(decryptedPassword + 1, inverse, encryptedPassword + 1);
+            unsigned char decryptedPassword[crypto_core_ristretto255_BYTES + offset];
+            int result = crypto_scalarmult_ristretto255(decryptedPassword + offset, inverse, encryptedPassword + offset);
             REQUIRE(result == 0);
-            memcpy(decryptedPassword, encryptedPassword, 1);
+            memcpy(decryptedPassword, encryptedPassword, offset);
 
-            CHECK(std::memcmp(expectedPoint, decryptedPassword + 1, crypto_core_ristretto255_BYTES) == 0);
+            CHECK(std::memcmp(expectedPoint, decryptedPassword + offset, crypto_core_ristretto255_BYTES) == 0);
             CHECK(expectedPoint[0] == decryptedPassword[0]);
         }
     }
