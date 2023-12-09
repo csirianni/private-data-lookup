@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.27)
 project(pdl LANGUAGES CXX)
 
 add_subdirectory("src")
-add_subdirectory("test")
+add_subdirectory("tests")
 
 if(NOT DEFINED CMAKE_CXX_STANDARD)
     set(CMAKE_CXX_STANDARD_20)

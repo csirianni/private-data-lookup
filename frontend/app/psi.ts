@@ -1,6 +1,7 @@
 import { base64 } from "rfc4648";
 
 const sodium = require("libsodium-wrappers-sumo");
+const fetch = require("node-fetch");
 
 type ServerResponse = {
     userPassword: string;
