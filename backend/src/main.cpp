@@ -44,8 +44,9 @@ int main(int argc, char *argv[])
 
     database::Database db = database::Database(argv[1], build);
     if (build)
-    {   
-        int offset = 1;
+    {
+        const size_t offset = 1;
+        spdlog::info("Password offset: {}", offset);
         // create password table
         db.execute("CREATE TABLE passwords (password TEXT);");
 

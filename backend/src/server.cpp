@@ -1,5 +1,6 @@
 #include "server.hpp"
 #include "sqlite3.h"
+#include "spdlog/spdlog.h"
 namespace server
 {
     void root(crow::App<crow::CORSHandler> &app)
@@ -21,6 +22,7 @@ namespace server
         std::string user_password = req.body.data();
         if (user_password.empty()) 
         { 
+            spdlog::error("Empty user password");
             response["status"] = "error";
             return response;
         }
