@@ -7,6 +7,6 @@ build:
 	cd $(BUILD_DIR) && cmake --build .
 
 check: build
-	cd $(BUILD_DIR) && ./test/pdl_test	
+	cd $(BUILD_DIR) && ./tests/pdl_test	
 
 .PHONY: all build run check
