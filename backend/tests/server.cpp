@@ -37,14 +37,14 @@ TEST_CASE("Test endpoints using handler")
     crypto_core_ristretto255_scalar_random(b);
 
     // 2. encrypt each password with b (and hash to point)
-    int offset = 1;
+    const size_t offset = 1;
     std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b, offset);
 
     // 3. insert into database
     for (const auto &password : encrypted_passwords)
     {
         // encode password before inserting into database
-        db.execute("INSERT INTO passwords (password) VALUES ('" + crow::utility::base64encode(password, password.size()+ offset) + "');");
+        db.execute("INSERT INTO passwords (password) VALUES ('" + crow::utility::base64encode(password, password.size() + offset) + "');");
     }
 
     // encode key b and insert into database

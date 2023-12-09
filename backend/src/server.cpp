@@ -42,7 +42,7 @@ namespace server
         unsigned char *b = (unsigned char *)decoded_b.data();
 
         // encrypt user password
-        int offset = 1;
+        const size_t offset = 1;
         std::string encrypted_password = cryptography::encryptPassword(crow::utility::base64decode(user_password, user_password.size()), b, offset);
         response["status"] = "success";
         response["userPassword"] = crow::utility::base64encode(encrypted_password, encrypted_password.size());

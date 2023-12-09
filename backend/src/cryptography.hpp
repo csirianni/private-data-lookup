@@ -19,7 +19,7 @@ namespace cryptography
      * @param offset the number of bytes to leak
      * @return std::string the encrypted password
      */
-    std::string hashAndEncryptPassword(const std::string &password, unsigned char *b, int offset=0);
+    std::string hashAndEncryptPassword(const std::string &password, unsigned char *b, size_t offset = 0);
 
     /**
      * @brief Encrypt the provided password using secret key b.
@@ -30,7 +30,7 @@ namespace cryptography
      * @param b the secret key
      * @return std::string the encrypted password
      */
-    std::string encryptPassword(const std::string &password, unsigned char *b, int offset=0);
+    std::string encryptPassword(const std::string &password, unsigned char *b, size_t offset = 0);
 
     /**
      * @brief Encrypt the provided set of passwords using secret key b.
@@ -40,7 +40,7 @@ namespace cryptography
      * @return std::vector<std::string> the encrypted passwords
      */
     std::vector<std::string> encrypt(const std::unordered_set<std::string> &passwords,
-                                     unsigned char *b, int offset=0);
+                                     unsigned char *b, size_t offset = 0);
 }
 
 #endif

@@ -3,7 +3,7 @@
 
 namespace cryptography
 {
-    std::string hashAndEncryptPassword(const std::string &password, unsigned char *b, int offset)
+    std::string hashAndEncryptPassword(const std::string &password, unsigned char *b, size_t offset)
     {
         // hash password to point
         unsigned char hash[crypto_core_ristretto255_HASHBYTES];
@@ -19,7 +19,7 @@ namespace cryptography
         return std::string(encryptedPassword, encryptedPassword + crypto_core_ristretto255_BYTES + offset);
     }
 
-    std::string encryptPassword(const std::string &password, unsigned char *b, int offset)
+    std::string encryptPassword(const std::string &password, unsigned char *b, size_t offset)
     {
         std::string rawPassword = password.substr(offset, crypto_core_ristretto255_BYTES);
         const unsigned char *data = (const unsigned char *)rawPassword.data();
@@ -28,7 +28,7 @@ namespace cryptography
         return std::string(encryptedPassword, encryptedPassword + crypto_core_ristretto255_BYTES);
     }
 
-    std::vector<std::string> encrypt(const std::unordered_set<std::string> &passwords, unsigned char *b, int offset)
+    std::vector<std::string> encrypt(const std::unordered_set<std::string> &passwords, unsigned char *b, size_t offset)
     {
         std::vector<std::string> result;
         result.reserve(passwords.size());
