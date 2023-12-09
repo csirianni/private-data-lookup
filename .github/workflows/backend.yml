@@ -38,4 +38,4 @@ jobs:
 
     - name: Run tests
       working-directory: ${{github.workspace}}/backend/build
-      run: ./test/pdl_test
+      run: ./tests/pdl_test
