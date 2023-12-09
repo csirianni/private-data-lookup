@@ -43,10 +43,12 @@ int main(int argc, char *argv[])
     }
 
     database::Database db = database::Database(argv[1], build);
+    // TODO: store this data in server because same file with different offset will have different passwords
+    const size_t offset = 1;
+    spdlog::info("Password offset: {}", offset);
+
     if (build)
     {
-        const size_t offset = 1;
-        spdlog::info("Password offset: {}", offset);
         // create password table
         db.execute("CREATE TABLE passwords (password TEXT);");
 
@@ -103,7 +105,7 @@ int main(int argc, char *argv[])
 
     // initialize endpoints
     server::root(app);
-    server::breachedPasswords(app, db);
+    server::breachedPasswords(app, db, offset);
 
     // set the port, set the app to run on multiple threads, and run the app
     app.port(18080).multithreaded().run();

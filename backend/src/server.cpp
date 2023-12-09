@@ -12,11 +12,11 @@ namespace server
         response["data"] = "server is now running";
         return response; });
     }
-
-    void breachedPasswords(crow::App<crow::CORSHandler> &app, database::Database &db)
+    // TODO: add offset parameter
+    void breachedPasswords(crow::App<crow::CORSHandler> &app, database::Database &db, size_t offset)
     {
         CROW_ROUTE(app, "/breachedPasswords")
-            .methods("POST"_method)([&db](const crow::request &req)
+            .methods("POST"_method)([&db, offset](const crow::request &req)
                                     {
         crow::json::wvalue response;
         std::string user_password = req.body.data();
@@ -42,7 +42,6 @@ namespace server
         unsigned char *b = (unsigned char *)decoded_b.data();
 
         // encrypt user password
-        const size_t offset = 1;
         std::string encrypted_password = cryptography::encryptPassword(crow::utility::base64decode(user_password, user_password.size()), b, offset);
         response["status"] = "success";
         response["userPassword"] = crow::utility::base64encode(encrypted_password, encrypted_password.size());
