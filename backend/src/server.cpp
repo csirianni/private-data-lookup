@@ -12,7 +12,7 @@ namespace server
         response["data"] = "server is now running";
         return response; });
     }
-    // TODO: add offset parameter
+
     void breachedPasswords(crow::App<crow::CORSHandler> &app, database::Database &db, size_t offset)
     {
         CROW_ROUTE(app, "/breachedPasswords")
