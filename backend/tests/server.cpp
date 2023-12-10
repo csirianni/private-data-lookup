@@ -38,7 +38,7 @@ TEST_CASE("Test endpoints using handler")
     crypto_core_ristretto255_scalar_random(b);
 
     // 2. encrypt each password with b (and hash to point)
-    const size_t offset = 5;
+    const size_t offset = 1;
     std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b, offset);
 
     // 3. insert into database
@@ -89,15 +89,17 @@ TEST_CASE("Test endpoints using handler")
             switch (offset % 3)
             {
             case 0:
-                // if offset is 0, then password is padded with a single '='
+                // password is padded with single '='
                 CHECK(breached_password[breached_password.size() - 1] == '=');
                 CHECK(breached_password[breached_password.size() - 2] != '=');
                 break;
             case 1:
+                // password is not padded
                 CHECK(breached_password[breached_password.size() - 1] != '=');
                 CHECK(breached_password[breached_password.size() - 2] != '=');
                 break;
             case 2:
+                // password is padded with two '='
                 CHECK(breached_password[breached_password.size() - 1] == '=');
                 CHECK(breached_password[breached_password.size() - 2] == '=');
                 break;

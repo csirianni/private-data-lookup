@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
             throw std::invalid_argument("Passwords and/or secret key table does not exist. Use --build to create a new database");
         }
     }
-
+    db.printTable("passwords");
     // Enable CORS
     crow::App<crow::CORSHandler> app;
 
