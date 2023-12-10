@@ -8,6 +8,11 @@ type ServerResponse = {
     breachedPasswords: string[];
 };
 
+/**
+ * Hash a password to a point on an elliptic curve 
+ * @param input the password to be hashed to a point on an elliptic curve
+ * @returns the point on an elliptic curve
+ */
 export function hashToPoint(input: string): Uint8Array {
     const hash = sodium.crypto_generichash(
         sodium.crypto_core_ristretto255_HASHBYTES,
@@ -17,9 +22,10 @@ export function hashToPoint(input: string): Uint8Array {
 }
 
 /**
- *
- * @param input the string to be encrypted
- * @returns input with a secret key applied and the key's inverse
+ * Apply a random seed to the password and returns the encrypted password and the inverse of the seed 
+ * @param input the password to be encrypted
+ * @param offset the number of bytes to be leaked
+ * @returns the encrypted password and the inverse of the seed
  */
 export function applySeed(input: string, offset = 0): [Uint8Array, Uint8Array] {
     // generate random seed
