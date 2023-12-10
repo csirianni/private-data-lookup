@@ -28,6 +28,7 @@ namespace cryptography
      *
      * @param password the password to encrypt
      * @param b the secret key
+     * @param offset the number of bytes to leak
      * @return std::string the encrypted password
      */
     std::string encryptPassword(const std::string &password, unsigned char *b, size_t offset = 0);
@@ -37,6 +38,7 @@ namespace cryptography
      *
      * @param passwords the set of passwords to encrypt
      * @param b the secret key
+     * @param offset the number of bytes to leak
      * @return std::vector<std::string> the encrypted passwords
      */
     std::vector<std::string> encrypt(const std::unordered_set<std::string> &passwords,
