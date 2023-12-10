@@ -21,7 +21,7 @@ export function hashToPoint(input: string): Uint8Array {
  * @param input the string to be encrypted
  * @returns input with a secret key applied and the key's inverse
  */
-export function applySeed(input: string, offset=0): [Uint8Array, Uint8Array] {
+export function applySeed(input: string, offset = 0): [Uint8Array, Uint8Array] {
     // generate random seed
     const seed = sodium.crypto_core_ristretto255_scalar_random();
     // get seed inverse
@@ -34,7 +34,7 @@ export function applySeed(input: string, offset=0): [Uint8Array, Uint8Array] {
         seed,
         point
     );
-    var leakedSeededPassword = new Uint8Array(offset + seededPassword.length);
+    const leakedSeededPassword = new Uint8Array(offset + seededPassword.length);
     leakedSeededPassword.set(leakedBytes, 0);
     leakedSeededPassword.set(seededPassword, offset);
     return [leakedSeededPassword, seedInverse];
@@ -42,7 +42,7 @@ export function applySeed(input: string, offset=0): [Uint8Array, Uint8Array] {
 
 function computeIntersection(
     data: ServerResponse,
-    aInverse: Uint8Array, 
+    aInverse: Uint8Array,
     offset = 0
 ): boolean {
     const userPassword = base64.parse(data.userPassword);
