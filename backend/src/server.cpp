@@ -32,15 +32,13 @@ namespace server
             return std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
         };
 
-        // get the table corresponding to the leaked byte
+        // get the table num corresponding to the user password leaked byte
         std::string decoded_password = crow::utility::base64decode(user_password, user_password.size());
-        std::string encoded_byte = crow::utility::base64encode(decoded_password.substr(0, offset), offset);
+        std::string encoded_leaked_byte = crow::utility::base64encode(decoded_password.substr(0, offset), offset);
+        std::string table_num = "table" + std::to_string(static_cast<unsigned int>(encoded_leaked_byte[0]));
 
-        int table_num = static_cast<int>(encoded_byte[0]);
-        std::string table_str = std::to_string(table_num);
-        std::string query_str = "table" + table_str;
-
-        std::vector<std::string> breached_passwords = db.execute("SELECT * FROM " + query_str + ";", callback);
+        // get all passwords from the table corresponding to the user password leaked byte
+        std::vector<std::string> breached_passwords = db.execute("SELECT * FROM " + table_num + ";", callback);
 
         // get b secret key from database
         std::string encoded_b = db.execute("SELECT * FROM secret;", callback)[0];
