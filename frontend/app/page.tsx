@@ -69,7 +69,7 @@ export default function SignUp() {
     ) => {
         event.preventDefault();
         setIsLoading(true);
-        const response = await checkSecurity(password); // makes an API call with the user's password
+        const response = await checkSecurity(password, 1); // makes an API call with the user's password
         setIsLoading(false);
 
         if (response.status == "success") {

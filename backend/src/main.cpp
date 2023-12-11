@@ -43,6 +43,10 @@ int main(int argc, char *argv[])
     }
 
     database::Database db = database::Database(argv[1], build);
+    // TODO: store this data in server because same file with different offset will have different passwords
+    const size_t offset = 1;
+    spdlog::info("Password offset: {}", offset);
+
     if (build)
     {
         // create password table
@@ -58,7 +62,7 @@ int main(int argc, char *argv[])
         crypto_core_ristretto255_scalar_random(b);
 
         // 2. encrypt each password with b (and hash to point)
-        std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b);
+        std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b, offset);
 
         // 3. insert into database
         for (const auto &password : encrypted_passwords)
@@ -90,7 +94,6 @@ int main(int argc, char *argv[])
             throw std::invalid_argument("Passwords and/or secret key table does not exist. Use --build to create a new database");
         }
     }
-
     // Enable CORS
     crow::App<crow::CORSHandler> app;
 
@@ -101,7 +104,7 @@ int main(int argc, char *argv[])
 
     // initialize endpoints
     server::root(app);
-    server::breachedPasswords(app, db);
+    server::breachedPasswords(app, db, offset);
 
     // set the port, set the app to run on multiple threads, and run the app
     app.port(18080).multithreaded().run();

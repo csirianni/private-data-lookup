@@ -23,7 +23,8 @@ namespace server
      *
      * @param app The crow server.
      * @param db The database of all breached passwords.
+     * @param offset The number of bytes to leak.
      */
-    void breachedPasswords(crow::App<crow::CORSHandler> &app, database::Database &db);
+    void breachedPasswords(crow::App<crow::CORSHandler> &app, database::Database &db, size_t offset = 0);
 }
 #endif // SERVER_H
