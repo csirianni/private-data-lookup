@@ -1,4 +1,5 @@
 #include <unordered_set>
+#include <iostream>
 #include <string>
 
 #ifndef PASSWORDS_H
