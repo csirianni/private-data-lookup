@@ -48,6 +48,10 @@ int main(int argc, char *argv[])
     spdlog::info("Password offset: {}", offset);
 
     // limit the number of leaked bytes to 4
+    if (offset > 4)
+    {
+        throw std::invalid_argument("Offset cannot be greater than 4");
+    }
 
     if (build)
     {
