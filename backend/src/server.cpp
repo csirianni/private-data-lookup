@@ -39,10 +39,8 @@ namespace server
         int table_num = static_cast<int>(encoded_byte[0]);
         std::string table_str = std::to_string(table_num);
         std::string query_str = "table" + table_str;
-        spdlog::info("User Password Table: {}", query_str);
 
         std::vector<std::string> breached_passwords = db.execute("SELECT * FROM " + query_str + ";", callback);
-        spdlog::info("Breached Passwords: {}", breached_passwords.size());
 
         // get b secret key from database
         std::string encoded_b = db.execute("SELECT * FROM secret;", callback)[0];

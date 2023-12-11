@@ -56,7 +56,6 @@ int main(int argc, char *argv[])
         {
             std::string query_str = "table" + std::to_string(i);
             db.execute("CREATE TABLE " + query_str + " (password TEXT);");
-            spdlog::info("Table key: {}", query_str);
         }
 
         // generate and insert the passwords into the database
@@ -79,10 +78,8 @@ int main(int argc, char *argv[])
             unsigned int table_num = static_cast<int>(encoded_byte[0]);
             std::string table_str = std::to_string(table_num);
             std::string query_str = "table" + table_str;
-            spdlog::info("Password Table: {}", query_str);
 
             std::string raw_password = password.substr(offset, password.size() - offset);
-            spdlog::info("Password str for above: {}", raw_password);
 
             // encode password before inserting into database
             db.execute("INSERT INTO " + query_str + " (password) VALUES ('" + crow::utility::base64encode(raw_password, raw_password.size()) + "');");
