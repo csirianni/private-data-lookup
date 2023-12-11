@@ -94,8 +94,8 @@ int main(int argc, char *argv[])
         db.execute("INSERT INTO secret (key) VALUES ('" + crow::utility::base64encode(std::string(reinterpret_cast<const char *>(b), crypto_core_ristretto255_SCALARBYTES), crypto_core_ristretto255_SCALARBYTES) + "');");
 
         // create offset table and insert offset
-        db.execute("CREATE TABLE offset (offset INTEGER);");
-        db.execute("INSERT INTO offset (offset) VALUES (" + std::to_string(offset) + ");");
+        db.execute("CREATE TABLE offset (key INTEGER);");
+        db.execute("INSERT INTO offset (key) VALUES (" + std::to_string(offset) + ");");
     }
     else
     {
@@ -106,11 +106,12 @@ int main(int argc, char *argv[])
             return count;
         };
 
-        // check if key table exists
-        std::vector<bool> secret_result = db.execute("SELECT COUNT(*) FROM sqlite_schema WHERE name = 'secret';", callback);
-        if (secret_result.front() == 0) // no passwords or no key table exists
+        // check if key ad offset table exists
+        std::vector<bool> secret_key = db.execute("SELECT COUNT(*) FROM sqlite_schema WHERE name = 'secret';", callback);
+        std::vector<bool> offset_key = db.execute("SELECT COUNT(*) FROM sqlite_schema WHERE name = 'offset';", callback);
+        if (secret_key.front() == 0 || offset_key.front() == 0) // no secret key or no offset key table exists
         {
-            throw std::invalid_argument("Passwords and/or secret key table does not exist. Use --build to create a new database");
+            throw std::invalid_argument("Secret key table or offset key table does not exist. Use --build to create a new database");
         }
     }
     // Enable CORS
