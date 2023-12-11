@@ -84,16 +84,18 @@ int main(int argc, char *argv[])
             std::string table_num = "table" + std::to_string(static_cast<unsigned int>(encoded_byte[0]));
 
             std::string raw_password = password.substr(offset, password.size() - offset);
-
             // encode password before inserting into database
             db.execute("INSERT INTO " + table_num + " (password) VALUES ('" + crow::utility::base64encode(raw_password, raw_password.size()) + "');");
         }
 
         // create key table
         db.execute("CREATE TABLE secret (key TEXT);");
-
         // encode key b and insert into database
         db.execute("INSERT INTO secret (key) VALUES ('" + crow::utility::base64encode(std::string(reinterpret_cast<const char *>(b), crypto_core_ristretto255_SCALARBYTES), crypto_core_ristretto255_SCALARBYTES) + "');");
+
+        // create offset table and insert offset
+        db.execute("CREATE TABLE offset (offset INTEGER);");
+        db.execute("INSERT INTO offset (offset) VALUES (" + std::to_string(offset) + ");");
     }
     else
     {
