@@ -1,6 +1,5 @@
 #include <vector>
 #include <string>
-#include <cstring>
 #include <unordered_set>
 
 #ifndef CRYPTOGRAPHY_H
