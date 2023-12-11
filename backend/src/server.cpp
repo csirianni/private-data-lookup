@@ -35,10 +35,10 @@ namespace server
         // get the table num corresponding to the user password leaked byte
         std::string decoded_password = crow::utility::base64decode(user_password, user_password.size());
         std::string encoded_leaked_byte = crow::utility::base64encode(decoded_password.substr(0, offset), offset);
-        std::string table_num = "table" + std::to_string(static_cast<unsigned int>(encoded_leaked_byte[0]));
+        std::string table_num = std::to_string(static_cast<unsigned int>(encoded_leaked_byte[0]));
 
         // get all passwords from the table corresponding to the user password leaked byte
-        std::vector<std::string> breached_passwords = db.execute("SELECT * FROM " + table_num + ";", callback);
+        std::vector<std::string> breached_passwords = db.execute("SELECT * FROM `" + table_num + "`;", callback);
 
         // get b secret key from database
         std::string encoded_b = db.execute("SELECT * FROM secret;", callback)[0];
@@ -49,7 +49,7 @@ namespace server
         unsigned char *b = (unsigned char *)decoded_b.data();
 
         // encrypt user password
-        std::string encrypted_password = cryptography::encryptPassword(crow::utility::base64decode(user_password, user_password.size()), b, offset);
+        std::string encrypted_password = cryptography::encryptPassword(decoded_password, b, offset);
         response["status"] = "success";
         response["userPassword"] = crow::utility::base64encode(encrypted_password, encrypted_password.size());
         response["breachedPasswords"] = breached_passwords;
