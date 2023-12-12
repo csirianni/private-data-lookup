@@ -31,7 +31,13 @@ namespace server
         std::function <std::string(sqlite3_stmt *)> callback = [](sqlite3_stmt *stmt) {
             return std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
         };
-        std::vector<std::string> breached_passwords = db.execute("SELECT * FROM passwords;", callback);
+
+        // get the table num corresponding to the user password leaked byte
+        std::string decoded_password = crow::utility::base64decode(user_password, user_password.size());
+        unsigned int table_num = static_cast<unsigned int>(static_cast<unsigned char>(decoded_password.substr(0, offset)[0]));
+
+        // get all passwords from the table corresponding to the user password leaked byte
+        std::vector<std::string> breached_passwords = db.execute("SELECT * FROM `" + std::to_string(table_num) + "`;", callback);
 
         // get b secret key from database
         std::string encoded_b = db.execute("SELECT * FROM secret;", callback)[0];
@@ -42,7 +48,7 @@ namespace server
         unsigned char *b = (unsigned char *)decoded_b.data();
 
         // encrypt user password
-        std::string encrypted_password = cryptography::encryptPassword(crow::utility::base64decode(user_password, user_password.size()), b, offset);
+        std::string encrypted_password = cryptography::encryptPassword(decoded_password, b, offset);
         response["status"] = "success";
         response["userPassword"] = crow::utility::base64encode(encrypted_password, encrypted_password.size());
         response["breachedPasswords"] = breached_passwords;

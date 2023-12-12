@@ -52,7 +52,7 @@ function computeIntersection(
     offset = 0
 ): boolean {
     const userPassword = base64.parse(data.userPassword);
-    const breachedPasswords = new Set((data.breachedPasswords).map(function (element) { return base64.parse(element).subarray(offset).join(""); }));
+    const breachedPasswords = new Set((data.breachedPasswords).map(function (element) { return base64.parse(element).join(""); }));
 
     // Client phase 2 - applies inverse seed A to (user password)^ab
     // so now ((user password)^ab)^-a = (user password)^b
