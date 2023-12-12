@@ -30,9 +30,10 @@ TEST_CASE("Test endpoints using handler")
 
     // offset constant
     const size_t offset = 1;
+    const int num_tables = std::pow(std::pow(2, 8), offset);
 
     // create all tables from 0 to (2^8)^offset-1
-    for (int i = 0; i < std::pow(std::pow(2, 8), offset); i++)
+    for (int i = 0; i < num_tables; i++)
     {
         db.execute("CREATE TABLE `" + std::to_string(i) + "` (password TEXT);");
     }
@@ -51,13 +52,11 @@ TEST_CASE("Test endpoints using handler")
     for (const auto &password : encrypted_passwords)
     {
         // determine which table to insert into based on leaked byte
-        std::string encoded_byte = crow::utility::base64encode(password.substr(0, offset), offset);
-        std::string table_num = std::to_string(static_cast<unsigned int>(encoded_byte[0]));
-
+        unsigned int leaked_byte = ((unsigned char)password.substr(0, offset)[0]) & (num_tables-1);
         std::string raw_password = password.substr(offset, password.size() - offset);
 
         // encode password before inserting into database
-        db.execute("INSERT INTO `" + table_num + "` (password) VALUES ('" + crow::utility::base64encode(raw_password, raw_password.size()) + "');");
+        db.execute("INSERT INTO `" + std::to_string(leaked_byte) + "` (password) VALUES ('" + crow::utility::base64encode(raw_password, raw_password.size()) + "');");
     }
 
     // create key table

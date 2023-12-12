@@ -34,11 +34,11 @@ namespace server
 
         // get the table num corresponding to the user password leaked byte
         std::string decoded_password = crow::utility::base64decode(user_password, user_password.size());
-        std::string encoded_leaked_byte = crow::utility::base64encode(decoded_password.substr(0, offset), offset);
-        std::string table_num = std::to_string(static_cast<unsigned int>(encoded_leaked_byte[0]));
+        unsigned char leaked_byte = decoded_password.substr(0, offset)[0];
+        unsigned int table_num = leaked_byte & ((int)std::pow(std::pow(2, 8), offset) - 1);
 
         // get all passwords from the table corresponding to the user password leaked byte
-        std::vector<std::string> breached_passwords = db.execute("SELECT * FROM `" + table_num + "`;", callback);
+        std::vector<std::string> breached_passwords = db.execute("SELECT * FROM `" + std::to_string(table_num) + "`;", callback);
 
         // get b secret key from database
         std::string encoded_b = db.execute("SELECT * FROM secret;", callback)[0];
