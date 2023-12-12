@@ -79,10 +79,12 @@ int main(int argc, char *argv[])
         for (const auto &password : encrypted_passwords)
         {
             // determine which table to insert into based on leaked byte
-            unsigned int leaked_byte = ((unsigned char)password.substr(0, offset)[0]) & (num_tables-1);
+            // unsigned char cast is required to prevent unintentional sign extension
+            // TODO: support more than one byte using helper function
+            unsigned int table_num = static_cast<unsigned int>(static_cast<unsigned char>(password.substr(0, offset)[0]));
             std::string raw_password = password.substr(offset, password.size() - offset);
             // encode password before inserting into database
-            db.execute("INSERT INTO `" + std::to_string(leaked_byte) + "` (password) VALUES ('" + crow::utility::base64encode(raw_password, raw_password.size()) + "');");
+            db.execute("INSERT INTO `" + std::to_string(table_num) + "` (password) VALUES ('" + crow::utility::base64encode(raw_password, raw_password.size()) + "');");
         }
 
         // create key table
