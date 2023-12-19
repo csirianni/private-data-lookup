@@ -10,11 +10,10 @@
 #include "sodium.h"
 #include "cryptography.hpp"
 #include "spdlog/spdlog.h"
+#include <chrono>
 
 int main(int argc, char *argv[])
 {
-    spdlog::set_level(spdlog::level::debug);
-
     if (argc < 2 || argc > 3)
     {
         printf("Usage: %s <database file> [--build]\n", argv[0]);
@@ -44,7 +43,7 @@ int main(int argc, char *argv[])
 
     database::Database db = database::Database(argv[1], build);
     // TODO: store this data in server because same file with different offset will have different passwords
-    const size_t offset = 1;
+    const size_t offset = 0;
     spdlog::info("Password offset: {}", offset);
 
     // limit the number of leaked bytes to 4
@@ -64,7 +63,9 @@ int main(int argc, char *argv[])
         }
 
         // generate and insert the passwords into the database
-        std::unordered_set<std::string> passwords = password::generatePasswords(100, 20);
+        spdlog::info("Generating passwords...");
+        auto start = std::chrono::high_resolution_clock::now();
+        std::unordered_set<std::string> passwords = password::generatePasswords(1000000, 20);
         passwords.insert("TestPass1&");
         passwords.insert("ChocolateCake1!");
 
@@ -74,8 +75,13 @@ int main(int argc, char *argv[])
 
         // 2. encrypt each password with b (and hash to point)
         std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b, offset);
+        auto stop = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+        spdlog::info("Passwords generated in {} ms", duration.count());
 
         // 3. insert into database
+        spdlog::info("Inserting passwords into database...");
+        start = std::chrono::high_resolution_clock::now();
         for (const auto &password : encrypted_passwords)
         {
             // determine which table to insert into based on leaked byte
@@ -86,6 +92,9 @@ int main(int argc, char *argv[])
             // encode password before inserting into database
             db.execute("INSERT INTO `" + std::to_string(table_num) + "` (password) VALUES ('" + crow::utility::base64encode(raw_password, raw_password.size()) + "');");
         }
+        stop = std::chrono::high_resolution_clock::now();
+        duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+        spdlog::info("Passwords inserted into database in {} ms", duration.count());
 
         // create key table
         db.execute("CREATE TABLE secret (key TEXT);");

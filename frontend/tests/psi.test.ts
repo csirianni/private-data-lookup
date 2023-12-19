@@ -30,12 +30,12 @@ describe("testing applySeed", () => {
 describe("testing expected server response", () => {
     test("sending breached password should return fail status", async () => {
         const password = "TestPass1&";
-        const response = await checkSecurity(password, 1);
+        const response = await checkSecurity(password, 0);
         expect(response.status).toBe("fail");
-    });
+    }, 60000000);
     test("sending non-breach password should return success status", async () => {
         const password = "NiniIsTheBest!4";
-        const response = await checkSecurity(password, 1);
+        const response = await checkSecurity(password, 0);
         expect(response.status).toBe("success");
-    });
+    }, 60000000);
 });
