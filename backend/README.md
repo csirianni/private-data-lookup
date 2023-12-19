@@ -2,19 +2,19 @@
 
 ## Configuration
 
-In `/backend`, install conan:
+In `/backend`, start by installing [Conan](https://conan.io/):
 
 ```bash
 brew install conan cmake
 conan install . --output-folder=build --build=missing
 ```
 
-Set up the `/build` folder:
+You probably need to create a default profile. Use `conan profile detect`.
+
+Next, link and compile the program:
 
 ```bash
-mkdir build && cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
-cmake --build .
+make build
 ```
 
 From `/backend`, start the server. Use the `--build` flag to create or rebuild a database for the breached passwords or omit it to use an existing one:
