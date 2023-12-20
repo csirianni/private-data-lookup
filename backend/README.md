@@ -36,6 +36,25 @@ The body must be [Base64](https://en.wikipedia.org/wiki/Base64) encoded.
 
 The user password and breached passwords are Base64 encoded.
 
+#### Example
+
+```typescript
+import { base64 } from "rfc4648";
+
+const response = await fetch(
+    "http://localhost:18080/breachedPasswords",
+    {
+        method: "POST",
+        mode: "cors",
+        headers: {
+            "Access-Control-Allow-Headers": "*",
+            "Content-Type": "application/json",
+        },
+        body: base64.stringify(password),
+    }
+);
+```
+
 ## Configuration
 
 In `/backend`, start by installing [Conan](https://conan.io/):
