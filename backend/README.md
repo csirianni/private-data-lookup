@@ -1,5 +1,20 @@
 # Backend
 
+## About
+
+The backend serves encrypted breached passwords using the REST API architecture. There are two available endpoints:
+
+1. `/` (GET): This endpoint confirms the server is up and running.
+2. `/breachedPasswords` (POST): This endpoint provided the encrypted breached passwords. The POST request should include the leaked bytes followed by the user's encrypted password. In general, for `n` leaked bytes, the length of the password is `32 + n` leaked bytes:
+
+```text
+0         n      32 + n
++---- ----+---- ----+
+|   ...   |   ...   |
++---- ----+---- ----+
+^leak     ^password
+```
+
 ## Configuration
 
 In `/backend`, start by installing [Conan](https://conan.io/):
@@ -40,10 +55,11 @@ To fix VS Code import errors with Crow, try adding the following line to your `s
 After building, you can run tests from `/backend`:
 
 ```bash
-cd build && ./test/pdl_test	
+cd build && ./test/pdl_test 
 ```
 
 or alternatively:
+
 ```bash
 make check
 ```
