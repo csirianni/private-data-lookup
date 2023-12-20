@@ -6,7 +6,7 @@ The backend serves encrypted breached passwords using the REST API architecture.
 
 ### Encrypt user password with breached passwords
 
-```POST /breachedPassword```
+**POST** `/breachedPassword`
 
 This endpoint encrypts the user's password and provides a list of encrypted breached passwords.
 
