@@ -2,18 +2,39 @@
 
 ## About
 
-The backend serves encrypted breached passwords using the REST API architecture. There are two available endpoints:
+The backend serves encrypted breached passwords using the REST API architecture. There is a single endpoint:
 
-1. `/` (GET): This endpoint confirms the server is up and running.
-2. `/breachedPasswords` (POST): This endpoint provided the encrypted breached passwords. The POST request should include the leaked bytes followed by the user's encrypted password. In general, for `n` leaked bytes, the length of the password is `32 + n` leaked bytes:
+### Encrypt user password with breached passwords
+
+```POST /breachedPassword```
+
+This endpoint encrypts the user's password and provides a list of encrypted breached passwords.
+
+#### Parameters
+
+`body` *Required*
+
+The leaked bytes followed by the user's encrypted password. In general, for `n` leaked bytes, the length of the password is `32 + n`:
 
 ```text
-0         n      32 + n
+0         n         32 + n
 +---- ----+---- ----+
 |   ...   |   ...   |
 +---- ----+---- ----+
 ^leak     ^password
 ```
+
+The body must be [Base64](https://en.wikipedia.org/wiki/Base64) encoded.
+
+#### Response
+
+| Key                 | Description                                            | Always present |
+|---------------------|--------------------------------------------------------|----------------|
+| `status`            | A string, `success`, `fail` or `error`.                | Yes            |
+| `userPassword`      | A string, the user's password encrypted.               | No             |
+| `breachedPasswords` | An array of strings, the breached passwords encrypted. | No             |
+
+The user password and breached passwords are Base64 encoded.
 
 ## Configuration
 
