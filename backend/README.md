@@ -4,7 +4,7 @@
 
 The backend serves encrypted breached passwords using the REST API architecture. There is a single endpoint:
 
-### Encrypt user password with breached passwords
+### Create user password with breached passwords
 
 **POST** `/breachedPassword`
 
@@ -60,11 +60,17 @@ const response = await fetch(
 In `/backend`, start by installing [Conan](https://conan.io/):
 
 ```bash
-brew install conan cmake
+brew install conan 
 conan install . --output-folder=build --build=missing
 ```
 
 You probably need to create a default profile. Use `conan profile detect`.
+
+If you haven't installed CMake already, do so now:
+
+```bash
+brew install cmake
+```
 
 Next, link and compile the program:
 
@@ -72,17 +78,21 @@ Next, link and compile the program:
 make build
 ```
 
-From `/backend`, start the server. Use the `--build` flag to create or rebuild a database for the breached passwords or omit it to use an existing one:
+From `/backend`, start the server. Use the `--build` flag to create or rebuild a database for the breached passwords:
 
 ```bash
 build/src/server <database filepath> --build
 ```
 
+Or, omit the `--build` flag to use an existing database:
+
 ```bash
 build/src/server data/passwords.db 
 ```
 
-To fix VS Code import errors with Crow, try adding the following line to your `settings.json`:
+## Debugging
+
+To fix VS Code import errors, try adding the following line to your `settings.json`:
 
 ```json
 "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
