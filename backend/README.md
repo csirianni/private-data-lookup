@@ -2,9 +2,9 @@
 
 ## About
 
-The backend serves encrypted breached passwords using the REST API architecture. There is a single endpoint:
+The backend hosts the breached passwords for use in the Private Set Intersection computation. The user sends a password and receives that password and the set of breached passwords both encrypted with secret key `b`. The backend uses [Crow](https://crowcpp.org/master/) for the REST API, [SQLite3](https://www.sqlite.org/index.html) for the breached password database, and [Libsodium](https://libsodium.gitbook.io/doc/) for the cryptography. The API has a single endpoint:
 
-### Create user password and get breached passwords
+### Encrypt user password and get breached passwords
 
 **POST** `/breachedPasswords`
 
@@ -14,7 +14,7 @@ This endpoint encrypts the user's password and provides a list of encrypted brea
 
 `body` *Required*
 
-The leaked bytes followed by the user's encrypted password. In general, for `n` leaked bytes, the length of the password is `32 + n`:
+The leaked bytes followed by the user's encrypted password. In general, for `n` leaked bytes, the length of the data is `32 + n`:
 
 ```text
 0         n         32 + n
