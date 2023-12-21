@@ -4,9 +4,9 @@
 
 The backend serves encrypted breached passwords using the REST API architecture. There is a single endpoint:
 
-### Create user password with breached passwords
+### Create user password and get breached passwords
 
-**POST** `/breachedPassword`
+**POST** `/breachedPasswords`
 
 This endpoint encrypts the user's password and provides a list of encrypted breached passwords.
 
