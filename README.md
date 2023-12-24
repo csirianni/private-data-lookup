@@ -26,6 +26,12 @@ If the set intersection is non-empty, the user's password is compromised and sho
 
 ![PSI computation](https://private-user-images.githubusercontent.com/54677998/292687569-4fa846b9-1362-470c-b9cc-3de275a41706.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTEiLCJleHAiOjE3MDM0NDgyMjcsIm5iZiI6MTcwMzQ0NzkyNywicGF0aCI6Ii81NDY3Nzk5OC8yOTI2ODc1NjktNGZhODQ2YjktMTM2Mi00NzBjLWI5Y2MtM2RlMjc1YTQxNzA2LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFJV05KWUFYNENTVkVINTNBJTJGMjAyMzEyMjQlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjMxMjI0VDE5NTg0N1omWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTljY2RjMjQ0NTAxOWFmMTgxYjdhOGE1MGQ3YWUwYjQzZGQyYjIyNzY3Y2FlYjUxZTI2NjBhZGQ4YjRkZTY4ZWEmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.okTTuRlv7eqpOtsC9B0yABMfDWpIEydPFEz3LuRZYCw)
 
+### Optimization
+
+Critical path latency in the system is defined as the time elapsed between the user clicking "Sign Up" and the browser specifying if the password is breached or not. To reduce critical path latency, [$k$-anonymity](https://en.wikipedia.org/wiki/K-anonymity) is used. By partitioning passwords into $k$ buckets, the number of passwords serialized by the server during each request is significantly reduced. This decreases the time to download breached passwords and linearly scan the set.
+
+Passwords are assigned a bucket based on one or more leaked bytes. Given $n$ leaked bytes, there are $\left[0, (2^8)^n - 1\right]$ buckets. This feature involves a tradeoff between user privacy and application performance. The key assumption is that the number of breached passwords is sufficiently large to not reveal identifiable information about individual users. Since real breached password datasets contain billions of passwords [[1](https://www.wired.com/story/collection-leak-usernames-passwords-billions/)], this assumption is reasonable.
+
 ## Instructions
 
 It's necessary to configure the `/frontend` and `/backend` folders initially. See the respective `README.md`s for more information. After configuration, you can run the application using the following commands.
