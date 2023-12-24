@@ -24,11 +24,11 @@ In Private Set Intersection, neither party reveals anything to their counterpart
 
 If the set intersection is non-empty, the user's password is compromised and should not be used.
 
-### Optimization
+### Performance Optimization
 
-Critical path latency in the system is defined as the time elapsed between the user clicking "Sign Up" and the browser specifying if the password is breached or not. To reduce critical path latency, [$k$-anonymity](https://en.wikipedia.org/wiki/K-anonymity) is used. By partitioning passwords into $k$ buckets, the number of passwords serialized by the server during each request is significantly reduced. This decreases the time to download breached passwords and linearly scan the set.
+The initial PSI implementation unreasonably increases critical path latency due to the size of the breached password dataset. To address this challenge, [k-anonymity](https://en.wikipedia.org/wiki/K-anonymity) is used. Passwords are partitioned in $k$ buckets based on one or more leaked bytes. Given $n$ leaked bytes, there are $\left[0, (2^8)^n - 1\right]$ buckets. The client generates a partition index using $n$ leaked bytes, and then the server returns a smaller subset of dataset. The result is a decrease in the number of serialized passwords per request and faster processing times.
 
-Passwords are assigned a bucket based on one or more leaked bytes. Given $n$ leaked bytes, there are $\left[0, (2^8)^n - 1\right]$ buckets. This feature involves a tradeoff between user privacy and application performance. The key assumption is that the number of breached passwords is sufficiently large to not reveal identifiable information about individual users. Since real breached password datasets contain billions of passwords [[1](https://www.wired.com/story/collection-leak-usernames-passwords-billions/)], this assumption is reasonable.
+This feature involves a tradeoff between user privacy and application performance. The key assumption is that the number of breached passwords is sufficiently large to not reveal identifiable information about individual users. Since real breached password datasets contain billions of passwords [[1](https://www.wired.com/story/collection-leak-usernames-passwords-billions/)], each bucket contains millions of passwords. Thus, the assumption holds and the increased leakage involves neglible privacy risk.
 
 ## Instructions
 
