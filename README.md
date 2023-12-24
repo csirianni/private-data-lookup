@@ -25,20 +25,20 @@ yarn dev
 To run the backend, `cd` into the `/backend` and compile the program:
 
 ```console
-mkdir build && cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
-cmake --build .
+make build
 ```
 
 Then, you can simply run this command on an existing database:
-Database file paths should end in .db, like "passwords.db"
+Database file paths should end in .db, like `passwords.db`.
+
 ```console
 build/src/server <database filepath>
 ```
 
-If you want to build a new database from a new or existing database, you can use the --build flag after the filepath. 
+If you want to build a new database from a new or existing path, you can use the `--build` flag after the path.
+
 ```console
 build/src/server <database filepath> --build
 ```
 
-Ensure that the backend is running with the frontend, otherwise you will see a message of server errors on the front-end website.
+Ensure that the backend is running with the frontend, otherwise you will see a server error on the front-end website.
