@@ -25,3 +25,29 @@ yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser. The page will reload if you make edits.
+
+## Testing
+
+You can run tests from `/frontend`:
+
+```console
+yarn test
+```
+
+This command involves integration testing, so make sure the backend is running and that the leaked bytes are the same. For example,
+
+`/frontend/tests/psi.test.ts`
+
+```javascript
+test("sending breached password should return fail status", async () => {
+    const password = "TestPass1&";
+    const response = await checkSecurity(password, 1);
+    expect(response.status).toBe("fail");
+});
+```
+
+```/backend/src/main.cpp```
+
+```cpp
+const size_t offset = 1;
+```
