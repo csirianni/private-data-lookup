@@ -29,13 +29,13 @@ make build
 ```
 
 Then, you can simply run this command on an existing database:
-Database file paths should end in .db, like "passwords.db"
+Database file paths should end in .db, like `passwords.db`.
 
 ```console
 build/src/server <database filepath>
 ```
 
-If you want to build a new database from a new or existing database, you can use the --build flag after the filepath.
+If you want to build a new database from a new or existing path, you can use the `--build` flag after the path.
 
 ```console
 build/src/server <database filepath> --build
