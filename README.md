@@ -14,19 +14,17 @@ Private Data Lookup (PDL) is a web application that allows users to privately qu
 
 ## Implementation
 
+### PSI
+
 In Private Set Intersection, neither party reveals anything to their counterpart except for the elements in the intersection. This is accomplished using encryption. Hashed passwords are encrypted using secret key $a$ on the frontend and secret key $b$ on the backend. Querying the set of breached passwords is a three step process:
 
-1. The client sends an encrypted user password $\text{Hash}(p)^a$
+1. The client sends an encrypted user password $\text{Hash}(p)^a$ to the server.
+2. The server sends the re-encrypted user password $\text{Hash}(p)^{ab}$ and the encrypted breached passwords $\text{Hash}(b_1)^{b}, ...,\text{Hash}(b_n)^{b}$ to the client.
+3. The client partially decrypts the user password using $a^{-1}$ and checks if $\text{Hash}(p)^{aba^{-1}}$ is contained in the set of breached passwords.
 
-![Client request](images/client-request.png)
+If the set intersection is non-empty, the user's password is compromised and should not be used.
 
-2. The server sends the re-encrypted user password $\text{Hash}(p)^{ab}$ and the encrypted breached passwords $\text{Hash}(b_1)^{b}, ...,\text{Hash}(b_n)^{b}$
-
-![Server response](images/server-response.png)
-
-3. The client decrypts the user password using $a^{-1}$ and checks if $\text{Hash}(p)^{b}$ is contained in the set of breached passwords.
-
-![PSI computation](images/psi-compute.png)
+![PSI computation](https://private-user-images.githubusercontent.com/54677998/292687569-4fa846b9-1362-470c-b9cc-3de275a41706.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTEiLCJleHAiOjE3MDM0NDgyMjcsIm5iZiI6MTcwMzQ0NzkyNywicGF0aCI6Ii81NDY3Nzk5OC8yOTI2ODc1NjktNGZhODQ2YjktMTM2Mi00NzBjLWI5Y2MtM2RlMjc1YTQxNzA2LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFJV05KWUFYNENTVkVINTNBJTJGMjAyMzEyMjQlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjMxMjI0VDE5NTg0N1omWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTljY2RjMjQ0NTAxOWFmMTgxYjdhOGE1MGQ3YWUwYjQzZGQyYjIyNzY3Y2FlYjUxZTI2NjBhZGQ4YjRkZTY4ZWEmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.okTTuRlv7eqpOtsC9B0yABMfDWpIEydPFEz3LuRZYCw)
 
 ## Instructions
 
