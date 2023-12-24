@@ -12,6 +12,22 @@ Private Data Lookup (PDL) is a web application that allows users to privately qu
 > - [How Meta is improving password security and preserving privacy](https://engineering.fb.com/2023/08/08/security/how-meta-is-improving-password-security-and-preserving-privacy/)
 > - [Data Breaches, Phishing, or Malware?: Understanding the Risks of Stolen Credentials](https://dl.acm.org/doi/10.1145/3133956.3134067)
 
+## Implementation
+
+In Private Set Intersection, neither party reveals anything to their counterpart except for the elements in the intersection. This is accomplished using encryption. Hashed passwords are encrypted using secret key $a$ on the frontend and secret key $b$ on the backend. Querying the set of breached passwords is a three step process:
+
+1. The client sends an encrypted user password $\text{Hash}(p)^a$
+
+    ![Client request](images/client-request.png)
+
+2. The server sends the re-encrypted user password $\text{Hash}(p)^{ab}$ and the encrypted breached passwords $\text{Hash}(b_1)^{b}, ...,\text{Hash}(b_n)^{b}$
+
+    ![Server response](images/server-response.png)
+
+3. The client decrypts the user password using $a^{-1}$ and checks if $\text{Hash}(p)^{b}$ is contained in the set of breached passwords.
+
+    ![PSI computation](images/psi-compute.png)
+
 ## Instructions
 
 It's necessary to configure the `/frontend` and `/backend` folders initially. See the respective `README.md`s for more information. After configuration, you can run the application using the following commands.
