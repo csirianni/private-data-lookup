@@ -18,15 +18,15 @@ In Private Set Intersection, neither party reveals anything to their counterpart
 
 1. The client sends an encrypted user password $\text{Hash}(p)^a$
 
-    ![Client request](./images/client-request.png)
+    ![Client request](/images/client-request.png)
 
 2. The server sends the re-encrypted user password $\text{Hash}(p)^{ab}$ and the encrypted breached passwords $\text{Hash}(b_1)^{b}, ...,\text{Hash}(b_n)^{b}$
 
-    ![Server response](./images/server-response.png)
+    ![Server response](/images/server-response.png)
 
 3. The client decrypts the user password using $a^{-1}$ and checks if $\text{Hash}(p)^{b}$ is contained in the set of breached passwords.
 
-    ![PSI computation](./images/psi-compute.png)
+    ![PSI computation](/images/psi-compute.png)
 
 ## Instructions
 
