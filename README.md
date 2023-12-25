@@ -32,7 +32,7 @@ This feature involves a tradeoff between user privacy and application performanc
 
 ## Instructions
 
-It's necessary to configure the `/frontend` and `/backend` folders initially. See the respective `README.md`s for more information. After configuration, you can run the application using the following commands.
+You need to configure the `/frontend` and `/backend` folders initially. See the respective `README.md`s for more information. After configuration, you can run the application using the following commands.
 
 To run the frontend, `cd` into `/frontend` and run
 
@@ -59,4 +59,4 @@ If you want to build a new database from a new or existing path, you can use the
 build/src/server <database filepath> --build
 ```
 
-Ensure that the backend is running with the frontend, otherwise you will see a server error on the front-end website.
+Ensure that the backend is running with the frontend, otherwise you will see a server error in the web application.
