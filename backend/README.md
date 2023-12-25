@@ -63,7 +63,7 @@ In `/backend`, start by installing [Conan](https://conan.io/):
 brew install conan 
 ```
 
-Them, install the project's packages using the following:
+Then, install the project's packages using the following:
 
 ```console
 conan install . --output-folder=build --build=missing
