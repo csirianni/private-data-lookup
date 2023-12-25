@@ -1,8 +1,16 @@
 # Frontend
 
-Made with [Next.js](https://nextjs.org/).
+## About
+
+The frontend renders the client web application and computes the private set intersection. It is made with [Next.js](https://nextjs.org/), [Tailwind](https://tailwindcss.com/), and [MaterialUI](https://mui.com/material-ui/).
+
+![Sign up page](https://i.imgur.com/8sea2io.png)
+
+Note that a password must satisfy the listed requirements before the user can click "Sign Up."
 
 ## Configuration
+
+Make sure you have [Yarn](https://yarnpkg.com/) and [Node](https://nodejs.org/en) installed.
 
 To run the frontend server, use your preferred terminal to `cd` into `/frontend` and then install the required packages by running
 
@@ -18,8 +26,28 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser. The page will reload if you make edits.
 
-## Deploy on Vercel
+## Testing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+You can run tests from `/frontend`:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```console
+yarn test
+```
+
+This command involves integration testing, so make sure the backend is running and that the leaked bytes are the same. For example,
+
+`/frontend/tests/psi.test.ts`
+
+```javascript
+test("sending breached password should return fail status", async () => {
+    const password = "TestPass1&";
+    const response = await checkSecurity(password, 1);
+    expect(response.status).toBe("fail");
+});
+```
+
+```/backend/src/main.cpp```
+
+```cpp
+const size_t offset = 1;
+```
