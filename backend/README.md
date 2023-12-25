@@ -2,7 +2,7 @@
 
 ## About
 
-The backend hosts the breached passwords for use in the Private Set Intersection computation. The user sends a password and receives that password and the set of breached passwords both encrypted with secret key `b`. The backend uses [Crow](https://crowcpp.org/master/) for the REST API, [SQLite3](https://www.sqlite.org/index.html) for the breached password database, and [Libsodium](https://libsodium.gitbook.io/doc/) for the cryptography. The API has a single endpoint:
+The backend hosts the breached passwords for use in the Private Set Intersection computation. The user sends a password and receives that password and the set of breached passwords both encrypted with secret key $b$. The backend uses [Crow](https://crowcpp.org/master/) for the REST API, [SQLite3](https://www.sqlite.org/index.html) for the breached password database, and [Libsodium](https://libsodium.gitbook.io/doc/) for the cryptography. The API has a single endpoint:
 
 ### Encrypt user password and get breached passwords
 
@@ -14,7 +14,7 @@ This endpoint encrypts the user's password and provides a list of encrypted brea
 
 `body` *Required*
 
-The leaked bytes followed by the user's encrypted password. In general, for `n` leaked bytes, the length of the data is `32 + n`:
+The leaked bytes followed by the user's encrypted password. In general, for $n$ leaked bytes, the length of the data is $32 + n$:
 
 ```text
 0         n         32 + n
@@ -59,8 +59,13 @@ const response = await fetch(
 
 In `/backend`, start by installing [Conan](https://conan.io/):
 
-```bash
+```console
 brew install conan 
+```
+
+Them, install the project's packages using the following:
+
+```console
 conan install . --output-folder=build --build=missing
 ```
 
@@ -68,25 +73,25 @@ You probably need to create a default profile. Use `conan profile detect`.
 
 If you haven't installed CMake already, do so now:
 
-```bash
+```console
 brew install cmake
 ```
 
 Next, link and compile the program:
 
-```bash
+```console
 make build
 ```
 
 From `/backend`, start the server. Use the `--build` flag to create or rebuild a database for the breached passwords:
 
-```bash
+```console
 build/src/server <database filepath> --build
 ```
 
 Or, omit the `--build` flag to use an existing database:
 
-```bash
+```console
 build/src/server data/passwords.db 
 ```
 
@@ -104,12 +109,12 @@ To fix VS Code import errors, try adding the following line to your `settings.js
 
 After building, you can run tests from `/backend`:
 
-```bash
+```console
 cd build && ./test/pdl_test 
 ```
 
 or alternatively:
 
-```bash
+```console
 make check
 ```
