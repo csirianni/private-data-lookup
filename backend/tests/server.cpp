@@ -1,14 +1,16 @@
 #define CATCH_CONFIG_MAIN
-#include <catch2/catch_test_macros.hpp>
 #include "server.hpp"
-#include "password.hpp"
-#include "cryptography.hpp"
-#include "sodium.h"
-#include <nlohmann/json.hpp>
+
 #include <spdlog/spdlog.h>
 
-TEST_CASE("Test endpoints using handler")
-{
+#include <catch2/catch_test_macros.hpp>
+#include <nlohmann/json.hpp>
+
+#include "cryptography.hpp"
+#include "password.hpp"
+#include "sodium.h"
+
+TEST_CASE("Test endpoints using handler") {
     // enable CORS
     crow::App<crow::CORSHandler> app;
 
@@ -33,37 +35,48 @@ TEST_CASE("Test endpoints using handler")
     const int num_tables = std::pow(std::pow(2, 8), offset);
 
     // create all tables from 0 to (2^8)^offset-1
-    for (int i = 0; i < num_tables; i++)
-    {
+    for (int i = 0; i < num_tables; i++) {
         db.execute("CREATE TABLE `" + std::to_string(i) + "` (password TEXT);");
     }
 
     // create a mock password set
-    std::unordered_set<std::string> passwords = {"TestPass1&", "ChocolateCake1!", "LoveMyDogs3$"};
+    std::unordered_set<std::string> passwords = {
+        "TestPass1&", "ChocolateCake1!", "LoveMyDogs3$"};
 
     // 1. generate secret key b
     unsigned char b[crypto_core_ristretto255_SCALARBYTES];
     crypto_core_ristretto255_scalar_random(b);
 
     // 2. encrypt each password with b (and hash to point)
-    std::vector<std::string> encrypted_passwords = cryptography::encrypt(passwords, b, offset);
+    std::vector<std::string> encrypted_passwords =
+        cryptography::encrypt(passwords, b, offset);
 
     // 3. insert into database
-    for (const auto &password : encrypted_passwords)
-    {
+    for (const auto &password : encrypted_passwords) {
         // determine which table to insert into based on leaked byte
-        unsigned int leaked_byte = ((unsigned char)password.substr(0, offset)[0]) & (num_tables-1);
-        std::string raw_password = password.substr(offset, password.size() - offset);
+        unsigned int leaked_byte =
+            ((unsigned char)password.substr(0, offset)[0]) & (num_tables - 1);
+        std::string raw_password =
+            password.substr(offset, password.size() - offset);
 
         // encode password before inserting into database
-        db.execute("INSERT INTO `" + std::to_string(leaked_byte) + "` (password) VALUES ('" + crow::utility::base64encode(raw_password, raw_password.size()) + "');");
+        db.execute(
+            "INSERT INTO `" + std::to_string(leaked_byte) +
+            "` (password) VALUES ('" +
+            crow::utility::base64encode(raw_password, raw_password.size()) +
+            "');");
     }
 
     // create key table
     db.execute("CREATE TABLE secret (key TEXT);");
 
     // encode key b and insert into database
-    db.execute("INSERT INTO secret (key) VALUES ('" + crow::utility::base64encode(std::string(reinterpret_cast<const char *>(b), crypto_core_ristretto255_SCALARBYTES), crypto_core_ristretto255_SCALARBYTES) + "');");
+    db.execute("INSERT INTO secret (key) VALUES ('" +
+               crow::utility::base64encode(
+                   std::string(reinterpret_cast<const char *>(b),
+                               crypto_core_ristretto255_SCALARBYTES),
+                   crypto_core_ristretto255_SCALARBYTES) +
+               "');");
 
     // initialize endpoints
     server::breachedPasswords(app, db, offset);
@@ -74,16 +87,14 @@ TEST_CASE("Test endpoints using handler")
     crow::request req;
     crow::response res;
 
-    SECTION("Root")
-    {
+    SECTION("Root") {
         req.url = "/";
 
         app.handle(req, res);
         CHECK(res.code == 200);
     }
 
-    SECTION("Breached Passwords")
-    {
+    SECTION("Breached Passwords") {
         req.url = "/breachedPasswords";
         req.method = "POST"_method;
         req.add_header("Access-Control-Allow-Headers", "*");
@@ -91,8 +102,10 @@ TEST_CASE("Test endpoints using handler")
 
         // encrypt user password with b (and hash to point)
         std::string user_request = "TestPass1&";
-        std::string encrypted_password = cryptography::hashAndEncryptPassword(user_request, b, offset);
-        req.body = crow::utility::base64encode(encrypted_password, encrypted_password.size());
+        std::string encrypted_password =
+            cryptography::hashAndEncryptPassword(user_request, b, offset);
+        req.body = crow::utility::base64encode(encrypted_password,
+                                               encrypted_password.size());
 
         app.handle(req, res);
 
@@ -101,7 +114,8 @@ TEST_CASE("Test endpoints using handler")
 
         // check correct bucket is returned
         REQUIRE(body["breachedPasswords"].is_array());
-        std::vector<std::string> breached_bucket = body["breachedPasswords"].get<std::vector<std::string>>();
+        std::vector<std::string> breached_bucket =
+            body["breachedPasswords"].get<std::vector<std::string>>();
         CHECK(breached_bucket.size() == 1);
 
         // check breached password encoding
